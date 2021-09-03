@@ -1,0 +1,40 @@
+@use '~@angular/material/theming' as mat;
+@import '../styles';
+
+.mat-column-type {
+  width: 50px;
+}
+
+.mat-column-level {
+  width: 60px;
+}
+
+.mat-column-name {
+  width: 260px;
+}
+
+.mat-column-requirement {
+  width: 700px;
+}
+
+.description {
+  @include use-font(caption);
+  color: mat.mat-color(mat.$mat-grey, 500);
+}
+
+.table-container {
+  /*height: 900px;*/
+  /*overflow-y: scroll;*/
+}
+
+.title {
+  @include use-font(title);
+  margin-bottom:  20px;
+}
+
+.title-table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px;
+}

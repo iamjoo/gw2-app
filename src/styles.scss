@@ -1,0 +1,16 @@
+@use '~@angular/material/theming' as mat;
+
+$config: mat.mat-typography-config();
+
+@mixin use-font($name) {
+  @include mat.mat-typography-level-to-styles($config, $name)
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

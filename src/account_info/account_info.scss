@@ -1,0 +1,14 @@
+@import '../styles';
+
+.container {
+  margin: 20px;
+}
+
+.mat-column-key {
+  width: 150px;
+}
+
+.title {
+  @include use-font(title);
+  margin-bottom:  20px;
+}
