@@ -18,10 +18,6 @@ export interface AchievementApiObj {
   readonly rewards: RewardApiObj[];
 }
 
-export interface BuildApiObj {
-  readonly id: number;
-}
-
 export interface DailyAchievementsApiObj {
   readonly pve: DailyAchievementApiObj[];
   readonly pvp: DailyAchievementApiObj[];
@@ -51,9 +47,9 @@ export interface ItemApiObj {
   readonly rarity: ItemRarity;
 }
 
-type ItemType = 'Armor'|'Back'|'Bag'|'Consumable'|'Container'|'CrafingMaterial'|
-    'Gathering'|'Gizmo'|'Key'|'MiniPet'|'Tool'|'Trait'|'Trinket'|'Trophy'|
-    'UpgradeComponent'|'Weapon';
+type ItemType = 'Armor'|'Back'|'Bag'|'Consumable'|'Container'|
+    'CraftingMaterial'|'Gathering'|'Gizmo'|'Key'|'MiniPet'|'Tool'|'Trait'|
+    'Trinket'|'Trophy'|'UpgradeComponent'|'Weapon';
 
 type ItemRarity = 'Junk'|'Basic'|'Fine'|'Masterwork'|'Rare'|'Exotic'|
     'Ascended'|'Legendary';

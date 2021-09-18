@@ -130,6 +130,57 @@ export class Dailies {
             });
           }
 
+          for (const dailyAchievement of dailyAchievements.pvp) {
+            const achievement = achievementsMap.get(dailyAchievement.id);
+            if (!achievement) {
+              continue;
+            }
+
+            array.push({
+              id: achievement.id,
+              name: achievement.name,
+              description: achievement.description,
+              requirement: achievement.requirement,
+              type: 'PvP',
+              level: `${dailyAchievement.level.min} - ${dailyAchievement.level.max}`,
+              rewards: getRewardsNamesFromAchievement(achievement, itemsMap),
+            });
+          }
+
+          for (const dailyAchievement of dailyAchievements.wvw) {
+            const achievement = achievementsMap.get(dailyAchievement.id);
+            if (!achievement) {
+              continue;
+            }
+
+            array.push({
+              id: achievement.id,
+              name: achievement.name,
+              description: achievement.description,
+              requirement: achievement.requirement,
+              type: 'WvW',
+              level: `${dailyAchievement.level.min} - ${dailyAchievement.level.max}`,
+              rewards: getRewardsNamesFromAchievement(achievement, itemsMap),
+            });
+          }
+
+          for (const dailyAchievement of dailyAchievements.fractals) {
+            const achievement = achievementsMap.get(dailyAchievement.id);
+            if (!achievement) {
+              continue;
+            }
+
+            array.push({
+              id: achievement.id,
+              name: achievement.name,
+              description: achievement.description,
+              requirement: achievement.requirement,
+              type: 'Fractals',
+              level: `${dailyAchievement.level.min} - ${dailyAchievement.level.max}`,
+              rewards: getRewardsNamesFromAchievement(achievement, itemsMap),
+            });
+          }
+
           return array;
         }),
     );

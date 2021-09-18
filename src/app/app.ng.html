@@ -1,7 +1,4 @@
 <mat-toolbar class="toolbar" color="primary">
-  <button mat-icon-button color="accent">
-    <mat-icon>menu</mat-icon>
-  </button>
   <span>Guild Wars 2</span>
 </mat-toolbar>
 
@@ -9,9 +6,6 @@
     color="accent"
     mat-tab-nav-bar
     *ngIf="{activeRoute: activeRoute$ | async} as data">
-  <a [active]="data.activeRoute === 'build'" matTabLink routerLink="/build">
-    Build
-  </a>
   <a [active]="data.activeRoute === 'worlds'" matTabLink routerLink="/worlds">
     Worlds
   </a>

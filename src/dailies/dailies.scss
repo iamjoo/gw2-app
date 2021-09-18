@@ -10,10 +10,14 @@
 }
 
 .mat-column-name {
-  width: 260px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 300px;
 }
 
 .mat-column-requirement {
+  padding-left: 10px;
+  padding-right: 10px;
   width: 700px;
 }
 
@@ -23,8 +27,8 @@
 }
 
 .table-container {
-  /*height: 900px;*/
-  /*overflow-y: scroll;*/
+  height: 900px;
+  overflow-y: scroll;
 }
 
 .title {

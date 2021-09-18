@@ -2,9 +2,9 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, BuildApiObj, DailyAchievementsApiObj, GuildApiObj, ItemApiObj, WorldApiObj} from './models';
+import {AccountApiObj, AchievementApiObj, DailyAchievementsApiObj, GuildApiObj, ItemApiObj, WorldApiObj} from './models';
 
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -34,11 +34,14 @@ enum Path {
 })
 export class ApiService {
 
+  private readonly account$ = this.createAccount();
+  private readonly dailyAchievements$ = this.createDailyAchievements();
+  private readonly worlds$ = this.createWorlds();
+
   constructor(private readonly http: HttpClient) {}
 
   getAccount(): Observable<AccountApiObj> {
-    const params = {'access_token': API_KEY}
-    return this.http.get<AccountApiObj>(`${ROOT_URL}${Path.ACCOUNT}`, {params});
+    return this.account$;
   }
 
   getAchievements(ids: number[]): Observable<AchievementApiObj[]> {
@@ -47,12 +50,8 @@ export class ApiService {
         {params});
   }
 
-  getBuild(): Observable<BuildApiObj> {
-    return this.http.get<BuildApiObj>(`${ROOT_URL}${Path.BUILD}`);
-  }
-
   getDailyAchievements(): Observable<DailyAchievementsApiObj> {
-    return this.http.get<DailyAchievementsApiObj>(`${ROOT_URL}${Path.DAILY_ACHIEVEMENTS}`);
+    return this.dailyAchievements$;
   }
 
   getGuild(id: string): Observable<GuildApiObj> {
@@ -64,7 +63,29 @@ export class ApiService {
   }
 
   getWorlds(): Observable<WorldApiObj[]> {
+    return this.worlds$;
+  }
+
+  private createAccount(): Observable<AccountApiObj> {
+    const params = {'access_token': API_KEY}
+    return this.http.get<AccountApiObj>(`${ROOT_URL}${Path.ACCOUNT}`, {params})
+        .pipe(
+            shareReplay({bufferSize: 1, refCount: false}),
+        );
+  }
+
+  private createDailyAchievements(): Observable<DailyAchievementsApiObj> {
+    return this.http.get<DailyAchievementsApiObj>(`${ROOT_URL}${Path.DAILY_ACHIEVEMENTS}`)
+        .pipe(
+            shareReplay({bufferSize: 1, refCount: false}),
+        );
+  }
+
+  private createWorlds(): Observable<WorldApiObj[]> {
     const params = {'ids': 'all'}
-    return this.http.get<WorldApiObj[]>(`${ROOT_URL}${Path.WORLDS}`, {params});
+    return this.http.get<WorldApiObj[]>(`${ROOT_URL}${Path.WORLDS}`, {params})
+        .pipe(
+            shareReplay({bufferSize: 1, refCount: false}),
+        );
   }
 }
