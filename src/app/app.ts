@@ -5,27 +5,32 @@ import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
+import {ApiKeyService} from '../api_key/api_key';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.ng.html',
-  styleUrls: ['./app.scss']
+  styleUrls: ['./app.scss'],
 })
 export class App {
   readonly activeRoute$ = this.createActiveRoute();
 
   constructor(
-      private readonly apiService: ApiService,
-      private readonly router: Router,
-  ) {
+    private readonly apiKeyService: ApiKeyService,
+    private readonly apiService: ApiService,
+    private readonly router: Router
+  ) {}
+
+  setApiKey(): void {
+    this.apiKeyService.setApiKey();
   }
 
   private createActiveRoute(): Observable<string> {
     return this.router.events.pipe(
-        filter((event): event is NavigationEnd => {
-          return event instanceof NavigationEnd;
-        }),
-        map((event) => event.urlAfterRedirects.replace('/', '')),
-        );
+      filter((event): event is NavigationEnd => {
+        return event instanceof NavigationEnd;
+      }),
+      map(event => event.urlAfterRedirects.replace('/', ''))
+    );
   }
 }

@@ -5,6 +5,7 @@ import {map, switchMap} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
 import {AchievementApiObj, DailyAchievementApiObj, ItemApiObj, ItemReward} from '../api/models';
+import {ItemService} from '../item/item_service';
 
 interface DataSourceObject {
   readonly id: number;
@@ -57,7 +58,10 @@ export class Dailies {
       'rewards',
   ];
 
-  constructor(private readonly apiService: ApiService) {}
+  constructor(
+      private readonly apiService: ApiService,
+      private readonly itemService: ItemService,
+  ) {}
 
   private createData(): Observable<DataSourceObject[]> {
     return this.apiService.getDailyAchievements().pipe(
@@ -91,7 +95,9 @@ export class Dailies {
           .map((reward) => reward.id);
 
           const itemsMap$ =
-              combineLatest(rewardsIds.map((id) => this.apiService.getItem(id)))
+              combineLatest(rewardsIds.map((id) => {
+                return this.itemService.getItem(id);
+              }))
                   .pipe(
                       map((items) => {
                         const map = new Map<number, ItemApiObj>();
@@ -110,9 +116,6 @@ export class Dailies {
         }),
         map(([achievementsMap, dailyAchievements, itemsMap]) => {
           const array: DataSourceObject[] = [];
-          console.log(achievementsMap);
-          console.log(dailyAchievements);
-
           for (const dailyAchievement of dailyAchievements.pve) {
             const achievement = achievementsMap.get(dailyAchievement.id);
             if (!achievement) {

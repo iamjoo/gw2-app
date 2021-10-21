@@ -1,5 +1,12 @@
 <mat-toolbar class="toolbar" color="primary">
   <span>Guild Wars 2</span>
+  <div class="spacer"></div>
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>settings</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button (click)="setApiKey()" mat-menu-item>Add/Edit API Key</button>
+  </mat-menu>
 </mat-toolbar>
 
 <nav
@@ -8,6 +15,12 @@
     *ngIf="{activeRoute: activeRoute$ | async} as data">
   <a [active]="data.activeRoute === 'worlds'" matTabLink routerLink="/worlds">
     Worlds
+  </a>
+  <a [active]="data.activeRoute === 'characters'" matTabLink routerLink="/characters">
+    Characters
+  </a>
+  <a [active]="data.activeRoute === 'inventory'" matTabLink routerLink="/inventory">
+    Inventory
   </a>
   <a [active]="data.activeRoute === 'dailies'" matTabLink routerLink="/dailies">
     Dailies

@@ -5,17 +5,19 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatTableModule} from '@angular/material/table';
 
-import {AccountInfo} from './account_info';
+import {Inventory} from './inventory';
 
 @NgModule({
-  declarations: [AccountInfo],
+  declarations: [
+    Inventory,
+  ],
   imports: [
     CommonModule,
-    MatButtonModule,
     MatIconModule,
+    MatButtonModule,
     MatProgressBarModule,
     MatTableModule,
   ],
-  exports: [AccountInfo],
+  exports: [Inventory]
 })
-export class AccountInfoModule {}
+export class InventoryModule {}

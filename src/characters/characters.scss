@@ -1,0 +1,101 @@
+@use '~@angular/material/theming' as mat;
+@import '../styles';
+
+.container {
+  margin: 20px;
+}
+
+.mat-column-age {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-column-crafting {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-column-created {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-column-deaths {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-column-equipment {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-column-gender {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-column-level {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-column-name {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-column-profession {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-column-race {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.character-title {
+  @include use-font(caption);
+  color: mat.mat-color(mat.$mat-grey, 500);
+}
+
+.equipment-header {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.row-with-crafting-rating {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+
+  & span:last-child {
+    margin-left: 20px;
+  }
+}
+
+.row-with-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.title {
+  @include use-font(title);
+  margin-bottom:  20px;
+}
+
+.title-table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px;
+}
+
+tr.mat-row {
+  height: 80px;
+}

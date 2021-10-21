@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, startWith} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
 import {WorldApiObj, WorldPopulationApi} from '../api/models';
@@ -55,7 +55,7 @@ export class Worlds {
   private createData(): Observable<DataSourceObject[]> {
     return combineLatest([
         this.apiService.getWorlds(),
-        this.apiService.getAccount(),
+        this.apiService.getAccount().pipe(startWith({world: ''})),
     ]).pipe(
         map(([worlds, {world: homeId}]) => worlds.map(
             ({id, name, population}) => {

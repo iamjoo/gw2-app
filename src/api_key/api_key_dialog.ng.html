@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Enter an API key</h2>
+<mat-dialog-content>
+  You can find your Guild Wars 2 API key or create a new one
+  <a
+      class="gw-link"
+      href="https://account.arena.net/applications"
+      rel="noopener"
+      target="_blank">
+    here
+  </a>
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>API Key</mat-label>
+      <input
+          (keydown.enter)="setKey()"
+          matInput
+          placeholder="D37DC-78F2-8445-8399"
+          [value]="data.apiKey">
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button (click)="cancel()" mat-button>Cancel</button>
+  <button (click)="removeKey()" color="warn" mat-button>Remove key</button>
+  <button
+      (click)="setKey()"
+      color="primary"
+      [disabled]="isDisabled()"
+      mat-button>
+    Set key
+  </button>
+</mat-dialog-actions>

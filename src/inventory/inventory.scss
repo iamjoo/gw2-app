@@ -1,0 +1,13 @@
+@import '../styles';
+
+.title {
+  @include use-font(title);
+  margin-bottom:  20px;
+}
+
+.title-table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px;
+}
