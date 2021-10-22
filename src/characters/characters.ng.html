@@ -65,10 +65,7 @@
             </div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <gw-equipment-expander
-                [equipment]="element.equipment"
-                [expanded]="!!(expandAll$ | async)">
-            </gw-equipment-expander>
+            <gw-equipment-expander [equipments]="element.equipment"></gw-equipment-expander>
           </td>
         </ng-container>
 

@@ -1,0 +1,40 @@
+@import '../styles';
+
+.item-name {
+  border-left: 2px solid;
+  padding-left: 4px;
+}
+
+/* Item rarity colors */
+
+.junk {
+  border-color: $color-junk;
+}
+
+.basic {
+  border-color: $color-basic;
+}
+
+.fine {
+  border-color: $color-fine;
+}
+
+.masterwork {
+  border-color: $color-masterwork;
+}
+
+.rare {
+  border-color: $color-rare;
+}
+
+.exotic {
+  border-color: $color-exotic;
+}
+
+.ascended {
+  border-color: $color-ascended;
+}
+
+.legendary {
+  border-color: $color-legendary;
+}

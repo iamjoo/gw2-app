@@ -1,13 +1,84 @@
 @import '../styles';
 
+.character-counts {
+  margin-left: 10px;
+}
+
+.container {
+  margin: 20px;
+}
+
+.icon {
+  border: 2px solid;
+  height: 48px;
+}
+
+.item-count-row {
+  margin-top: 20px;
+
+  & p {
+    @include use-font(subheading-2);
+  }
+}
+
+.item-description {
+  @include use-font(caption);
+}
+
+.item-icon-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.item-info {
+  margin-left: 10px;
+}
+
+.item-name {
+  @include use-font(headline);
+}
+
+.mat-form-field.mat-form-field {
+  font-size: 18px;
+  margin-top: 20px;
+  width: 500px;
+}
+
 .title {
   @include use-font(title);
   margin-bottom:  20px;
 }
 
-.title-table-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 20px;
+/* Item rarity colors */
+
+.junk {
+  border-color: $color-junk;
+}
+
+.basic {
+  border-color: $color-basic;
+}
+
+.fine {
+  border-color: $color-fine;
+}
+
+.masterwork {
+  border-color: $color-masterwork;
+}
+
+.rare {
+  border-color: $color-rare;
+}
+
+.exotic {
+  border-color: $color-exotic;
+}
+
+.ascended {
+  border-color: $color-ascended;
+}
+
+.legendary {
+  border-color: $color-legendary;
 }

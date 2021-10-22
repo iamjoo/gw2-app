@@ -1,18 +1,20 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {EMPTY, Observable} from 'rxjs';
+import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, CharacterApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, TitleApiObj, PvpApiObj, WorldApiObj} from './models';
+import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WorldApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
+const ITEMS_LIMIT = 199;
 const ROOT_URL = 'https://api.guildwars2.com/v2/';
 
 enum Path {
   ACCOUNT = 'account',
   ACHIEVEMENTS = 'achievements',
+  BANK = 'account/bank',
   BUILD = 'build',
   CHARACTERS = 'characters',
   COIN_EXCHANGE = 'commerce/exchange/coins',
@@ -21,6 +23,7 @@ enum Path {
   FILES = 'files',
   GEM_EXCHANGE = 'commerce/exchange/gems',
   GUILD = 'guild',
+  INVENTORY = 'account/inventory',
   ITEMS = 'items',
   MASTERY_POINTS = 'account/mastery/points',
   PVP = 'pvp/stats',
@@ -34,11 +37,13 @@ enum Path {
 })
 export class ApiService {
   private readonly account$ = this.createAccount();
+  private readonly bank$ = this.createBank();
   private readonly characters$ = this.createCharacters();
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly files$ = this.createFilesMap();
   private readonly masteryPoints$ = this.createMasteryPoints();
   private readonly pvpStats$ = this.createPvpStats();
+  private readonly sharedInventory$ = this.createSharedInventory();
   private readonly worlds$ = this.createWorlds();
 
   constructor(
@@ -56,6 +61,10 @@ export class ApiService {
       `${ROOT_URL}${Path.ACHIEVEMENTS}`,
       {params}
     );
+  }
+
+  getBank(): Observable<BankApiObj[]> {
+    return this.bank$;
   }
 
   getCharacters(): Observable<CharacterApiObj[]> {
@@ -78,12 +87,41 @@ export class ApiService {
     return this.http.get<ItemApiObj>(`${ROOT_URL}${Path.ITEMS}/${id}`);
   }
 
+  getItems(ids: number[]): Observable<ItemApiObj[]> {
+    if (ids.length <= ITEMS_LIMIT) {
+      const joinedIds = ids.join(',');
+      return this.http.get<ItemApiObj[]>(
+          `${ROOT_URL}${Path.ITEMS}?ids=${joinedIds}`);
+    }
+
+    let i: number;
+    let j: number;
+    const allJoinedIds: string[] = [];
+    for (i = 0, j = ids.length; i < j; i += ITEMS_LIMIT) {
+      const joinedIds = ids.slice(i, i + ITEMS_LIMIT).join(',');
+      allJoinedIds.push(joinedIds);
+    }
+
+    const itemRequests$ = allJoinedIds.map((ids) => {
+      return this.http.get<ItemApiObj[]>(
+          `${ROOT_URL}${Path.ITEMS}?ids=${ids}`);
+    });
+
+    return combineLatest(itemRequests$).pipe(
+        map((items) => items.flat(1)),
+    );
+  }
+
   getMasteryPoints(): Observable<MasteryPointsApiObj> {
     return this.masteryPoints$;
   }
 
   getPvpStats(): Observable<PvpApiObj> {
     return this.pvpStats$;
+  }
+
+  getSharedInventory(): Observable<SharedInventoryApiObj[]> {
+    return this.sharedInventory$;
   }
 
   getTitle(id: number): Observable<TitleApiObj> {
@@ -105,6 +143,22 @@ export class ApiService {
         return this.http.get<AccountApiObj>(`${ROOT_URL}${Path.ACCOUNT}`, {
           params,
         });
+      }),
+      shareReplay({bufferSize: 1, refCount: false})
+    );
+  }
+
+  private createBank(): Observable<BankApiObj[]> {
+    return this.apiKeyService.apiKey$.pipe(
+      switchMap(apiKey => {
+        if (apiKey === null) {
+          return EMPTY;
+        }
+
+        const params = {access_token: apiKey};
+        return this.http.get<BankApiObj[]>(`${ROOT_URL}${Path.BANK}`, {
+              params,
+            });
       }),
       shareReplay({bufferSize: 1, refCount: false})
     );
@@ -176,6 +230,23 @@ export class ApiService {
 
         const params = {access_token: apiKey};
         return this.http.get<PvpApiObj>(`${ROOT_URL}${Path.PVP}`, {params});
+      }),
+      shareReplay({bufferSize: 1, refCount: false})
+    );
+  }
+
+  private createSharedInventory(): Observable<SharedInventoryApiObj[]> {
+    return this.apiKeyService.apiKey$.pipe(
+      switchMap(apiKey => {
+        if (apiKey === null) {
+          return EMPTY;
+        }
+
+        const params = {access_token: apiKey};
+        return this.http
+            .get<SharedInventoryApiObj[]>(`${ROOT_URL}${Path.INVENTORY}`, {
+              params,
+            });
       }),
       shareReplay({bufferSize: 1, refCount: false})
     );

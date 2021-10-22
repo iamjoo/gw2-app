@@ -1,3 +1,49 @@
+@import '../styles';
+
+.armor-section {
+  width: 350px;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.equipment-section {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.item-row {
+  & p:first-child {
+    @include use-font(subheading-1);
+  }
+
+  & p:not(:first-child) {
+    margin-left: 10px;
+  }
+}
+
+.mining-section {
+  width: 200px;
+}
+
+.open-panel-title {
+  @include use-font(title);
+
+  /* The badge is offset by 11px so we need space to show it */
+  margin-top: 12px;
+}
+
+.section-title {
+  @include use-font(subheading-2);
+}
+
+.trinkets-section,
+.weapons-section {
+  width: 260px;
+}
+
 mat-expansion-panel.mat-expansion-panel {
   box-shadow: none;
 }

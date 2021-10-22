@@ -1,3 +1,52 @@
-<div class="title-table-container">
-  <div class="title">Coming soon!</div>
+<div class="container" *ngIf="needsKey$ | async; else searchView">
+  <div class="title">This page requires an API key</div>
+  <button (click)="setApiKey()" color="primary" mat-button>
+    Enter an API key
+  </button>
 </div>
+
+<ng-template #searchView>
+  <div *ngIf="{isReady: allItems$ | async} as data">
+    <mat-progress-bar mode="indeterminate" *ngIf="!data.isReady"></mat-progress-bar>
+    <div class="container" *ngIf="data.isReady">
+      <div class="title">Inventory Search</div>
+
+      <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption [displayWith]="getItemName">
+        <mat-option *ngFor="let item of filteredItems | async" [value]="item">
+          {{item.name}}
+        </mat-option>
+      </mat-autocomplete>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Search for an item</mat-label>
+        <input
+            [formControl]="myControl"
+            [matAutocomplete]="auto"
+            matInput
+            placeholder="Ectoplasm"
+            type="text">
+      </mat-form-field>
+
+      <div *ngIf="selectedItem$ | async as selectedItem">
+        <div class="item-icon-row">
+          <img
+              class="icon"
+              [class]="getItemClass(selectedItem)"
+              [src]="selectedItem.icon">
+          <div class="item-info">
+            <div class="item-name">{{selectedItem.name}}</div>
+            <div class="item-description">{{selectedItem.description}}</div>
+          </div>
+        </div>
+        <div class="item-count-row" *ngIf="selectedItemCounts$ | async as itemCount">
+          <p>You have <strong>{{itemCount.count | number}}</strong> total</p>
+          <div class="character-counts" *ngIf="characterCounts$ | async as characterCounts">
+            <p *ngFor="let characterCount of characterCounts">
+              {{characterCount.name}} has {{characterCount.count | number}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

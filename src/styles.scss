@@ -6,6 +6,16 @@ $config: mat.mat-typography-config();
   @include mat.mat-typography-level-to-styles($config, $name)
 }
 
+/* Item rarity colors */
+$color-junk: #AAA;
+$color-basic: #000;
+$color-fine: #62A4DA;
+$color-masterwork: #1a9306;
+$color-rare: #fcd00b;
+$color-exotic: #ffa405;
+$color-ascended: #fb3e8d;
+$color-legendary: #4C139D;
+
 html, body {
   height: 100%;
 }

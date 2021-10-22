@@ -1,11 +1,145 @@
-<mat-expansion-panel [expanded]="expanded">
+<mat-expansion-panel
+    (closed)="isClosed = true"
+    (opened)="isClosed = true">
   <mat-expansion-panel-header>
     <mat-panel-title>
-      Equipment
+      <span *ngIf="isClosed else openPanel">
+        {{equipments.length}} Pieces of Equipment
+      </span>
+      <ng-template #openPanel>
+        <span
+            class="open-panel-title"
+            [matBadge]="equipments.length"
+            matBadgeColor="accent"
+            matBadgeOverlap="false">
+          Equipment
+        </span>
+      </ng-template>
     </mat-panel-title>
-    <mat-panel-description>
-      Has xx jawns
-    </mat-panel-description>
   </mat-expansion-panel-header>
-  <p>Coming soon</p>
+  <div class="container" *ngIf="equipment$ | async as equipment">
+    <div class="equipment-section mining-section">
+      <p class="section-title">Mining Tools</p>
+      <div class="item-row" *ngIf="equipment.axe as axe">
+        <p>Axe</p>
+        <p>{{axe.name}}</p>
+      </div>
+      <div class="item-row" *ngIf="equipment.pick as pick">
+        <p>Pick</p>
+        <p>{{pick.name}}</p>
+      </div>
+      <div class="item-row" *ngIf="equipment.sickle as sickle">
+        <p>Sickle</p>
+        <p>{{sickle.name}}</p>
+      </div>
+    </div>
+    <div class="equipment-section armor-section">
+      <p class="section-title">Armor</p>
+      <div class="item-row">
+        <p>Helm</p>
+        <p *ngIf="equipment.helm as helm">
+          <gw-armor-weapon-info [item]="helm"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Shoulders</p>
+        <p *ngIf="equipment.shoulders as shoulders">
+          <gw-armor-weapon-info [item]="shoulders"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Coat</p>
+        <p *ngIf="equipment.coat as coat">
+          <gw-armor-weapon-info [item]="coat"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Gloves</p>
+        <p *ngIf="equipment.gloves as gloves">
+          <gw-armor-weapon-info [item]="gloves"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Leggings</p>
+        <p *ngIf="equipment.leggings as leggings">
+          <gw-armor-weapon-info [item]="leggings"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Boots</p>
+        <p *ngIf="equipment.boots as boots">
+          <gw-armor-weapon-info [item]="boots"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Backpack</p>
+        <p *ngIf="equipment.backpack as backpack">
+          <gw-armor-weapon-info [item]="backpack"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Aquatic Helm</p>
+        <p *ngIf="equipment.helmAquatic as helmAquatic">
+          <gw-armor-weapon-info [item]="helmAquatic"></gw-armor-weapon-info>
+        </p>
+      </div>
+    </div>
+    <div class="equipment-section weapons-section">
+      <p class="section-title">Weapons</p>
+      <div class="item-row">
+        <p>Weapon Set 1</p>
+        <p *ngIf="equipment.weaponA1 as weaponA1">
+          <gw-armor-weapon-info [item]="weaponA1"></gw-armor-weapon-info>
+        </p>
+        <p *ngIf="equipment.weaponA2 as weaponA2">
+          <gw-armor-weapon-info [item]="weaponA2"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Weapon Set 2</p>
+        <p *ngIf="equipment.weaponB1 as weaponB1">
+          <gw-armor-weapon-info [item]="weaponB1"></gw-armor-weapon-info>
+        </p>
+        <p *ngIf="equipment.weaponB2 as weaponB2">
+          <gw-armor-weapon-info [item]="weaponB2"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Aquatic Weapons</p>
+        <p *ngIf="equipment.weaponAquaticA as weaponAquaticA">
+          <gw-armor-weapon-info [item]="weaponAquaticA"></gw-armor-weapon-info>
+        </p>
+        <p *ngIf="equipment.weaponAquaticB as weaponAquaticB">
+          <gw-armor-weapon-info [item]="weaponAquaticB"></gw-armor-weapon-info>
+        </p>
+      </div>
+    </div>
+    <div class="equipment-section trinkets-section">
+      <p class="section-title">Trinkets</p>
+      <div class="item-row">
+        <p>Amulet</p>
+        <p *ngIf="equipment.amulet as amulet">
+          <gw-armor-weapon-info [item]="amulet"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Accessories</p>
+        <p *ngIf="equipment.accessory1 as accessory1">
+          <gw-armor-weapon-info [item]="accessory1"></gw-armor-weapon-info>
+        </p>
+        <p *ngIf="equipment.accessory2 as accessory2">
+          <gw-armor-weapon-info [item]="accessory2"></gw-armor-weapon-info>
+        </p>
+      </div>
+      <div class="item-row">
+        <p>Rings</p>
+        <p *ngIf="equipment.ring1 as ring1">
+          <gw-armor-weapon-info [item]="ring1"></gw-armor-weapon-info>
+        </p>
+        <p *ngIf="equipment.ring2 as ring2">
+          <gw-armor-weapon-info [item]="ring2"></gw-armor-weapon-info>
+        </p>
+      </div>
+    </div>
+  </div>
 </mat-expansion-panel>

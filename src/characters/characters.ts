@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, QueryList, ViewChildren} from '@angular/core';
 
-import {combineLatest, Observable, of as observableOf, ReplaySubject} from 'rxjs';
+import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
 
+import {EquipmentExpander} from './equipment_expander';
 import {ApiService} from '../api/api';
 import {CraftingApiObj, DisciplineApiObj, EquipmentApiObj, GenderApiObj, ProfessionApiObj, RaceApiObj} from '../api/models';
 import {ApiKeyService} from '../api_key/api_key';
@@ -47,7 +48,7 @@ function getProfessionIconUrl(
 @Component({
   selector: 'gw-characters',
   templateUrl: './characters.ng.html',
-  styleUrls: ['./characters.scss']
+  styleUrls: ['./characters.scss'],
 })
 export class Characters {
 
@@ -64,8 +65,9 @@ export class Characters {
       'deaths',
       'equipment',
   ];
-  readonly expandAll$ = new ReplaySubject<boolean>(1);
   readonly needsKey$ = this.createNeedsKey();
+
+  @ViewChildren(EquipmentExpander) expanders!: QueryList<EquipmentExpander>;
 
   constructor(
       private readonly apiKeyService: ApiKeyService,
@@ -73,11 +75,11 @@ export class Characters {
   ) {}
 
   collapseAll(): void {
-    this.expandAll$.next(false);
+    this.expanders.forEach((expander) => expander.close());
   }
 
   expandAll(): void {
-    this.expandAll$.next(true);
+    this.expanders.forEach((expander) => expander.open());
   }
 
   setApiKey(): void {

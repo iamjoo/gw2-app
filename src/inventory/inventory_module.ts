@@ -1,9 +1,11 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatTableModule} from '@angular/material/table';
 
 import {Inventory} from './inventory';
 
@@ -13,10 +15,12 @@ import {Inventory} from './inventory';
   ],
   imports: [
     CommonModule,
-    MatIconModule,
+    MatAutocompleteModule,
     MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatProgressBarModule,
-    MatTableModule,
+    ReactiveFormsModule,
   ],
   exports: [Inventory]
 })
