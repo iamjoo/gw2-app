@@ -115,6 +115,7 @@ var Path;
     Path["INVENTORY"] = "account/inventory";
     Path["ITEMS"] = "items";
     Path["MASTERY_POINTS"] = "account/mastery/points";
+    Path["MATERIALS"] = "account/materials";
     Path["PVP"] = "pvp/stats";
     Path["TITLES"] = "titles";
     Path["WORLDS"] = "worlds";
@@ -130,6 +131,7 @@ class ApiService {
         this.dailyAchievements$ = this.createDailyAchievements();
         this.files$ = this.createFilesMap();
         this.masteryPoints$ = this.createMasteryPoints();
+        this.materials$ = this.createMaterials();
         this.pvpStats$ = this.createPvpStats();
         this.sharedInventory$ = this.createSharedInventory();
         this.worlds$ = this.createWorlds();
@@ -178,6 +180,9 @@ class ApiService {
     }
     getMasteryPoints() {
         return this.masteryPoints$;
+    }
+    getMaterials() {
+        return this.materials$;
     }
     getPvpStats() {
         return this.pvpStats$;
@@ -246,6 +251,17 @@ class ApiService {
             }
             const params = { access_token: apiKey };
             return this.http.get(`${ROOT_URL}${Path.MASTERY_POINTS}`, { params });
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["shareReplay"])({ bufferSize: 1, refCount: false }));
+    }
+    createMaterials() {
+        return this.apiKeyService.apiKey$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])(apiKey => {
+            if (apiKey === null) {
+                return rxjs__WEBPACK_IMPORTED_MODULE_0__["EMPTY"];
+            }
+            const params = { access_token: apiKey };
+            return this.http.get(`${ROOT_URL}${Path.MATERIALS}`, {
+                params,
+            });
         }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["shareReplay"])({ bufferSize: 1, refCount: false }));
     }
     createPvpStats() {
@@ -1973,12 +1989,21 @@ class Inventory {
                 this.updateItemCounts(item.id, item.count, 'Bank');
             }
         }));
+        const materialCounts$ = this.apiService.getMaterials().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])((materials) => {
+            for (const material of materials) {
+                if (!material) {
+                    continue;
+                }
+                this.updateItemCounts(material.id, material.count, 'Material Storage');
+            }
+        }));
         Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["combineLatest"])([
             equipmentCounts$,
             bagCounts$,
             inventoryCounts$,
             sharedInventoryCounts$,
             bankCounts$,
+            materialCounts$,
         ]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["take"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["takeUntil"])(this.destroy$)).subscribe();
     }
     updateItemCounts(itemId, increment, characterName) {
@@ -3078,19 +3103,26 @@ class ItemService {
                 .filter((item) => item)
                 .map((item) => item.id);
         }));
+        const materialIds$ = this.apiService.getMaterials().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((materials) => {
+            return materials
+                .filter((material) => material)
+                .map((material) => material.id);
+        }));
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_0__["combineLatest"])([
             equipmentIds$,
             bagIds$,
             inventoryIds$,
             sharedInventoryIds$,
             bankIds$,
-        ]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(([equipmentIds, bagIds, inventoryIds, sharedInventoryIds, bankIds,]) => {
+            materialIds$,
+        ]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])(([equipmentIds, bagIds, inventoryIds, sharedInventoryIds, bankIds, materialIds,]) => {
             return new Set([
                 ...equipmentIds,
                 ...bagIds,
                 ...inventoryIds,
                 ...sharedInventoryIds,
                 ...bankIds,
+                ...materialIds,
             ]);
         }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["switchMap"])((itemIds) => {
             return this.apiService.getItems(Array.from(itemIds));

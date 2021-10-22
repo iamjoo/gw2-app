@@ -85,12 +85,21 @@ export class ItemService {
         }),
     );
 
+    const materialIds$ = this.apiService.getMaterials().pipe(
+        map((materials) => {
+          return materials
+              .filter((material) => material)
+              .map((material) => material.id);
+        }),
+    );
+
     return combineLatest([
       equipmentIds$,
       bagIds$,
       inventoryIds$,
       sharedInventoryIds$,
       bankIds$,
+      materialIds$,
     ]).pipe(
         map(([
           equipmentIds,
@@ -98,6 +107,7 @@ export class ItemService {
           inventoryIds,
           sharedInventoryIds,
           bankIds,
+          materialIds,
         ]) => {
           return new Set([
             ...equipmentIds,
@@ -105,6 +115,7 @@ export class ItemService {
             ...inventoryIds,
             ...sharedInventoryIds,
             ...bankIds,
+            ...materialIds,
           ]);
         }),
         switchMap((itemIds) => {

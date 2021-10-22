@@ -34,6 +34,11 @@ export interface AchievementApiObj {
   readonly rewards: RewardApiObj[];
 }
 
+export interface MaterialApiObj {
+  readonly id: number;
+  readonly count: number;
+}
+
 export interface FileApiObj {
   readonly id: string;
   readonly icon: string;

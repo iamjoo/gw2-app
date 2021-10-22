@@ -199,12 +199,26 @@ export class Inventory implements OnInit, OnDestroy {
         }),
     );
 
+    const materialCounts$ = this.apiService.getMaterials().pipe(
+        map((materials) => {
+          for (const material of materials) {
+            if (!material) {
+              continue;
+            }
+
+            this.updateItemCounts(material.id, material.count,
+                'Material Storage');
+          }
+        }),
+    );
+
     combineLatest([
       equipmentCounts$,
       bagCounts$,
       inventoryCounts$,
       sharedInventoryCounts$,
       bankCounts$,
+      materialCounts$,
     ]).pipe(
         take(1),
         takeUntil(this.destroy$),

@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WorldApiObj} from './models';
+import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WorldApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -26,6 +26,7 @@ enum Path {
   INVENTORY = 'account/inventory',
   ITEMS = 'items',
   MASTERY_POINTS = 'account/mastery/points',
+  MATERIALS = 'account/materials',
   PVP = 'pvp/stats',
   TITLES = 'titles',
   WORLDS = 'worlds',
@@ -42,6 +43,7 @@ export class ApiService {
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly files$ = this.createFilesMap();
   private readonly masteryPoints$ = this.createMasteryPoints();
+  private readonly materials$ = this.createMaterials();
   private readonly pvpStats$ = this.createPvpStats();
   private readonly sharedInventory$ = this.createSharedInventory();
   private readonly worlds$ = this.createWorlds();
@@ -114,6 +116,10 @@ export class ApiService {
 
   getMasteryPoints(): Observable<MasteryPointsApiObj> {
     return this.masteryPoints$;
+  }
+
+  getMaterials(): Observable<MaterialApiObj[]> {
+    return this.materials$;
   }
 
   getPvpStats(): Observable<PvpApiObj> {
@@ -216,6 +222,22 @@ export class ApiService {
           `${ROOT_URL}${Path.MASTERY_POINTS}`,
           {params}
         );
+      }),
+      shareReplay({bufferSize: 1, refCount: false})
+    );
+  }
+
+  private createMaterials(): Observable<MaterialApiObj[]> {
+    return this.apiKeyService.apiKey$.pipe(
+      switchMap(apiKey => {
+        if (apiKey === null) {
+          return EMPTY;
+        }
+
+        const params = {access_token: apiKey};
+        return this.http.get<MaterialApiObj[]>(`${ROOT_URL}${Path.MATERIALS}`, {
+              params,
+            });
       }),
       shareReplay({bufferSize: 1, refCount: false})
     );
