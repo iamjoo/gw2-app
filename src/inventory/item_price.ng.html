@@ -1,0 +1,22 @@
+<p class="title">Trading Post Info</p>
+
+<div *ngIf="prices$ | async as prices else notTradeable">
+  <p>
+    <span class="label">You can sell all for</span>
+    <gw-currency [amount]="prices.totalSellAmount"></gw-currency>
+  </p>
+
+  <p>
+    <span class="label">You can sell one for</span>
+    <gw-currency [amount]="prices.singleSellAmount"></gw-currency>
+  </p>
+
+  <p>
+    <span class="label">You can buy more for</span>
+    <gw-currency [amount]="prices.singleBuyAmount"></gw-currency>
+  </p>
+</div>
+
+<ng-template #notTradeable>
+  <div class="not-tradeable">This item is not tradeable</div>
+</ng-template>

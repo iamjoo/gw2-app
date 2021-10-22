@@ -38,12 +38,17 @@
             <div class="item-description">{{selectedItem.description}}</div>
           </div>
         </div>
-        <div class="item-count-row" *ngIf="selectedItemCounts$ | async as itemCount">
-          <p>You have <strong>{{itemCount.count | number}}</strong> total</p>
-          <div class="character-counts" *ngIf="characterCounts$ | async as characterCounts">
-            <p *ngFor="let characterCount of characterCounts">
-              {{characterCount.name}} has {{characterCount.count | number}}
-            </p>
+        <div class="item-count-price" *ngIf="selectedItemCounts$ | async as itemCount">
+          <div class="item-count-row">
+            <p>You have <strong>{{itemCount.count | number}}</strong> total</p>
+            <div class="character-counts" *ngIf="characterCounts$ | async as characterCounts">
+              <p *ngFor="let characterCount of characterCounts">
+                {{characterCount.name}} has {{characterCount.count | number}}
+              </p>
+            </div>
+          </div>
+          <div class="item-price-row">
+            <gw-item-price [item]="selectedItem" [itemCount]="itemCount.count"></gw-item-price>
           </div>
         </div>
       </div>

@@ -1,0 +1,17 @@
+<div *ngIf="currencyBreakdown$ | async as currency">
+  <div class="currency-row" *ngIf="icons$ | async as icons">
+    <div class="currency" *ngIf="currency.gold as gold">
+      <span>{{gold | number}}</span>
+      <img [src]="icons.gold">
+    </div>
+    <div class="currency" *ngIf="currency.silver as silver">
+      <span>{{silver | number}}</span>
+      <img [src]="icons.silver">
+    </div>
+    <div class="currency">
+      <span>{{currency.copper | number}}</span>
+      <img [src]="icons.copper">
+    </div>
+    <p>Total: {{currency.total | number}}</p>
+  </div>
+</div>

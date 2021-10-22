@@ -1,0 +1,15 @@
+@import '../styles';
+
+.currency {
+  display: flex;
+  flex-direction: row;
+
+  & span {
+    @include use-font(subheading-2);
+  }
+}
+
+.currency-row {
+  display: flex;
+  flex-direction: row;
+}

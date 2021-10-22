@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WorldApiObj} from './models';
+import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WorldApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -27,6 +27,7 @@ enum Path {
   ITEMS = 'items',
   MASTERY_POINTS = 'account/mastery/points',
   MATERIALS = 'account/materials',
+  PRICES = 'commerce/prices',
   PVP = 'pvp/stats',
   TITLES = 'titles',
   WORLDS = 'worlds',
@@ -120,6 +121,10 @@ export class ApiService {
 
   getMaterials(): Observable<MaterialApiObj[]> {
     return this.materials$;
+  }
+
+  getPrices(id: number): Observable<PriceApiObj> {
+    return this.http.get<PriceApiObj>(`${ROOT_URL}${Path.PRICES}/${id}`);
   }
 
   getPvpStats(): Observable<PvpApiObj> {

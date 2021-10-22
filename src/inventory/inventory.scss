@@ -13,8 +13,14 @@
   height: 48px;
 }
 
+.item-count-price {
+  display: flex;
+  flex-direction: row;
+}
+
 .item-count-row {
   margin-top: 20px;
+  width: 300px;
 
   & p {
     @include use-font(subheading-2);
@@ -36,6 +42,11 @@
 
 .item-name {
   @include use-font(headline);
+}
+
+.item-price-row {
+  margin-left: 40px;
+  margin-top: 20px;
 }
 
 .mat-form-field.mat-form-field {

@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import {combineLatest, EMPTY, Observable, ReplaySubject} from 'rxjs';
-import {debounceTime, filter, map, shareReplay, startWith, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
+import {debounceTime, filter, map, shareReplay, startWith, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
 import {ItemApiObj} from '../api/models';
