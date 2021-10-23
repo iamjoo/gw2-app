@@ -1,6 +1,54 @@
 @use '~@angular/material/theming' as mat;
 @import '../styles';
 
+.mat-column-name {
+  width: 240px;
+}
+
+.mat-column-population {
+  width: 250px;
+}
+
+.coming-soon {
+  @include use-font(subheading-1);
+  margin-bottom:  20px;
+}
+
+.container {
+  height: 100%;
+}
+
+.table-container {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.title {
+  @include use-font(title);
+  margin-bottom:  20px;
+}
+
+.title-table-container {
+  align-items: flex-start;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+.world-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  & mat-icon {
+    margin-left: 10px;
+  }
+}
+
+/* Population colors */
+
 .low {
   color: mat.mat-color(mat.$mat-light-green, 600);
 }
@@ -19,44 +67,4 @@
 
 .full {
   color: mat.mat-color(mat.$mat-red, 600);
-}
-
-.mat-column-name {
-  width: 240px;
-}
-
-.mat-column-population {
-  width: 250px;
-}
-
-.table-container {
-  height: 900px;
-  overflow-y: scroll;
-}
-
-.coming-soon {
-  @include use-font(subheading-1);
-  margin-bottom:  20px;
-}
-
-.title {
-  @include use-font(title);
-  margin-bottom:  20px;
-}
-
-.title-table-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 20px;
-}
-
-.world-name {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  & mat-icon {
-    margin-left: 10px;
-  }
 }

@@ -1,4 +1,4 @@
-<div *ngIf="{source: data$ | async} as data">
+<div class="container" *ngIf="{source: data$ | async} as data">
   <mat-progress-bar mode="indeterminate" *ngIf="!data.source"></mat-progress-bar>
   <div class="title-table-container" *ngIf="data.source">
     <div class="title">Dailies</div>

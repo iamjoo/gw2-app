@@ -1,10 +1,6 @@
 @use '~@angular/material/theming' as mat;
 @import '../styles';
 
-.container {
-  margin: 20px;
-}
-
 .mat-column-age {
   padding-left: 10px;
   padding-right: 10px;
@@ -55,6 +51,10 @@
   padding-right: 10px;
 }
 
+.container {
+  margin: 20px;
+}
+
 .character-title {
   @include use-font(caption);
   color: mat.mat-color(mat.$mat-grey, 500);
@@ -65,6 +65,10 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.main-container {
+  height: 100%;
 }
 
 .row-with-crafting-rating {
@@ -84,16 +88,23 @@
   align-items: center;
 }
 
+.table-container {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
 .title {
   @include use-font(title);
   margin-bottom:  20px;
 }
 
 .title-table-container {
+  align-items: flex-start;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin: 20px;
+  height: 100%;
+  padding: 20px;
 }
 
 tr.mat-row {
