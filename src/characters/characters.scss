@@ -22,8 +22,10 @@
 }
 
 .mat-column-equipment {
+  box-sizing: border-box;
   padding-left: 10px;
   padding-right: 10px;
+  width: 1232px;
 }
 
 .mat-column-gender {
