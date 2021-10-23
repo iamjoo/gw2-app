@@ -1,6 +1,6 @@
 <mat-expansion-panel
     (closed)="isClosed = true"
-    (opened)="isClosed = true">
+    (opened)="isClosed = false">
   <mat-expansion-panel-header>
     <mat-panel-title>
       <span *ngIf="isClosed else openPanel">
