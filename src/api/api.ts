@@ -36,6 +36,9 @@ enum Path {
   providedIn: 'root',
 })
 export class ApiService {
+
+  private readonly guildIdToGuild = new Map<string, Observable<GuildApiObj>>();
+
   private readonly account$ = this.createAccount();
   private readonly bank$ = this.createBank();
   private readonly characters$ = this.createCharacters();
@@ -87,7 +90,16 @@ export class ApiService {
   }
 
   getGuild(id: string): Observable<GuildApiObj> {
-    return this.http.get<GuildApiObj>(`${ROOT_URL}${Path.GUILD}/${id}`);
+    if (!this.guildIdToGuild.has(id)) {
+      const guild$ =
+          this.http.get<GuildApiObj>(`${ROOT_URL}${Path.GUILD}/${id}`)
+              .pipe(
+                  shareReplay({bufferSize: 1, refCount: false}),
+              );
+      this.guildIdToGuild.set(id, guild$);
+    }
+
+    return this.guildIdToGuild.get(id)!;
   }
 
   getItem(id: number): Observable<ItemApiObj> {
