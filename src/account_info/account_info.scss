@@ -1,14 +1,43 @@
 @import '../styles';
 
+.mat-column-key {
+  width: 150px;
+}
+
 .container {
   margin: 20px;
 }
 
-.mat-column-key {
-  width: 150px;
+.main-container {
+  height: 100%;
+}
+
+.table-container {
+  max-height: 100%;
+  overflow-y: auto;
+
+  &:nth-child(2) {
+    margin-left: 20px;
+  }
+}
+
+.tables {
+  display: flex;
+  flex-direction: row;
+  /* Title is 32px with 20px margin */
+  height: calc(100% - 32px - 20px);
 }
 
 .title {
   @include use-font(title);
   margin-bottom:  20px;
+}
+
+.title-table-container {
+  align-items: flex-start;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
 }

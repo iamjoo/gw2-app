@@ -53,13 +53,13 @@
   padding-right: 10px;
 }
 
-.container {
-  margin: 20px;
-}
-
 .character-title {
   @include use-font(caption);
   color: mat.mat-color(mat.$mat-grey, 500);
+}
+
+.container {
+  margin: 20px;
 }
 
 .equipment-header {

@@ -1,15 +1,16 @@
 @import '../styles';
 
-.currency {
+.coin {
+  align-items: center;
   display: flex;
   flex-direction: row;
 
-  & span {
+  &.large-font span {
     @include use-font(subheading-2);
   }
 }
 
-.currency-row {
+.coin-row {
   display: flex;
   flex-direction: row;
 }

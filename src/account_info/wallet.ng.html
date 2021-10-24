@@ -1,0 +1,30 @@
+<div *ngIf="{source: data$ | async} as data">
+  <table [dataSource]="data.source" mat-table *ngIf="data.source">
+    <ng-container matColumnDef="currency">
+      <th mat-header-cell *matHeaderCellDef>Currency</th>
+      <td mat-cell *matCellDef="let element">
+        <div
+            [matTooltip]="element.description"
+            matTooltipPosition="left">
+          {{element.name}}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef>Amount</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="amount-icon" *ngIf="element.name !== 'Coin' else coin">
+          <span>{{element.amount | number}}</span>
+          <img class="icon" [src]="element.icon">
+        </div>
+        <ng-template #coin>
+          <gw-coin [amount]="element.amount"></gw-coin>
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

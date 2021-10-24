@@ -1,0 +1,17 @@
+@import '../styles';
+
+.mat-column-currency {
+  padding-right: 24px;
+}
+
+.amount-icon {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.icon {
+  height: 32px;
+  padding-left: 10px;
+}

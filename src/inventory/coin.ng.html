@@ -1,0 +1,16 @@
+<div *ngIf="coinBreakdown$ | async as coin">
+  <div class="coin-row" *ngIf="icons$ | async as icons">
+    <div class="coin" [class.large-font]="useLargeFont" *ngIf="coin.gold as gold">
+      <span>{{gold | number}}</span>
+      <img [src]="icons.gold">
+    </div>
+    <div class="coin" [class.large-font]="useLargeFont" *ngIf="coin.silver as silver">
+      <span>{{silver | number}}</span>
+      <img [src]="icons.silver">
+    </div>
+    <div class="coin" [class.large-font]="useLargeFont">
+      <span>{{coin.copper | number}}</span>
+      <img [src]="icons.copper">
+    </div>
+  </div>
+</div>

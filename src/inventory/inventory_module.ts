@@ -7,13 +7,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
-import {Currency} from './currency';
+import {Coin} from './coin';
 import {Inventory} from './inventory';
 import {ItemPrice} from './item_price';
 
 @NgModule({
   declarations: [
-    Currency,
+    Coin,
     Inventory,
     ItemPrice,
   ],
@@ -26,6 +26,9 @@ import {ItemPrice} from './item_price';
     MatProgressBarModule,
     ReactiveFormsModule,
   ],
-  exports: [Inventory]
+  exports: [
+    Coin,
+    Inventory,
+  ]
 })
 export class InventoryModule {}

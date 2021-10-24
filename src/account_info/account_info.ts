@@ -13,12 +13,20 @@ interface DataSourceObject {
   readonly value: string | number | string[];
 }
 
+interface WalletDataSourceObject {
+  readonly name: string;
+  readonly description: string;
+  readonly icon: string;
+  readonly amount: number;
+}
+
 @Component({
   selector: 'gw-account-info',
   templateUrl: './account_info.ng.html',
   styleUrls: ['./account_info.scss'],
 })
 export class AccountInfo {
+
   readonly data$ = this.createData();
   readonly displayedColumns = ['key', 'value'];
   readonly needsKey$ = this.createNeedsKey();

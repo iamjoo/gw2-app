@@ -8,7 +8,7 @@ import {ApiService} from '../api/api';
 const COPPER_TO_GOLD = 10000;
 const COPPER_TO_SILVER = 100;
 
-interface CurrencyInfo {
+interface CoinBreakdown {
   readonly gold: number;
   readonly silver: number;
   readonly copper: number;
@@ -23,15 +23,15 @@ interface Icon {
 }
 
 @Component({
-  selector: 'gw-currency',
-  templateUrl: './currency.ng.html',
-  styleUrls: ['./currency.scss']
+  selector: 'gw-coin',
+  templateUrl: './coin.ng.html',
+  styleUrls: ['./coin.scss']
 })
-export class Currency {
+export class Coin {
 
   private readonly amount$ = new BehaviorSubject<number>(0);
 
-  readonly currencyBreakdown$ = this.createCurrencyBreakdown();
+  readonly coinBreakdown$ = this.createCoinBreakdown();
   readonly icons$ = this.createIcons();
 
   @Input()
@@ -39,9 +39,11 @@ export class Currency {
     this.amount$.next(amount ?? 0);
   }
 
+  @Input() useLargeFont = false;
+
   constructor(private readonly apiService: ApiService) {}
 
-  private createCurrencyBreakdown(): Observable<CurrencyInfo> {
+  private createCoinBreakdown(): Observable<CoinBreakdown> {
     return this.amount$.pipe(
         map((amount) => {
           const gold = Math.floor(amount / COPPER_TO_GOLD);

@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WorldApiObj} from './models';
+import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WalletApiObj, WorldApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -16,6 +16,7 @@ enum Path {
   ACHIEVEMENTS = 'achievements',
   BANK = 'account/bank',
   CHARACTERS = 'characters',
+  CURRENCIES = 'currencies',
   DAILY_ACHIEVEMENTS = 'achievements/daily',
   FILES = 'files',
   GUILD = 'guild',
@@ -38,12 +39,14 @@ export class ApiService {
   private readonly account$ = this.createAccount();
   private readonly bank$ = this.createBank();
   private readonly characters$ = this.createCharacters();
+  private readonly currencies$ = this.createCurrencyMap();
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly files$ = this.createFilesMap();
   private readonly masteryPoints$ = this.createMasteryPoints();
   private readonly materials$ = this.createMaterials();
   private readonly pvpStats$ = this.createPvpStats();
   private readonly sharedInventory$ = this.createSharedInventory();
+  private readonly wallet$ = this.createWallet();
   private readonly worlds$ = this.createWorlds();
 
   constructor(
@@ -69,6 +72,10 @@ export class ApiService {
 
   getCharacters(): Observable<CharacterApiObj[]> {
     return this.characters$;
+  }
+
+  getCurrenciesMap(): Observable<Map<number, CurrencyApiObj>> {
+    return this.currencies$;
   }
 
   getDailyAchievements(): Observable<DailyAchievementsApiObj> {
@@ -136,6 +143,10 @@ export class ApiService {
     return this.http.get<TitleApiObj>(`${ROOT_URL}${Path.TITLES}/${id}`);
   }
 
+  getWallet(): Observable<WalletApiObj[]> {
+    return this.wallet$;
+  }
+
   getWorlds(): Observable<WorldApiObj[]> {
     return this.worlds$;
   }
@@ -189,6 +200,23 @@ export class ApiService {
     );
   }
 
+  private createCurrencyMap(): Observable<Map<number, CurrencyApiObj>> {
+    const params = {ids: 'all'};
+    return this.http
+      .get<CurrencyApiObj[]>(`${ROOT_URL}${Path.CURRENCIES}`, {params})
+      .pipe(
+        map((currencies) => {
+          const currencyMap = new Map<number, CurrencyApiObj>();
+          for (const currency of currencies) {
+            currencyMap.set(currency.id, currency);
+          }
+
+          return currencyMap;
+        }),
+        shareReplay({bufferSize: 1, refCount: false})
+      );
+  }
+
   private createDailyAchievements(): Observable<DailyAchievementsApiObj> {
     return this.http
       .get<DailyAchievementsApiObj>(`${ROOT_URL}${Path.DAILY_ACHIEVEMENTS}`)
@@ -200,7 +228,7 @@ export class ApiService {
     return this.http
       .get<FileApiObj[]>(`${ROOT_URL}${Path.FILES}`, {params})
       .pipe(
-        map(files => {
+        map((files) => {
           const fileMap = new Map<string, string>();
           for (const file of files) {
             fileMap.set(file.id, file.icon);
@@ -271,6 +299,22 @@ export class ApiService {
             .get<SharedInventoryApiObj[]>(`${ROOT_URL}${Path.INVENTORY}`, {
               params,
             });
+      }),
+      shareReplay({bufferSize: 1, refCount: false})
+    );
+  }
+
+  private createWallet(): Observable<WalletApiObj[]> {
+    return this.apiKeyService.apiKey$.pipe(
+      switchMap(apiKey => {
+        if (apiKey === null) {
+          return EMPTY;
+        }
+
+        const params = {access_token: apiKey};
+        return this.http.get<WalletApiObj[]>(`${ROOT_URL}${Path.WALLET}`, {
+          params,
+        });
       }),
       shareReplay({bufferSize: 1, refCount: false})
     );

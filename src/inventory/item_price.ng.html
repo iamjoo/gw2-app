@@ -3,17 +3,17 @@
 <div *ngIf="prices$ | async as prices else notTradeable">
   <p>
     <span class="label">You can sell all for</span>
-    <gw-currency [amount]="prices.totalSellAmount"></gw-currency>
+    <gw-coin [amount]="prices.totalSellAmount" [useLargeFont]="true"></gw-coin>
   </p>
 
   <p>
     <span class="label">You can sell one for</span>
-    <gw-currency [amount]="prices.singleSellAmount"></gw-currency>
+    <gw-coin [amount]="prices.singleSellAmount" [useLargeFont]="true"></gw-coin>
   </p>
 
   <p>
     <span class="label">You can buy more for</span>
-    <gw-currency [amount]="prices.singleBuyAmount"></gw-currency>
+    <gw-coin [amount]="prices.singleBuyAmount" [useLargeFont]="true"></gw-coin>
   </p>
 </div>
 
