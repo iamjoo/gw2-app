@@ -124,6 +124,7 @@ class ApiService {
     constructor(apiKeyService, http) {
         this.apiKeyService = apiKeyService;
         this.http = http;
+        this.guildIdToGuild = new Map();
         this.account$ = this.createAccount();
         this.bank$ = this.createBank();
         this.characters$ = this.createCharacters();
@@ -160,7 +161,12 @@ class ApiService {
         return this.files$;
     }
     getGuild(id) {
-        return this.http.get(`${ROOT_URL}${Path.GUILD}/${id}`);
+        if (!this.guildIdToGuild.has(id)) {
+            const guild$ = this.http.get(`${ROOT_URL}${Path.GUILD}/${id}`)
+                .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["shareReplay"])({ bufferSize: 1, refCount: false }));
+            this.guildIdToGuild.set(id, guild$);
+        }
+        return this.guildIdToGuild.get(id);
     }
     getItem(id) {
         return this.http.get(`${ROOT_URL}${Path.ITEMS}/${id}`);
