@@ -5,8 +5,9 @@ import {map, switchMap, tap} from 'rxjs/operators';
 
 import {EquipmentExpander} from './equipment_expander';
 import {ApiService} from '../api/api';
-import {BagApiObj, CraftingApiObj, DisciplineApiObj, EquipmentApiObj, GenderApiObj, ProfessionApiObj, RaceApiObj} from '../api/models';
+import {BagApiObj, CraftingApiObj, DisciplineApiObj, EquipmentApiObj, GenderApiObj, ItemApiObj, ProfessionApiObj, RaceApiObj} from '../api/models';
 import {ApiKeyService} from '../api_key/api_key';
+import {ItemService} from '../item/item_service';
 import {dateStringToMediumDate, secondsToDuration} from '../util/dates';
 
 interface BagInfo {
@@ -79,6 +80,7 @@ export class Characters {
   constructor(
       private readonly apiKeyService: ApiKeyService,
       private readonly apiService: ApiService,
+      private readonly itemService: ItemService,
   ) {}
 
   collapseAll(): void {
@@ -100,13 +102,14 @@ export class Characters {
     return combineLatest([
         this.apiService.getCharacters(),
         this.apiService.getFilesMap(),
+        this.itemService.getAllCharacterItemIdsToItems(),
     ]).pipe(
         tap(([a]) => console.log(a)),
-        map(([characters, filesMap]) => {
+        map(([characters, filesMap, itemIdsToItems]) => {
           return characters.map((character) => {
             return {
               age: secondsToDuration(character.age),
-              bags: getBagsInfo(character.bags),
+              bags: getBagsInfo(character.bags, itemIdsToItems),
               crafting: getCraftingInfo(character.crafting, filesMap),
               created: dateStringToMediumDate(character.created),
               deaths: character.deaths.toLocaleString(),
@@ -142,9 +145,12 @@ export class Characters {
   }
 }
 
-function getBagsInfo(bagObjects: BagApiObj[]): BagInfo[] {
-  return bagObjects.map((bagObj, index) => {
-    return {name: `Bag ${index + 1}`, capacity: bagObj.size};
+function getBagsInfo(
+    bagObjects: BagApiObj[],
+    itemIdsToItems: Map<number, ItemApiObj>): BagInfo[] {
+  return bagObjects.map((bagObj) => {
+    const name = itemIdsToItems.get(bagObj.id)?.name ?? 'Bag';
+    return {name, capacity: bagObj.size};
   });
 }
 
