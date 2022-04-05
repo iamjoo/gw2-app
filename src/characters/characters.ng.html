@@ -43,6 +43,15 @@
             <td mat-cell *matCellDef="let element">{{element.deaths}}</td>
           </ng-container>
 
+          <ng-container matColumnDef="bags">
+            <th mat-header-cell *matHeaderCellDef>Bags</th>
+            <td mat-cell *matCellDef="let element">
+              <div *ngFor="let bag of element.bags">
+                {{bag.name}}: {{bag.capacity}}
+              </div>
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="equipment">
             <th mat-header-cell *matHeaderCellDef>
               <div class="equipment-header">

@@ -158,7 +158,7 @@ type EquipmentSlotApiObj =
   | 'WeaponB1'
   | 'WeaponB2';
 
-interface BagApiObj {
+export interface BagApiObj {
   readonly id: number; // use /v2/items
   readonly size: number;
   readonly inventory: InventoryApiObj[];

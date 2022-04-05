@@ -31,7 +31,11 @@ export function secondsToDuration(seconds: number): string {
  */
 export function dateStringToMediumDate(dateInput: string): string {
   const date = new Date(dateInput);
-  const options = {year: 'numeric', month: 'short', day: 'numeric'};
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  };
 
   return date.toLocaleDateString('en-US', options);
 }

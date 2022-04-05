@@ -5,9 +5,14 @@ import {map, switchMap, tap} from 'rxjs/operators';
 
 import {EquipmentExpander} from './equipment_expander';
 import {ApiService} from '../api/api';
-import {CraftingApiObj, DisciplineApiObj, EquipmentApiObj, GenderApiObj, ProfessionApiObj, RaceApiObj} from '../api/models';
+import {BagApiObj, CraftingApiObj, DisciplineApiObj, EquipmentApiObj, GenderApiObj, ProfessionApiObj, RaceApiObj} from '../api/models';
 import {ApiKeyService} from '../api_key/api_key';
 import {dateStringToMediumDate, secondsToDuration} from '../util/dates';
+
+interface BagInfo {
+  readonly name: string;
+  readonly capacity: number;
+}
 
 interface CraftingInfo {
   readonly info: CraftingApiObj;
@@ -16,6 +21,7 @@ interface CraftingInfo {
 
 interface DataSourceObject {
   readonly age: string;
+  readonly bags: BagInfo[];
   readonly crafting: CraftingInfo[];
   readonly created: string;
   readonly deaths: string;
@@ -63,6 +69,7 @@ export class Characters {
       'age',
       'created',
       'deaths',
+      'bags',
       'equipment',
   ];
   readonly needsKey$ = this.createNeedsKey();
@@ -99,6 +106,7 @@ export class Characters {
           return characters.map((character) => {
             return {
               age: secondsToDuration(character.age),
+              bags: getBagsInfo(character.bags),
               crafting: getCraftingInfo(character.crafting, filesMap),
               created: dateStringToMediumDate(character.created),
               deaths: character.deaths.toLocaleString(),
@@ -132,6 +140,12 @@ export class Characters {
         map((title) => title.name),
     );
   }
+}
+
+function getBagsInfo(bagObjects: BagApiObj[]): BagInfo[] {
+  return bagObjects.map((bagObj, index) => {
+    return {name: `Bag ${index + 1}`, capacity: bagObj.size};
+  });
 }
 
 function getCraftingInfo(
