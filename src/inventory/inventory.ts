@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import {combineLatest, EMPTY, Observable, ReplaySubject} from 'rxjs';
-import {debounceTime, filter, map, shareReplay, startWith, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
+import {debounceTime, filter, map, shareReplay, startWith, take, takeUntil, withLatestFrom} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
 import {ItemApiObj} from '../api/models';
@@ -91,7 +91,6 @@ export class Inventory implements OnInit, OnDestroy {
     this.selectedItemCounts$ = this.selectedItem$.pipe(
         map((item) => this.allItemCounts.get(item.id)),
         filter((itemCount): itemCount is ItemCounter => !!itemCount),
-        tap(a => console.log(a)),
         shareReplay({bufferSize: 1, refCount: true}),
     );
 

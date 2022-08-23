@@ -22,10 +22,7 @@ export class Wallet {
   readonly data$ = this.createData();
   readonly displayedColumns = ['currency', 'amount'];
 
-  constructor(private readonly apiService: ApiService) {
-    this.apiService.getCurrenciesMap().subscribe(a => console.log(a));
-    this.apiService.getWallet().subscribe(a => console.log(a));
-  }
+  constructor(private readonly apiService: ApiService) {}
 
   private createData(): Observable<DataSourceObject[]> {
     return combineLatest([

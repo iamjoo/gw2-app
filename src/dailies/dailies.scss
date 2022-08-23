@@ -30,9 +30,29 @@
   color: mat.mat-color(mat.$mat-grey, 500);
 }
 
+.icon {
+  height: 32px;
+  padding-left: 10px;
+}
+
+.rewards {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
 .table-container {
   max-height: 100%;
   overflow-y: auto;
+}
+
+.tables {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
 }
 
 .title {

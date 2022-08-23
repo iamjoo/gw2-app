@@ -1,41 +1,78 @@
-<div class="container" *ngIf="{source: data$ | async} as data">
-  <mat-progress-bar mode="indeterminate" *ngIf="!data.source"></mat-progress-bar>
-  <div class="title-table-container" *ngIf="data.source">
-    <div class="title">Dailies</div>
+<div
+    class="container"
+    *ngIf="{dailies: dailiesData$ | async, mapChests: mapChestsData$ | async} as data">
+  <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="!data.dailies || !data.mapChests">
+  </mat-progress-bar>
+  <div class="tables" *ngIf="data.dailies && data.mapChests">
+    <div class="title-table-container" *ngIf="data.dailies">
+      <div class="title">Dailies</div>
 
-    <div class="table-container">
-      <table [dataSource]="data.source" mat-table>
-        <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef>Type</th>
-          <td mat-cell *matCellDef="let element">{{element.type}}</td>
-        </ng-container>
+      <div class="table-container">
+        <table [dataSource]="data.dailies" mat-table>
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let element">{{element.type}}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="level">
-          <th mat-header-cell *matHeaderCellDef>Level</th>
-          <td mat-cell *matCellDef="let element">{{element.level}}</td>
-        </ng-container>
+          <ng-container matColumnDef="level">
+            <th mat-header-cell *matHeaderCellDef>Level</th>
+            <td mat-cell *matCellDef="let element">{{element.level}}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let element">
-            <div>{{element.name}}</div>
-            <div class="description">{{element.description}}</div>
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let element">
+              <div>{{element.name}}</div>
+              <div class="description">{{element.description}}</div>
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="requirement">
-          <th mat-header-cell *matHeaderCellDef>Requirement</th>
-          <td mat-cell *matCellDef="let element">{{element.requirement}}</td>
-        </ng-container>
+          <ng-container matColumnDef="requirement">
+            <th mat-header-cell *matHeaderCellDef>Requirement</th>
+            <td mat-cell *matCellDef="let element">{{element.requirement}}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="rewards">
-          <th mat-header-cell *matHeaderCellDef>Rewards</th>
-          <td mat-cell *matCellDef="let element">{{element.rewards}}</td>
-        </ng-container>
+          <ng-container matColumnDef="rewards">
+            <th mat-header-cell *matHeaderCellDef>Rewards</th>
+            <td mat-cell *matCellDef="let element">{{element.rewards}}</td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+          <tr mat-header-row *matHeaderRowDef="dailiesDisplayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: dailiesDisplayedColumns;"></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="title-table-container" *ngIf="data.mapChests">
+      <div class="title">Chests</div>
+
+      <div class="table-container">
+        <table [dataSource]="data.mapChests" mat-table>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-checkbox [checked]="element.completed" [disableRipple]="true">
+                {{element.name}}
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="reward">
+            <th mat-header-cell *matHeaderCellDef>Reward</th>
+            <td mat-cell *matCellDef="let element">
+              <div class="rewards" *ngFor="let reward of element.rewards">
+                <span>{{reward.name}}</span>
+                <img class="icon" [src]="reward.url">
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="mapChestsDisplayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: mapChestsDisplayedColumns;"></tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

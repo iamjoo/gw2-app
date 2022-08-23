@@ -1,7 +1,7 @@
 import {Component, QueryList, ViewChildren} from '@angular/core';
 
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 
 import {EquipmentExpander} from './equipment_expander';
 import {ApiService} from '../api/api';
@@ -104,7 +104,6 @@ export class Characters {
         this.apiService.getFilesMap(),
         this.itemService.getAllCharacterItemIdsToItems(),
     ]).pipe(
-        tap(([a]) => console.log(a)),
         map(([characters, filesMap, itemIdsToItems]) => {
           return characters.map((character) => {
             return {

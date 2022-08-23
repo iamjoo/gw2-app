@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from '@angular/material/checkbox';
 
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
@@ -7,7 +8,7 @@ import {ApiService} from '../api/api';
 import {AchievementApiObj, DailyAchievementApiObj, ItemApiObj, ItemReward} from '../api/models';
 import {ItemService} from '../item/item_service';
 
-interface DataSourceObject {
+interface DailyDataSourceObject {
   readonly id: number;
   readonly name: string;
   readonly description: string;
@@ -15,6 +16,64 @@ interface DataSourceObject {
   readonly level: string;
   readonly type: 'PvE'|'PvP'|'WvW'|'Fractals'|'Special';
   readonly rewards?: string;
+}
+
+type MapChestName = 'Verdant Brink'|'Auric Basin'|'Tangled Depths'|
+    'Dragon\'s Stand';
+
+interface MapChestReward {
+  readonly name: 'Amalgamated Gemstone'|'Reclaimed Metal Plate';
+  readonly url: string;
+}
+
+interface MapChestDataSourceObject {
+  readonly completed: boolean;
+  readonly name: MapChestName;
+  readonly rewards: MapChestReward[];
+}
+
+const AMALGAMATED_GEMSTONE: MapChestReward = {
+  name: 'Amalgamated Gemstone',
+  url: 'https://render.guildwars2.com/file/35BC2D35511C806348730A5E63152B2E260D4A5C/919363.png',
+};
+
+const RECLAIMED_METAL_PLATE: MapChestReward = {
+  name: 'Reclaimed Metal Plate',
+  url: 'https://render.guildwars2.com/file/AC2729C25DE5C2A3E925083570C2161F52280163/1203052.png',
+};
+
+function createMapChestDataSourceObject(id: string, apiData: string[]) {
+  let name: MapChestName;
+  let rewards: MapChestReward[];
+  let completed: boolean;
+  let itemUrls: string[];
+
+  switch (id) {
+    case 'vb':
+      name = 'Verdant Brink';
+      rewards = [AMALGAMATED_GEMSTONE, RECLAIMED_METAL_PLATE];
+      completed = apiData.includes('verdant_brink_heros_choice_chest');
+      break;
+    case 'ab':
+      name = 'Auric Basin';
+      rewards = [AMALGAMATED_GEMSTONE];
+      completed = apiData.includes('auric_basin_heros_choice_chest');
+      break;
+    case 'td':
+      name = 'Tangled Depths';
+      rewards = [AMALGAMATED_GEMSTONE];
+      completed = apiData.includes('tangled_depths_heros_choice_chest');
+      break;
+    case 'ds':
+      name = 'Dragon\'s Stand';
+      rewards = [AMALGAMATED_GEMSTONE];
+      completed = apiData.includes('dragons_stand_heros_choice_chest');
+      break;
+    default:
+      throw new Error('Invalid map!');
+  }
+
+  return {name, rewards, completed};
 }
 
 function getRewardsNamesFromAchievement(
@@ -45,12 +104,18 @@ function getRewardsNamesFromAchievement(
 @Component({
   selector: 'gw-dailies',
   templateUrl: './dailies.ng.html',
-  styleUrls: ['./dailies.scss']
+  styleUrls: ['./dailies.scss'],
+  providers: [
+    {
+      provide: MAT_CHECKBOX_DEFAULT_OPTIONS,
+      useValue: {clickAction: 'noop'} as MatCheckboxDefaultOptions,
+    }
+  ]
 })
 export class Dailies {
 
-  readonly data$ = this.createData();
-  readonly displayedColumns = [
+  readonly dailiesData$ = this.createDailiesData();
+  readonly dailiesDisplayedColumns = [
       'type',
       'level',
       'name',
@@ -58,12 +123,18 @@ export class Dailies {
       'rewards',
   ];
 
+  readonly mapChestsData$ = this.createMapChestsData();
+  readonly mapChestsDisplayedColumns = [
+      'name',
+      'reward',
+  ];
+
   constructor(
       private readonly apiService: ApiService,
       private readonly itemService: ItemService,
   ) {}
 
-  private createData(): Observable<DataSourceObject[]> {
+  private createDailiesData(): Observable<DailyDataSourceObject[]> {
     return this.apiService.getDailyAchievements().pipe(
         switchMap((dailyAchievements) => {
           const achievementIds = Object.values(dailyAchievements).flat().map(
@@ -115,7 +186,7 @@ export class Dailies {
           ]);
         }),
         map(([achievementsMap, dailyAchievements, itemsMap]) => {
-          const array: DataSourceObject[] = [];
+          const array: DailyDataSourceObject[] = [];
           for (const dailyAchievement of dailyAchievements.pve) {
             const achievement = achievementsMap.get(dailyAchievement.id);
             if (!achievement) {
@@ -185,6 +256,16 @@ export class Dailies {
           }
 
           return array;
+        }),
+    );
+  }
+
+  private createMapChestsData(): Observable<MapChestDataSourceObject[]> {
+    return this.apiService.getMapChestsCompleted().pipe(
+        map((chestsCompleted) => {
+          return ['vb', 'ab', 'td', 'ds'].map((id) => {
+            return createMapChestDataSourceObject(id, chestsCompleted);
+          });
         }),
     );
   }
