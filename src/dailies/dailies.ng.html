@@ -63,8 +63,8 @@
             <th mat-header-cell *matHeaderCellDef>Reward</th>
             <td mat-cell *matCellDef="let element">
               <div class="rewards" *ngFor="let reward of element.rewards">
-                <span>{{reward.name}}</span>
                 <img class="icon" [src]="reward.url">
+                <span>{{reward.name}}</span>
               </div>
             </td>
           </ng-container>
