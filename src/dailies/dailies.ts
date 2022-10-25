@@ -147,13 +147,9 @@ export class Dailies {
         switchMap((dailyAchievements: DailyAchievementsApiObj) => {
           const achievementIds = Object.values(dailyAchievements)
               .flat()
-              .filter((dailyAchievement: DailyAchievementApiObj) => {
-                return dailyAchievement.level.max === 80;
-              })
-              .map(
-                  (dailyAchievement: DailyAchievementApiObj) => {
-                    return dailyAchievement.id;
-                  });
+              .map((dailyAchievement: DailyAchievementApiObj) => {
+                return dailyAchievement.id;
+              });
           const achievementsMap$ =
               this.apiService.getAchievements(achievementIds).pipe(
                   map((achievements) => {
@@ -172,6 +168,10 @@ export class Dailies {
         map(([achievementsMap, dailyAchievements]) => {
           const array: DailyDataSourceObject[] = [];
           for (const dailyAchievement of dailyAchievements.pve) {
+            if (dailyAchievement.level.max !== 80) {
+              continue;
+            }
+
             const achievement = achievementsMap.get(dailyAchievement.id);
             if (!achievement) {
               continue;
@@ -181,32 +181,6 @@ export class Dailies {
               id: achievement.id,
               name: achievement.name,
               type: 'PvE',
-            });
-          }
-
-          for (const dailyAchievement of dailyAchievements.pvp) {
-            const achievement = achievementsMap.get(dailyAchievement.id);
-            if (!achievement) {
-              continue;
-            }
-
-            array.push({
-              id: achievement.id,
-              name: achievement.name,
-              type: 'PvP',
-            });
-          }
-
-          for (const dailyAchievement of dailyAchievements.wvw) {
-            const achievement = achievementsMap.get(dailyAchievement.id);
-            if (!achievement) {
-              continue;
-            }
-
-            array.push({
-              id: achievement.id,
-              name: achievement.name,
-              type: 'WvW',
             });
           }
 
@@ -247,6 +221,32 @@ export class Dailies {
               id: achievement.id,
               name: `Daily Recommended ${level} ${fractalName}`,
               type: 'Fractals',
+            });
+          }
+
+          for (const dailyAchievement of dailyAchievements.wvw) {
+            const achievement = achievementsMap.get(dailyAchievement.id);
+            if (!achievement) {
+              continue;
+            }
+
+            array.push({
+              id: achievement.id,
+              name: achievement.name,
+              type: 'WvW',
+            });
+          }
+
+          for (const dailyAchievement of dailyAchievements.pvp) {
+            const achievement = achievementsMap.get(dailyAchievement.id);
+            if (!achievement) {
+              continue;
+            }
+
+            array.push({
+              id: achievement.id,
+              name: achievement.name,
+              type: 'PvP',
             });
           }
 
