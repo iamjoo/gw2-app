@@ -217,6 +217,11 @@ export class Dailies {
             }
 
             const name = achievement.name;
+            if (!name.toLowerCase().includes('tier 4') &&
+                !name.toLowerCase().includes('recommended')) {
+              continue;
+            }
+
             const index = name.toLowerCase().lastIndexOf('scale');
             if (index < 0) {
               array.push({
@@ -240,9 +245,8 @@ export class Dailies {
             const fractalName = FRACTAL_LEVELS_MAP[level] ?? '';
             array.push({
               id: achievement.id,
-              name,
+              name: `Daily Recommended ${level} ${fractalName}`,
               type: 'Fractals',
-              fractalName,
             });
           }
 
