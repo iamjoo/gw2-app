@@ -1,21 +1,19 @@
 import {Component} from '@angular/core';
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from '@angular/material/checkbox';
 
-import {combineLatest, Observable, of as observableOf} from 'rxjs';
+import {combineLatest, Observable, of as observableOf, pipe} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
-import {AchievementApiObj, DailyAchievementApiObj, ItemApiObj, ItemReward} from '../api/models';
+import {AchievementApiObj, DailyAchievementApiObj, DailyAchievementsApiObj, ItemApiObj, ItemReward} from '../api/models';
 import {ItemService} from '../item/item_service';
+import {FRACTAL_LEVELS_MAP} from '../util/fractal_levels';
 
 interface DailyDataSourceObject {
   readonly id: number;
   readonly name: string;
-  readonly description: string;
-  readonly requirement: string;
-  readonly level: string;
   readonly type: 'PvE'|'PvP'|'WvW'|'Fractals'|'Special';
-  readonly rewards?: string;
+  readonly fractalName?: string;
 }
 
 type MapChestName = 'Verdant Brink'|'Auric Basin'|'Tangled Depths'|
@@ -115,12 +113,10 @@ function getRewardsNamesFromAchievement(
 export class Dailies {
 
   readonly dailiesData$ = this.createDailiesData();
+  readonly dailiesTomorrowData$ = this.createDailiesTomorrowData();
   readonly dailiesDisplayedColumns = [
       'type',
-      'level',
       'name',
-      'requirement',
-      'rewards',
   ];
 
   readonly mapChestsData$ = this.createMapChestsData();
@@ -136,11 +132,28 @@ export class Dailies {
 
   private createDailiesData(): Observable<DailyDataSourceObject[]> {
     return this.apiService.getDailyAchievements().pipe(
-        switchMap((dailyAchievements) => {
-          const achievementIds = Object.values(dailyAchievements).flat().map(
-              (dailyAchievement: DailyAchievementApiObj) => {
-                return dailyAchievement.id;
-              });
+        this.createDailyDataSourceObject(),
+    );
+  }
+
+  private createDailiesTomorrowData(): Observable<DailyDataSourceObject[]> {
+    return this.apiService.getDailyAchievementsTomorrow().pipe(
+        this.createDailyDataSourceObject(),
+    );
+  }
+
+  private createDailyDataSourceObject() {
+    return pipe(
+        switchMap((dailyAchievements: DailyAchievementsApiObj) => {
+          const achievementIds = Object.values(dailyAchievements)
+              .flat()
+              .filter((dailyAchievement: DailyAchievementApiObj) => {
+                return dailyAchievement.level.max === 80;
+              })
+              .map(
+                  (dailyAchievement: DailyAchievementApiObj) => {
+                    return dailyAchievement.id;
+                  });
           const achievementsMap$ =
               this.apiService.getAchievements(achievementIds).pipe(
                   map((achievements) => {
@@ -156,36 +169,7 @@ export class Dailies {
               observableOf(dailyAchievements),
           ]);
         }),
-        switchMap(([achievementsMap, dailyAchievements]) => {
-          const rewardsIds = Array.from(achievementsMap.values()).map(
-              (achievement: AchievementApiObj) => {
-                return achievement.rewards;
-              })
-          .flat()
-          .filter((reward): reward is ItemReward => reward.type === 'Item')
-          .map((reward) => reward.id);
-
-          const itemsMap$ =
-              combineLatest(rewardsIds.map((id) => {
-                return this.itemService.getItem(id);
-              }))
-                  .pipe(
-                      map((items) => {
-                        const map = new Map<number, ItemApiObj>();
-                        for (const item of items) {
-                          map.set(item.id, item);
-                        }
-                        return map;
-                      }),
-                  );
-
-          return combineLatest([
-              observableOf(achievementsMap),
-              observableOf(dailyAchievements),
-              itemsMap$,
-          ]);
-        }),
-        map(([achievementsMap, dailyAchievements, itemsMap]) => {
+        map(([achievementsMap, dailyAchievements]) => {
           const array: DailyDataSourceObject[] = [];
           for (const dailyAchievement of dailyAchievements.pve) {
             const achievement = achievementsMap.get(dailyAchievement.id);
@@ -196,11 +180,7 @@ export class Dailies {
             array.push({
               id: achievement.id,
               name: achievement.name,
-              description: achievement.description,
-              requirement: achievement.requirement,
               type: 'PvE',
-              level: `${dailyAchievement.level.min} - ${dailyAchievement.level.max}`,
-              rewards: getRewardsNamesFromAchievement(achievement, itemsMap),
             });
           }
 
@@ -213,11 +193,7 @@ export class Dailies {
             array.push({
               id: achievement.id,
               name: achievement.name,
-              description: achievement.description,
-              requirement: achievement.requirement,
               type: 'PvP',
-              level: `${dailyAchievement.level.min} - ${dailyAchievement.level.max}`,
-              rewards: getRewardsNamesFromAchievement(achievement, itemsMap),
             });
           }
 
@@ -230,11 +206,7 @@ export class Dailies {
             array.push({
               id: achievement.id,
               name: achievement.name,
-              description: achievement.description,
-              requirement: achievement.requirement,
               type: 'WvW',
-              level: `${dailyAchievement.level.min} - ${dailyAchievement.level.max}`,
-              rewards: getRewardsNamesFromAchievement(achievement, itemsMap),
             });
           }
 
@@ -244,14 +216,33 @@ export class Dailies {
               continue;
             }
 
+            const name = achievement.name;
+            const index = name.toLowerCase().lastIndexOf('scale');
+            if (index < 0) {
+              array.push({
+                id: achievement.id,
+                name,
+                type: 'Fractals',
+              });
+              continue;
+            }
+
+            const level = Number(name.slice(index + 6));
+            if (isNaN(level)) {
+              array.push({
+                id: achievement.id,
+                name,
+                type: 'Fractals',
+              });
+              continue;
+            }
+
+            const fractalName = FRACTAL_LEVELS_MAP[level] ?? '';
             array.push({
               id: achievement.id,
-              name: achievement.name,
-              description: achievement.description,
-              requirement: achievement.requirement,
+              name,
               type: 'Fractals',
-              level: `${dailyAchievement.level.min} - ${dailyAchievement.level.max}`,
-              rewards: getRewardsNamesFromAchievement(achievement, itemsMap),
+              fractalName,
             });
           }
 

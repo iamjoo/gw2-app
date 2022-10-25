@@ -1,11 +1,15 @@
 <div
     class="container"
-    *ngIf="{dailies: dailiesData$ | async, mapChests: mapChestsData$ | async} as data">
+    *ngIf="{
+      dailies: dailiesData$ | async,
+      dailiesTomorrow: dailiesTomorrowData$ | async,
+      mapChests: mapChestsData$ | async
+    } as data">
   <mat-progress-bar
       mode="indeterminate"
       *ngIf="!data.dailies || !data.mapChests">
   </mat-progress-bar>
-  <div class="tables" *ngIf="data.dailies && data.mapChests">
+  <div class="tables" *ngIf="data.dailies && data.dailiesTomorrow && data.mapChests">
     <div class="title-table-container" *ngIf="data.dailies">
       <div class="title">Dailies</div>
 
@@ -16,27 +20,36 @@
             <td mat-cell *matCellDef="let element">{{element.type}}</td>
           </ng-container>
 
-          <ng-container matColumnDef="level">
-            <th mat-header-cell *matHeaderCellDef>Level</th>
-            <td mat-cell *matCellDef="let element">{{element.level}}</td>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let element">
+              <div>{{element.name}}</div>
+              <div class="fractal-name">{{element.fractalName}}</div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="dailiesDisplayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: dailiesDisplayedColumns;"></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="title-table-container" *ngIf="data.dailiesTomorrow">
+      <div class="title">Dailies for tomorrow</div>
+
+      <div class="table-container">
+        <table [dataSource]="data.dailiesTomorrow" mat-table>
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let element">{{element.type}}</td>
           </ng-container>
 
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let element">
               <div>{{element.name}}</div>
-              <div class="description">{{element.description}}</div>
+              <div class="fractal-name">{{element.fractalName}}</div>
             </td>
-          </ng-container>
-
-          <ng-container matColumnDef="requirement">
-            <th mat-header-cell *matHeaderCellDef>Requirement</th>
-            <td mat-cell *matCellDef="let element">{{element.requirement}}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="rewards">
-            <th mat-header-cell *matHeaderCellDef>Rewards</th>
-            <td mat-cell *matCellDef="let element">{{element.rewards}}</td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="dailiesDisplayedColumns; sticky: true"></tr>

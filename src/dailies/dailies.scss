@@ -2,11 +2,7 @@
 @import '../styles';
 
 .mat-column-type {
-  width: 50px;
-}
-
-.mat-column-level {
-  width: 60px;
+  width: 70px;
 }
 
 .mat-column-name {
@@ -15,17 +11,11 @@
   width: 300px;
 }
 
-.mat-column-requirement {
-  padding-left: 10px;
-  padding-right: 10px;
-  width: 700px;
-}
-
 .container {
   height: 100%;
 }
 
-.description {
+.fractal-name {
   @include use-font(caption);
   color: mat.mat-color(mat.$mat-grey, 500);
 }
@@ -33,14 +23,6 @@
 .icon {
   height: 32px;
   padding-right: 10px;
-}
-
-.rewards {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  padding-bottom: 5px;
-  padding-top: 5px;
 }
 
 .table-container {

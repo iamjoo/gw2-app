@@ -18,6 +18,7 @@ enum Path {
   CHARACTERS = 'characters',
   CURRENCIES = 'currencies',
   DAILY_ACHIEVEMENTS = 'achievements/daily',
+  DAILY_ACHIEVEMENTS_TOMORROW = 'achievements/daily/tomorrow',
   FILES = 'files',
   GUILD = 'guild',
   INVENTORY = 'account/inventory',
@@ -45,6 +46,7 @@ export class ApiService {
   private readonly characters$ = this.createCharacters();
   private readonly currencies$ = this.createCurrencyMap();
   private readonly dailyAchievements$ = this.createDailyAchievements();
+  private readonly dailyAchievementsTomorrow$ = this.createDailyAchievementsTomorrow();
   private readonly files$ = this.createFilesMap();
   private readonly mapChestsCompleted$ = this.createMapChestsCompleted();
   private readonly masteryPoints$ = this.createMasteryPoints();
@@ -85,6 +87,10 @@ export class ApiService {
 
   getDailyAchievements(): Observable<DailyAchievementsApiObj> {
     return this.dailyAchievements$;
+  }
+
+  getDailyAchievementsTomorrow(): Observable<DailyAchievementsApiObj> {
+    return this.dailyAchievementsTomorrow$;
   }
 
   getFilesMap(): Observable<Map<string, string>> {
@@ -238,6 +244,12 @@ export class ApiService {
   private createDailyAchievements(): Observable<DailyAchievementsApiObj> {
     return this.http
       .get<DailyAchievementsApiObj>(`${ROOT_URL}${Path.DAILY_ACHIEVEMENTS}`)
+      .pipe(shareReplay({bufferSize: 1, refCount: false}));
+  }
+
+  private createDailyAchievementsTomorrow(): Observable<DailyAchievementsApiObj> {
+    return this.http
+      .get<DailyAchievementsApiObj>(`${ROOT_URL}${Path.DAILY_ACHIEVEMENTS_TOMORROW}`)
       .pipe(shareReplay({bufferSize: 1, refCount: false}));
   }
 
