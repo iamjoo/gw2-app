@@ -13,8 +13,8 @@
     color="accent"
     mat-tab-nav-bar
     *ngIf="{activeRoute: activeRoute$ | async} as data">
-  <a [active]="data.activeRoute === 'worlds'" matTabLink routerLink="/worlds">
-    Worlds
+  <a [active]="data.activeRoute === 'dailies'" matTabLink routerLink="/dailies">
+    Dailies
   </a>
   <a [active]="data.activeRoute === 'characters'" matTabLink routerLink="/characters">
     Characters
@@ -22,11 +22,11 @@
   <a [active]="data.activeRoute === 'inventory'" matTabLink routerLink="/inventory">
     Inventory
   </a>
-  <a [active]="data.activeRoute === 'dailies'" matTabLink routerLink="/dailies">
-    Dailies
-  </a>
   <a [active]="data.activeRoute === 'account-info'" matTabLink routerLink="/account-info">
     Account Info
+  </a>
+  <a [active]="data.activeRoute === 'worlds'" matTabLink routerLink="/worlds">
+    Worlds
   </a>
 </nav>
 

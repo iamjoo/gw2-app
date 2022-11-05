@@ -13,7 +13,7 @@ const routes: Routes = [
   {path: 'inventory', component: Inventory},
   {path: 'dailies', component: Dailies},
   {path: 'worlds', component: Worlds},
-  {path: '', redirectTo: '/worlds', pathMatch: 'full'},
+  {path: '', redirectTo: '/dailies', pathMatch: 'full'},
 ];
 
 @NgModule({
