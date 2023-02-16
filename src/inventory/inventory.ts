@@ -45,7 +45,7 @@ export class Inventory implements OnInit, OnDestroy {
   private readonly destroy$ = new ReplaySubject<void>();
 
   readonly allItems$ = this.itemService.getAllCharacterItems();
-  readonly myControl = new FormControl('');
+  readonly myControl = new FormControl<string|ItemApiObj>('');
   readonly needsKey$ = this.createNeedsKey();
 
   filteredItems!: Observable<ItemApiObj[]>;
@@ -67,6 +67,10 @@ export class Inventory implements OnInit, OnDestroy {
         startWith(''),
         debounceTime(200),
         map((enteredValue) => {
+          if (enteredValue == null) {
+            return '';
+          }
+
           return typeof enteredValue === 'string' ? enteredValue :
               enteredValue.name;
         }),
@@ -84,7 +88,9 @@ export class Inventory implements OnInit, OnDestroy {
       );
 
     this.selectedItem$ = this.myControl.valueChanges.pipe(
-        filter((value): value is ItemApiObj => value.id != null),
+        filter((value): value is ItemApiObj => {
+          return value != null && typeof value !== 'string';
+        }),
         shareReplay({bufferSize: 1, refCount: true}),
     );
 
