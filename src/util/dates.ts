@@ -27,6 +27,19 @@ export function secondsToDuration(seconds: number): string {
 }
 
 /**
+ * Formats seconds to 'mm:ss'.
+ */
+export function secondsToDurationShort(seconds: number): string {
+  const numMinutes =
+      Math.floor(seconds % SECONDS_IN_HOUR / SECONDS_IN_MINUTE);
+  const numMinutesString = (`${numMinutes}`).padStart(2, '0');
+  const numSeconds = Math.floor(seconds % SECONDS_IN_MINUTE);
+  const numSecondsString = (`${numSeconds}`).padStart(2, '0');
+
+  return `${numMinutesString}:${numSecondsString}`;
+}
+
+/**
  * Formats the date to 'MONTH DAY, YEAR'.
  */
 export function dateStringToMediumDate(dateInput: string): string {

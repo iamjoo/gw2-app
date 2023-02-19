@@ -63,13 +63,16 @@
                   "maximumError": "4kb"
                 }
               ]
+            },
+            "dev": {
+              "sourceMap": true
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "gw2-app:build"
+            "browserTarget": "gw2-app:build:dev"
           },
           "configurations": {
             "production": {
