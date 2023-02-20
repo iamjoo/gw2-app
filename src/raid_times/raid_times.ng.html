@@ -1,0 +1,164 @@
+<ng-container
+    *ngIf="{
+      gapiStatus: gapiStatus$ | async,
+      isMissingKeys: isMissingKeys$ | async,
+      isAuthorized: isAuthorized$ | async
+    } as auth">
+  <ng-container
+      *ngIf="auth.isMissingKeys || !auth.isAuthorized || auth.gapiStatus !== GapiStatus.READY; else tableView">
+    <ng-container *ngIf="auth.gapiStatus === GapiStatus.PENDING">
+      <div class="container">
+        <div class="title">Loading..</div>
+        <mat-spinner diameter="24"></mat-spinner>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="auth.gapiStatus === GapiStatus.ERROR">
+      <div class="container gapi-error">
+        <mat-icon color="warn">error</mat-icon>
+        <div class="title">There was an error loading GAPI</div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="auth.gapiStatus === GapiStatus.READY">
+      <div class="container">
+        <div class="title">Provide a Google API key and client ID then authorize Google</div>
+        <button (click)="setApiKeys()" color="primary" mat-button>
+          Enter API key and client ID
+        </button>
+        <button
+            (click)="authorizeUser()"
+            color="primary"
+            [disabled]="auth.isMissingKeys"
+            mat-button>
+          Authorize
+        </button>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #tableView>
+    <div
+        class="main-container"
+        *ngIf="{
+          source: data$ | async,
+          displayedColumns: displayedColumns$ | async
+        } as data">
+      <mat-progress-bar mode="indeterminate" *ngIf="!data.source"></mat-progress-bar>
+      <div class="title-table-container" *ngIf="data.source">
+        <div class="header">
+          <div class="title">Rush PoF Clear Times</div>
+          <div class="buttons">
+            <button
+                (click)="refreshData()"
+                mat-icon-button
+                matTooltip="Refresh data"
+                matTooltipPosition="above">
+              <mat-icon>refresh</mat-icon>
+            </button>
+            <button
+                (click)="setApiKeys()"
+                mat-icon-button
+                matTooltip="Change API key or client ID"
+                matTooltipPosition="above">
+              <mat-icon>vpn_key</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table [dataSource]="data.source" mat-table>
+
+            <ng-container matColumnDef="encounter">
+              <th mat-header-cell *matHeaderCellDef>Encounter</th>
+              <td
+                  [attr.colspan]="element.isWing ? 2 : 1"
+                  mat-cell
+                  *matCellDef="let element">
+                <ng-container *ngIf="element.isWing">
+                  <div class="wing-row">
+                    <img [src]="wingIcon">
+                    <div class="wing-name">{{element.encounter}}</div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!element.isWing">
+                  {{element.encounter}}
+                </ng-container>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="goalTime">
+              <th mat-header-cell *matHeaderCellDef>Goal Time</th>
+              <!-- ugly hack to handle colspan above -->
+              <td [class.hide-goal]="element.isWing" mat-cell *matCellDef="let element">
+                {{element.goalTimeSeconds | secondsToDurationShort}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="recordTime">
+              <th mat-header-cell *matHeaderCellDef>Best Time</th>
+              <td mat-cell *matCellDef="let element">
+                <ng-container *ngIf="!element.isWing">
+                  <div class="row-with-icon">
+                    {{element.recordTimeSeconds | secondsToDurationShort}}
+                    <div *ngIf="element.beatGoal">
+                      <mat-icon
+                          class="beat-goal"
+                          matTooltip="Beat goal time (-{{element.goalDiffSeconds | secondsToDurationShort:1}})"
+                          matTooltipPosition="above">
+                        sports_score
+                      </mat-icon>
+                    </div>
+                  </div>
+                </ng-container>
+              </td>
+            </ng-container>
+
+            <ng-container *ngFor="let column of data.displayedColumns; index as i">
+              <!-- Skip first 3 columns since they're covered above -->
+              <ng-container [matColumnDef]="column" *ngIf="i > 2">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{column | stringToDate | date:'mediumDate'}}
+                </th>
+                <td class="weekly-times" mat-cell *matCellDef="let element">
+                  <ng-container *ngIf="!element.isWing">
+                    <!-- Offset by 3 to correct for the skipped columns above -->
+                    <ng-container
+                        *ngIf="element.dayInfos[i - 3] as info"
+                        [ngPlural]="info.durationSeconds">
+                      <ng-template ngPluralCase="=0">-</ng-template>
+                      <ng-template ngPluralCase="other">
+                        <div class="row-with-icon">
+                          <div>{{info.durationSeconds | secondsToDurationShort}}</div>
+                          <div *ngIf="info.beatGoal">
+                            <mat-icon
+                                class="beat-goal"
+                                matTooltip="Beat goal time (-{{info.goalDiffSeconds | secondsToDurationShort:1}})"
+                                matTooltipPosition="above">
+                              sports_score
+                            </mat-icon>
+                          </div>
+                          <div *ngIf="info.isNewRecord">
+                            <mat-icon
+                                class="new-record"
+                                matTooltip="New Rush record  (-{{info.prevRecordDiffSeconds | secondsToDurationShort:1}})"
+                                matTooltipPosition="above">
+                              auto_awesome
+                            </mat-icon>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </ng-container>
+                  </ng-container>
+                </td>
+              </ng-container>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="data.displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: data.displayedColumns;"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

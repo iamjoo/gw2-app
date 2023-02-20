@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Enter an API key and client ID</h2>
+<mat-dialog-content>
+  You can find your Google API key and client ID in the
+  <a
+      class="gw-link"
+      href="https://console.cloud.google.com/apis/credentials"
+      rel="noopener"
+      target="_blank">
+    Cloud Console
+  </a>
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>API Key</mat-label>
+      <input
+          (keydown.enter)="setKeys()"
+          matInput
+          placeholder="AIzaSyCVuG6qpyk"
+          [value]="data.apiKey">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Client ID</mat-label>
+      <input
+          (keydown.enter)="setKeys()"
+          matInput
+          placeholder="922223-fje7q.apps.googleusercontent.com"
+          [value]="data.clientId">
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button (click)="cancel()" mat-button>Cancel</button>
+  <button (click)="removeKeys()" color="warn" mat-button>Remove keys</button>
+  <button
+      (click)="setKeys()"
+      color="primary"
+      [disabled]="isDisabled()"
+      mat-button>
+    Set keys
+  </button>
+</mat-dialog-actions>

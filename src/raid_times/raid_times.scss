@@ -1,0 +1,107 @@
+@use '@angular/material/theming' as mat;
+@import '../styles';
+
+.beat-goal {
+  color: mat.mat-color(mat.$mat-green, 400);
+}
+
+.buttons {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.container {
+  margin: 20px;
+}
+
+.gapi-error {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+
+  .mat-icon {
+    margin-right: 5px;
+  }
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+.hide-goal {
+  display: none;
+}
+
+.row-with-icon {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+
+  .mat-icon {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-top: 5px;
+  }
+}
+
+.main-container {
+  height: 100%;
+}
+
+.new-record {
+  color: mat.mat-color(mat.$mat-red, 400);
+}
+
+.table-container {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.title {
+  @include use-font(title);
+  margin-right: 20px;
+}
+
+.title-table-container {
+  align-items: flex-start;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+.wing-name {
+  @include use-font(subheading-2);
+  margin-left: 15px;
+}
+
+.wing-row {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'wght' 300
+}
+
+.mat-column-encounter {
+  width: 200px;
+}
+
+.mat-column-goalTime {
+  width: 100px;
+}
+
+.mat-column-recordTime {
+  width: 150px;
+}
+
+.weekly-times {
+  width: 180px;
+}

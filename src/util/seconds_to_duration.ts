@@ -25,7 +25,7 @@ export class SecondsToDuration implements PipeTransform {
   standalone: true,
 })
 export class SecondsToDurationShort implements PipeTransform {
-  transform(seconds: number): string {
-    return secondsToDurationShort(seconds);
+  transform(seconds: number, pad = 2): string {
+    return secondsToDurationShort(seconds, pad);
   }
 }

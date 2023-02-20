@@ -29,10 +29,10 @@ export function secondsToDuration(seconds: number): string {
 /**
  * Formats seconds to 'mm:ss'.
  */
-export function secondsToDurationShort(seconds: number): string {
+export function secondsToDurationShort(seconds: number, pad = 2): string {
   const numMinutes =
       Math.floor(seconds % SECONDS_IN_HOUR / SECONDS_IN_MINUTE);
-  const numMinutesString = (`${numMinutes}`).padStart(2, '0');
+  const numMinutesString = (`${numMinutes}`).padStart(pad, '0');
   const numSeconds = Math.floor(seconds % SECONDS_IN_MINUTE);
   const numSecondsString = (`${numSeconds}`).padStart(2, '0');
 

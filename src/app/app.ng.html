@@ -43,6 +43,13 @@
     Account Info
   </a>
   <a
+      [active]="data.activeRoute === 'raid-times'"
+      class="tab"
+      mat-tab-link
+      routerLink="/raid-times">
+    Raid Times
+  </a>
+  <a
       [active]="data.activeRoute === 'worlds'"
       class="tab"
       mat-tab-link
