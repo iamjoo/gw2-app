@@ -8,13 +8,14 @@ import {MatTableModule} from '@angular/material/table';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 import {combineLatest, Observable, of as observableOf, Subject} from 'rxjs';
-import {catchError, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, withLatestFrom} from 'rxjs/operators';
 
 import {GapiService, GapiStatus} from '../gapi/gapi_service';
 import {SheetsService} from '../sheets/sheets_service';
 import {SecondsToDurationShort} from '../util/seconds_to_duration';
 import {StringToDate} from '../util/string_to_date';
 
+const MAX_COLUMNS = 8;
 const WING_ICON = 'https://render.guildwars2.com/file/5866630DA52DCB5C423FB81ECF69FD071611E36B/1128644.png';
 
 enum PofEncounter {
@@ -137,7 +138,6 @@ export class RaidTimes {
   private createIsAuthorized(): Observable<boolean> {
     return this.gapiService.isUserAuthorized$.pipe(
         distinctUntilChanged(),
-        tap(a => console.log('isAuthorized', a)),
     );
   }
 
@@ -145,7 +145,6 @@ export class RaidTimes {
     return this.gapiService.apiKeys$.pipe(
         map(({apiKey, clientId}) => !apiKey || !clientId),
         distinctUntilChanged(),
-        tap(a => console.log('isMissingKeys', a)),
     );
   }
 
@@ -166,7 +165,8 @@ export class RaidTimes {
           // clearTimes[r][c], where r is the row number and c is the column.
           const dates = clearTimes[0]
               .filter((val) => val.includes('-'))
-              .reverse();
+              .reverse() // reverse so recent runs are shown first
+              .slice(0, MAX_COLUMNS);
           return columns.concat(dates);
         }),
     );
@@ -317,7 +317,8 @@ export class RaidTimes {
               recordTimeSeconds,
               beatGoal,
               goalDiffSeconds,
-              dayInfos: dayInfos.reverse(),
+              // reversed so recent runs are shown first
+              dayInfos: dayInfos.reverse().slice(0, MAX_COLUMNS),
             });
           }
 

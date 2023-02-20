@@ -11,7 +11,7 @@ export class SheetsService {
   getWeeklyClearTimes(): Observable<gapi.client.Response<gapi.client.sheets.ValueRange>> {
     return from(gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: SPREADSHEET_ID,
-        range: 'Test!A1:F13',
+        range: 'Test!A1:AA13',
       }));
   }
 
