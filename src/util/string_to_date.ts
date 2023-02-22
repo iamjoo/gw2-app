@@ -9,6 +9,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class StringToDate implements PipeTransform {
   transform(dateString: string): Date {
-    return new Date(dateString);
+    // The full date-time string converts it to local time
+    return new Date(`${dateString}T17:00`);
   }
 }
