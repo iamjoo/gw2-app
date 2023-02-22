@@ -6,21 +6,7 @@
     } as auth">
   <ng-container
       *ngIf="auth.isMissingKeys || !auth.isAuthorized || auth.gapiStatus !== GapiStatus.READY; else tableView">
-    <ng-container *ngIf="auth.gapiStatus === GapiStatus.PENDING">
-      <div class="container">
-        <div class="title">Loading..</div>
-        <mat-spinner diameter="24"></mat-spinner>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="auth.gapiStatus === GapiStatus.ERROR">
-      <div class="container gapi-error">
-        <mat-icon color="warn">error</mat-icon>
-        <div class="title">There was an error loading GAPI</div>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="auth.gapiStatus === GapiStatus.READY">
+    <ng-container *ngIf="auth.gapiStatus !== GapiStatus.ERROR">
       <div class="container">
         <div class="title">Provide a Google API key and client ID then authorize Google</div>
         <button (click)="setApiKeys()" color="primary" mat-button>
@@ -29,10 +15,17 @@
         <button
             (click)="authorizeUser()"
             color="primary"
-            [disabled]="auth.isMissingKeys"
+            [disabled]="auth.isMissingKeys || auth.gapiStatus === GapiStatus.PENDING"
             mat-button>
           Authorize
         </button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="auth.gapiStatus === GapiStatus.ERROR">
+      <div class="container gapi-error">
+        <mat-icon color="warn">error</mat-icon>
+        <div class="title">There was an error loading GAPI</div>
       </div>
     </ng-container>
   </ng-container>
