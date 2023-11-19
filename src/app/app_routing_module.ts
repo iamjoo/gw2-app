@@ -15,7 +15,7 @@ const routes: Routes = [
   {path: 'dailies', component: Dailies},
   {path: 'raid-times', component: RaidTimes},
   {path: 'worlds', component: Worlds},
-  {path: '', redirectTo: '/dailies', pathMatch: 'full'},
+  {path: '', redirectTo: '/account-info', pathMatch: 'full'},
 ];
 
 @NgModule({
