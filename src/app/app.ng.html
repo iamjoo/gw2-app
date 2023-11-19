@@ -15,11 +15,11 @@
     mat-stretch-tabs="false"
     *ngIf="{activeRoute: activeRoute$ | async} as data">
   <a
-      [active]="data.activeRoute === 'dailies'"
+      [active]="data.activeRoute === 'account-info'"
       class="tab"
       mat-tab-link
-      routerLink="/dailies">
-    Dailies
+      routerLink="/account-info">
+    Account Info
   </a>
   <a
       [active]="data.activeRoute === 'characters'"
@@ -34,13 +34,6 @@
       mat-tab-link
       routerLink="/inventory">
     Inventory
-  </a>
-  <a
-      [active]="data.activeRoute === 'account-info'"
-      class="tab"
-      mat-tab-link
-      routerLink="/account-info">
-    Account Info
   </a>
   <a
       [active]="data.activeRoute === 'raid-times'"
