@@ -1,12 +1,13 @@
+import {CommonModule} from '@angular/common';
 import {Component} from '@angular/core';
-import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from '@angular/material/checkbox';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatTableModule} from '@angular/material/table';
 
 import {combineLatest, Observable, of as observableOf, pipe} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
-import {AchievementApiObj, DailyAchievementApiObj, DailyAchievementsApiObj, ItemApiObj, ItemReward} from '../api/models';
-import {ItemService} from '../item/item_service';
+import {AchievementApiObj, DailyAchievementApiObj, DailyAchievementsApiObj, WizardsVaultProgressApiObj, WizardsVaultSpecialProgressApiObj} from '../api/models';
 import {FRACTAL_LEVELS_MAP} from '../util/fractal_levels';
 
 interface DailyDataSourceObject {
@@ -16,132 +17,88 @@ interface DailyDataSourceObject {
   readonly fractalName?: string;
 }
 
-type MapChestName = 'Verdant Brink'|'Auric Basin'|'Tangled Depths'|
-    'Dragon\'s Stand';
-
-interface MapChestReward {
-  readonly name: 'Amalgamated Gemstone'|'Reclaimed Metal Plate';
-  readonly url: string;
+interface WizardsVaultDataSourceObject {
+  readonly name: string;
+  readonly acclaim: number;
+  readonly current: number;
+  readonly total: number;
+  readonly progress: number;
 }
 
-interface MapChestDataSourceObject {
-  readonly completed: boolean;
-  readonly name: MapChestName;
-  readonly rewards: MapChestReward[];
-}
+function createWizardsVaultDataSourceObject() {
+  return pipe(
+      map((progress: WizardsVaultProgressApiObj|WizardsVaultSpecialProgressApiObj) => {
+        return progress.objectives.map((objective) => {
+          const percentProgress =
+              objective.progress_current / objective.progress_complete;
+          const progress = 100 * percentProgress;
 
-const AMALGAMATED_GEMSTONE: MapChestReward = {
-  name: 'Amalgamated Gemstone',
-  url: 'https://render.guildwars2.com/file/35BC2D35511C806348730A5E63152B2E260D4A5C/919363.png',
-};
-
-const RECLAIMED_METAL_PLATE: MapChestReward = {
-  name: 'Reclaimed Metal Plate',
-  url: 'https://render.guildwars2.com/file/AC2729C25DE5C2A3E925083570C2161F52280163/1203052.png',
-};
-
-function createMapChestDataSourceObject(id: string, apiData: string[]) {
-  let name: MapChestName;
-  let rewards: MapChestReward[];
-  let completed: boolean;
-  let itemUrls: string[];
-
-  switch (id) {
-    case 'vb':
-      name = 'Verdant Brink';
-      rewards = [AMALGAMATED_GEMSTONE, RECLAIMED_METAL_PLATE];
-      completed = apiData.includes('verdant_brink_heros_choice_chest');
-      break;
-    case 'ab':
-      name = 'Auric Basin';
-      rewards = [AMALGAMATED_GEMSTONE];
-      completed = apiData.includes('auric_basin_heros_choice_chest');
-      break;
-    case 'td':
-      name = 'Tangled Depths';
-      rewards = [AMALGAMATED_GEMSTONE];
-      completed = apiData.includes('tangled_depths_heros_choice_chest');
-      break;
-    case 'ds':
-      name = 'Dragon\'s Stand';
-      rewards = [AMALGAMATED_GEMSTONE];
-      completed = apiData.includes('dragons_stand_heros_choice_chest');
-      break;
-    default:
-      throw new Error('Invalid map!');
-  }
-
-  return {name, rewards, completed};
-}
-
-function getRewardsNamesFromAchievement(
-    achievement: AchievementApiObj, itemsMap: Map<number, ItemApiObj>): string {
-  if (!achievement.rewards.length) {
-    return 'None';
-  }
-
-  const rewardNames = [];
-  for (const reward of achievement.rewards) {
-    if (reward.type !== 'Item') {
-      continue;
-    }
-
-    const item = itemsMap.get(reward.id);
-    if (!item) {
-      continue;
-    }
-    rewardNames.push(item.name);
-  }
-
-  if (!rewardNames.length) {
-    return 'None';
-  }
-  return rewardNames.join(', ');
+          return {
+            name: objective.title,
+            acclaim: objective.acclaim,
+            current: objective.progress_current,
+            total: objective.progress_complete,
+            progress,
+          }
+        }).sort((a, b) => a.progress - b.progress);
+      }),
+      );
 }
 
 @Component({
-  selector: 'gw-dailies',
-  templateUrl: './dailies.ng.html',
-  styleUrls: ['./dailies.scss'],
-  providers: [
-    {
-      provide: MAT_CHECKBOX_DEFAULT_OPTIONS,
-      useValue: {clickAction: 'noop'} as MatCheckboxDefaultOptions,
-    }
-  ]
+  selector: 'gw-wizards-vault',
+  templateUrl: './wizards_vault.ng.html',
+  styleUrls: ['./wizards_vault.scss'],
+  imports: [CommonModule, MatProgressBarModule, MatTableModule],
+  standalone: true,
 })
-export class Dailies {
+export class WizardsVault {
 
-  readonly dailiesData$ = this.createDailiesData();
-  readonly dailiesTomorrowData$ = this.createDailiesTomorrowData();
-  readonly dailiesDisplayedColumns = [
-      'type',
-      'name',
-  ];
-
-  readonly mapChestsData$ = this.createMapChestsData();
-  readonly mapChestsDisplayedColumns = [
-      'name',
-      'reward',
-  ];
+  readonly wizardsVaultDaily$ = this.createWizardsVaultDailyData();
+  readonly wizardsVaultWeekly$ = this.createWizardsVaultWeeklyData();
+  readonly wizardsVaultSpecial$ = this.createWizardsVaultSpecialData();
+  readonly wizardsVaultDisplayedColumns = ['name', 'acclaim'];
 
   constructor(
       private readonly apiService: ApiService,
-      private readonly itemService: ItemService,
   ) {}
 
+  private createWizardsVaultDailyData(): Observable<WizardsVaultDataSourceObject[]> {
+    return this.apiService.getWizardsVaultDaily().pipe(
+        createWizardsVaultDataSourceObject(),
+        tap((a) => console.log(a)),
+        );
+  }
+
+  private createWizardsVaultWeeklyData(): Observable<WizardsVaultDataSourceObject[]> {
+    return this.apiService.getWizardsVaultWeekly().pipe(
+        createWizardsVaultDataSourceObject(),
+        tap((a) => console.log(a)),
+        );
+  }
+
+  private createWizardsVaultSpecialData(): Observable<WizardsVaultDataSourceObject[]> {
+    return this.apiService.getWizardsVaultSpecial().pipe(
+        createWizardsVaultDataSourceObject(),
+        tap((a) => console.log(a)),
+        );
+  }
+
+  // Keeping in case a daily fractals endpoint returns
   private createDailiesData(): Observable<DailyDataSourceObject[]> {
     return this.apiService.getDailyAchievements().pipe(
         this.createDailyDataSourceObject(),
     );
   }
 
+  // Keeping in case a daily fractals endpoint returns
   private createDailiesTomorrowData(): Observable<DailyDataSourceObject[]> {
     return this.apiService.getDailyAchievementsTomorrow().pipe(
         this.createDailyDataSourceObject(),
     );
   }
 
+  // Keeping in case a daily fractals endpoint returns
   private createDailyDataSourceObject() {
     return pipe(
         switchMap((dailyAchievements: DailyAchievementsApiObj) => {
@@ -251,16 +208,6 @@ export class Dailies {
           }
 
           return array;
-        }),
-    );
-  }
-
-  private createMapChestsData(): Observable<MapChestDataSourceObject[]> {
-    return this.apiService.getMapChestsCompleted().pipe(
-        map((chestsCompleted) => {
-          return ['vb', 'ab', 'td', 'ds'].map((id) => {
-            return createMapChestDataSourceObject(id, chestsCompleted);
-          });
         }),
     );
   }

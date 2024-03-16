@@ -357,3 +357,26 @@ interface TitleReward extends BaseReward {
   readonly type: 'Title';
   readonly id: number;
 }
+
+type WizardsVaultObjectiveTrack = 'PvE'|'WvW'|'PvP';
+
+export interface WizardsVaultProgressApiObj {
+  readonly meta_progress_current: number;
+  readonly meta_progress_complete: number;
+  readonly meta_reward_astral: number;
+  readonly objectives: WizardsVaultObjectiveApiObj[];
+}
+
+export interface WizardsVaultSpecialProgressApiObj {
+  readonly objectives: WizardsVaultObjectiveApiObj[];
+}
+
+export interface WizardsVaultObjectiveApiObj {
+  readonly id: number;
+  readonly title: string;
+  readonly track: WizardsVaultObjectiveTrack;
+  readonly acclaim: number;
+  readonly progress_current: number;
+  readonly progress_complete: number;
+  readonly claimed: boolean;
+}

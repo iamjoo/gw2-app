@@ -1,8 +1,8 @@
-@use '@angular/material/theming' as mat;
+@use '@angular/material' as mat;
 @import '../styles';
 
 .beat-goal {
-  color: mat.mat-color(mat.$mat-green, 400);
+/*  color: mat.mat-color(mat.$mat-green, 400);*/
 }
 
 .buttons {
@@ -53,7 +53,7 @@
 }
 
 .new-record {
-  color: mat.mat-color(mat.$mat-red, 400);
+/*  color: mat.mat-color(mat.$mat-red, 400);*/
 }
 
 .table-container {

@@ -1,4 +1,4 @@
-@use '@angular/material/theming' as mat;
+@use '@angular/material' as mat;
 @import '../styles';
 
 .mat-column-name {
@@ -50,21 +50,21 @@
 /* Population colors */
 
 .low {
-  color: mat.mat-color(mat.$mat-light-green, 600);
+/*  color: mat.mat-color(mat.$mat-light-green, 600);*/
 }
 
 .medium {
-  color: mat.mat-color(mat.$mat-light-green, 600);
+/*  color: mat.mat-color(mat.$mat-light-green, 600);*/
 }
 
 .high {
-  color: mat.mat-color(mat.$mat-lime, 600);
+/*  color: mat.mat-color(mat.$mat-lime, 600);*/
 }
 
 .very-high {
-  color: mat.mat-color(mat.$mat-orange, 600);
+/*  color: mat.mat-color(mat.$mat-orange, 600);*/
 }
 
 .full {
-  color: mat.mat-color(mat.$mat-red, 600);
+/*  color: mat.mat-color(mat.$mat-red, 600);*/
 }

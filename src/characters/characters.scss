@@ -1,4 +1,4 @@
-@use '@angular/material/theming' as mat;
+@use '@angular/material' as mat;
 @import '../styles';
 
 .mat-column-age {
@@ -55,7 +55,7 @@
 
 .character-title {
   @include use-font(caption);
-  color: mat.mat-color(mat.$mat-grey, 500);
+/*  color: mat.mat-color(mat.$mat-grey, 500);*/
 }
 
 .container {

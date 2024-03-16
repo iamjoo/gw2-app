@@ -1,9 +1,11 @@
-@use '@angular/material/theming' as mat;
+@use '@angular/material' as mat;
+@include mat.core();
 
-$config: mat.mat-typography-config();
+$config: mat.define-typography-config();
 
 @mixin use-font($name) {
-  @include mat.mat-typography-level-to-styles($config, $name)
+/*  @include mat.mat-typography-level-to-styles($config, $name)*/
+/*  @include mat.get-theme-typography($theme, $name);*/
 }
 
 /* Item rarity colors */

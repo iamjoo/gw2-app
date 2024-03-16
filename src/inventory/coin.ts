@@ -1,3 +1,4 @@
+import {CommonModule} from '@angular/common';
 import {Component, Input} from '@angular/core';
 
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -25,7 +26,9 @@ interface Icon {
 @Component({
   selector: 'gw-coin',
   templateUrl: './coin.ng.html',
-  styleUrls: ['./coin.scss']
+  styleUrls: ['./coin.scss'],
+  imports: [CommonModule],
+  standalone: true,
 })
 export class Coin {
 

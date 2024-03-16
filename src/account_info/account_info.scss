@@ -16,7 +16,7 @@
   max-height: 100%;
   overflow-y: auto;
 
-  &:nth-child(2) {
+  &:nth-child(n + 1) {
     margin-left: 20px;
   }
 }

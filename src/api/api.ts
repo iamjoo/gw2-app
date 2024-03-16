@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WalletApiObj, WorldApiObj} from './models';
+import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WalletApiObj, WizardsVaultProgressApiObj, WizardsVaultSpecialProgressApiObj, WorldApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -30,6 +30,9 @@ enum Path {
   PVP = 'pvp/stats',
   TITLES = 'titles',
   WALLET = 'account/wallet',
+  WIZARDS_VAULT_DAILY = 'account/wizardsvault/daily',
+  WIZARDS_VAULT_SPECIAL = 'account/wizardsvault/special',
+  WIZARDS_VAULT_WEEKLY = 'account/wizardsvault/weekly',
   WORLDS = 'worlds',
   WVW_RANKS = 'wvw/ranks',
 }
@@ -54,6 +57,9 @@ export class ApiService {
   private readonly pvpStats$ = this.createPvpStats();
   private readonly sharedInventory$ = this.createSharedInventory();
   private readonly wallet$ = this.createWallet();
+  private readonly wizardsVaultDaily$ = this.createWizardsVaultDaily();
+  private readonly wizardsVaultSpecial$ = this.createWizardsVaultSpecial();
+  private readonly wizardsVaultWeekly$ = this.createWizardsVaultWeekly();
   private readonly worlds$ = this.createWorlds();
 
   constructor(
@@ -169,6 +175,18 @@ export class ApiService {
 
   getWallet(): Observable<WalletApiObj[]> {
     return this.wallet$;
+  }
+
+  getWizardsVaultDaily(): Observable<WizardsVaultProgressApiObj> {
+    return this.wizardsVaultDaily$;
+  }
+
+  getWizardsVaultSpecial(): Observable<WizardsVaultSpecialProgressApiObj> {
+    return this.wizardsVaultSpecial$;
+  }
+
+  getWizardsVaultWeekly(): Observable<WizardsVaultProgressApiObj> {
+    return this.wizardsVaultWeekly$;
   }
 
   getWorlds(): Observable<WorldApiObj[]> {
@@ -362,6 +380,57 @@ export class ApiService {
         return this.http.get<WalletApiObj[]>(`${ROOT_URL}${Path.WALLET}`, {
           params,
         });
+      }),
+      shareReplay({bufferSize: 1, refCount: false})
+    );
+  }
+
+  private createWizardsVaultDaily(): Observable<WizardsVaultProgressApiObj> {
+    return this.apiKeyService.apiKey$.pipe(
+      switchMap(apiKey => {
+        if (apiKey === null) {
+          return EMPTY;
+        }
+
+        const params = {access_token: apiKey};
+        return this.http.get<WizardsVaultProgressApiObj>(
+          `${ROOT_URL}${Path.WIZARDS_VAULT_DAILY}`,
+          {params}
+        );
+      }),
+      shareReplay({bufferSize: 1, refCount: false})
+    );
+  }
+
+  private createWizardsVaultSpecial(): Observable<WizardsVaultSpecialProgressApiObj> {
+    return this.apiKeyService.apiKey$.pipe(
+      switchMap(apiKey => {
+        if (apiKey === null) {
+          return EMPTY;
+        }
+
+        const params = {access_token: apiKey};
+        return this.http.get<WizardsVaultSpecialProgressApiObj>(
+          `${ROOT_URL}${Path.WIZARDS_VAULT_SPECIAL}`,
+          {params}
+        );
+      }),
+      shareReplay({bufferSize: 1, refCount: false})
+    );
+  }
+
+  private createWizardsVaultWeekly(): Observable<WizardsVaultProgressApiObj> {
+    return this.apiKeyService.apiKey$.pipe(
+      switchMap(apiKey => {
+        if (apiKey === null) {
+          return EMPTY;
+        }
+
+        const params = {access_token: apiKey};
+        return this.http.get<WizardsVaultProgressApiObj>(
+          `${ROOT_URL}${Path.WIZARDS_VAULT_WEEKLY}`,
+          {params}
+        );
       }),
       shareReplay({bufferSize: 1, refCount: false})
     );

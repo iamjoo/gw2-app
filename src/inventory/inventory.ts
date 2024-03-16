@@ -1,12 +1,19 @@
+import {CommonModule} from '@angular/common';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 import {combineLatest, EMPTY, Observable, ReplaySubject} from 'rxjs';
 import {debounceTime, filter, map, shareReplay, startWith, take, takeUntil, withLatestFrom} from 'rxjs/operators';
 
+import {ApiKeyService} from '../api_key/api_key';
 import {ApiService} from '../api/api';
 import {ItemApiObj} from '../api/models';
-import {ApiKeyService} from '../api_key/api_key';
+import {ItemPrice} from './item_price';
 import {ItemService} from '../item/item_service';
 
 interface CharacterCounter {
@@ -37,7 +44,18 @@ function sortByName(a: ItemApiObj, b: ItemApiObj): number {
 @Component({
   selector: 'gw-inventory',
   templateUrl: './inventory.ng.html',
-  styleUrls: ['./inventory.scss']
+  styleUrls: ['./inventory.scss'],
+  imports: [
+    CommonModule,
+    ItemPrice,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressBarModule,
+    ReactiveFormsModule,
+  ],
+  standalone: true,
 })
 export class Inventory implements OnInit, OnDestroy {
 

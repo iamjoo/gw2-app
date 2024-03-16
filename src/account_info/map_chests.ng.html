@@ -1,0 +1,25 @@
+<div *ngIf="{source: data$ | async} as data">
+  <table [dataSource]="data.source" mat-table *ngIf="data.source">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [checked]="element.completed" [disableRipple]="true">
+          {{element.name}}
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="reward">
+      <th mat-header-cell *matHeaderCellDef>Reward</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="rewards" *ngFor="let reward of element.rewards">
+          <img class="icon" [src]="reward.url">
+          <span>{{reward.name}}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

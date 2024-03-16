@@ -1,4 +1,8 @@
+import {CommonModule} from '@angular/common';
 import {Component} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatTableModule} from '@angular/material/table';
 
 import {combineLatest, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -43,7 +47,14 @@ function getBarValue(population: WorldPopulationApi): number {
 @Component({
   selector: 'gw-worlds',
   templateUrl: './worlds.ng.html',
-  styleUrls: ['./worlds.scss']
+  styleUrls: ['./worlds.scss'],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatProgressBarModule,
+    MatTableModule,
+  ],
+  standalone: true,
 })
 export class Worlds {
 

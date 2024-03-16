@@ -1,4 +1,8 @@
+import {CommonModule} from '@angular/common';
 import {Component} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatTableModule} from '@angular/material/table';
 
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
@@ -6,6 +10,8 @@ import {map, switchMap} from 'rxjs/operators';
 import {ApiService} from '../api/api';
 import {AccountApiObj, MasteryPointsApiObj, PvpApiObj, WorldApiObj} from '../api/models';
 import {ApiKeyService} from '../api_key/api_key';
+import {MapChests} from './map_chests';
+import {Wallet} from './wallet';
 import {dateStringToMediumDate, secondsToDuration} from '../util/dates';
 
 interface DataSourceObject {
@@ -13,17 +19,19 @@ interface DataSourceObject {
   readonly value: string | number | string[];
 }
 
-interface WalletDataSourceObject {
-  readonly name: string;
-  readonly description: string;
-  readonly icon: string;
-  readonly amount: number;
-}
-
 @Component({
   selector: 'gw-account-info',
   templateUrl: './account_info.ng.html',
   styleUrls: ['./account_info.scss'],
+  imports: [
+    CommonModule,
+    MapChests,
+    MatButtonModule,
+    MatProgressBarModule,
+    MatTableModule,
+    Wallet,
+  ],
+  standalone: true,
 })
 export class AccountInfo {
 

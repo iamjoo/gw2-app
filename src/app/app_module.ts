@@ -12,32 +12,19 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app_routing_module';
 import {App} from './app';
 
-import {AccountInfoModule} from '../account_info/account_info_module';
-import {ApiKeyDialogModule} from '../api_key/api_key_dialog_module';
-import {CharactersModule} from '../characters/characters_module';
-import {DailiesModule} from '../dailies/dailies_module';
-import {InventoryModule} from '../inventory/inventory_module';
-import {WorldsModule} from '../worlds/worlds_module';
-
 @NgModule({
   declarations: [App],
   imports: [
-    AccountInfoModule,
-    ApiKeyDialogModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
-    CharactersModule,
-    DailiesModule,
     HttpClientModule,
-    InventoryModule,
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
     MatMenuModule,
     MatTabsModule,
     MatToolbarModule,
-    WorldsModule,
   ],
   providers: [],
   bootstrap: [App],

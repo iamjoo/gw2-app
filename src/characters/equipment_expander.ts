@@ -1,9 +1,12 @@
+import {CommonModule} from '@angular/common';
 import {Component, Input, ViewChild} from '@angular/core';
-import {MatExpansionPanel} from '@angular/material/expansion';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatExpansionModule, MatExpansionPanel} from '@angular/material/expansion';
 
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
+import {ArmorWeaponInfo} from './armor_weapon_info';
 import {EquipmentApiObj, ItemApiObj} from '../api/models';
 import {ItemService} from '../item/item_service';
 
@@ -36,6 +39,8 @@ interface Equipment {
   selector: 'gw-equipment-expander',
   templateUrl: './equipment_expander.ng.html',
   styleUrls: ['./equipment_expander.scss'],
+  imports: [ArmorWeaponInfo, CommonModule, MatBadgeModule, MatExpansionModule],
+  standalone: true,
 })
 export class EquipmentExpander {
 

@@ -1,9 +1,13 @@
+import {CommonModule} from '@angular/common';
 import {Component} from '@angular/core';
+import {MatTableModule} from '@angular/material/table';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
+import {Coin} from '../inventory/coin';
 
 interface DataSourceObject {
   readonly name: string;
@@ -16,6 +20,8 @@ interface DataSourceObject {
   selector: 'gw-wallet',
   templateUrl: './wallet.ng.html',
   styleUrls: ['./wallet.scss'],
+  imports: [Coin, CommonModule, MatTableModule, MatTooltipModule],
+  standalone: true,
 })
 export class Wallet {
 

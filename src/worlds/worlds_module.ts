@@ -7,13 +7,13 @@ import {MatTableModule} from '@angular/material/table';
 import {Worlds} from './worlds';
 
 @NgModule({
-  declarations: [Worlds],
+  // declarations: [Worlds],
   imports: [
     CommonModule,
     MatIconModule,
     MatProgressBarModule,
     MatTableModule,
   ],
-  exports: [Worlds]
+  // exports: [Worlds]
 })
 export class WorldsModule {}

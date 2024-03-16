@@ -1,4 +1,9 @@
+import {CommonModule} from '@angular/common';
 import {Component, QueryList, ViewChildren} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatTableModule} from '@angular/material/table';
 
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
@@ -56,6 +61,15 @@ function getProfessionIconUrl(
   selector: 'gw-characters',
   templateUrl: './characters.ng.html',
   styleUrls: ['./characters.scss'],
+  imports: [
+    CommonModule,
+    EquipmentExpander,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
+    MatTableModule,
+  ],
+  standalone: true,
 })
 export class Characters {
 

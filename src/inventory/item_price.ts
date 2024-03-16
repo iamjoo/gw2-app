@@ -1,9 +1,11 @@
+import {CommonModule} from '@angular/common';
 import {Component, Input} from '@angular/core';
 
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {catchError, filter, map, switchMap, withLatestFrom} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
+import {Coin} from './coin';
 import {ItemApiObj} from '../api/models';
 
 interface PriceInfo {
@@ -15,7 +17,9 @@ interface PriceInfo {
 @Component({
   selector: 'gw-item-price',
   templateUrl: './item_price.ng.html',
-  styleUrls: ['./item_price.scss']
+  styleUrls: ['./item_price.scss'],
+  imports: [Coin, CommonModule],
+  standalone: true,
 })
 export class ItemPrice {
 
