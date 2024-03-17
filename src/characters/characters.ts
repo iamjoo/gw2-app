@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component, QueryList, ViewChildren} from '@angular/core';
+import {Component, Inject, QueryList, ViewChildren} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -8,10 +8,11 @@ import {MatTableModule} from '@angular/material/table';
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {EquipmentExpander} from './equipment_expander';
+import {AddApiKey} from '../api_key/add_api_key';
+import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {ApiService} from '../api/api';
 import {BagApiObj, CraftingApiObj, DisciplineApiObj, EquipmentApiObj, GenderApiObj, ItemApiObj, ProfessionApiObj, RaceApiObj} from '../api/models';
-import {ApiKeyService} from '../api_key/api_key';
+import {EquipmentExpander} from './equipment_expander';
 import {ItemService} from '../item/item_service';
 import {dateStringToMediumDate, secondsToDuration} from '../util/dates';
 
@@ -62,6 +63,7 @@ function getProfessionIconUrl(
   templateUrl: './characters.ng.html',
   styleUrls: ['./characters.scss'],
   imports: [
+    AddApiKey,
     CommonModule,
     EquipmentExpander,
     MatButtonModule,
@@ -87,12 +89,11 @@ export class Characters {
       'bags',
       'equipment',
   ];
-  readonly needsKey$ = this.createNeedsKey();
 
   @ViewChildren(EquipmentExpander) expanders!: QueryList<EquipmentExpander>;
 
   constructor(
-      private readonly apiKeyService: ApiKeyService,
+      @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
       private readonly apiService: ApiService,
       private readonly itemService: ItemService,
   ) {}
@@ -103,10 +104,6 @@ export class Characters {
 
   expandAll(): void {
     this.expanders.forEach((expander) => expander.open());
-  }
-
-  setApiKey(): void {
-    this.apiKeyService.setApiKey();
   }
 
   private createData(): Observable<DataSourceObject[]> {
@@ -138,12 +135,6 @@ export class Characters {
             };
           });
         }),
-    );
-  }
-
-  private createNeedsKey(): Observable<boolean> {
-    return this.apiKeyService.apiKey$.pipe(
-        map((apiKey) => apiKey === null),
     );
   }
 

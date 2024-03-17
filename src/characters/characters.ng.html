@@ -1,8 +1,5 @@
-<div class="container" *ngIf="needsKey$ | async; else tableView">
-  <div class="title">This page requires an API key</div>
-  <button (click)="setApiKey()" color="primary" mat-button>
-    Enter an API key
-  </button>
+<div class="container" *ngIf="(apiKeyPresent$ | async) === false; else tableView">
+  <gw-add-api-key></gw-add-api-key>
 </div>
 
 <ng-template #tableView>

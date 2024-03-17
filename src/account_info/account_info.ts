@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatTableModule} from '@angular/material/table';
@@ -7,9 +7,10 @@ import {MatTableModule} from '@angular/material/table';
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {ApiService} from '../api/api';
 import {AccountApiObj, MasteryPointsApiObj, PvpApiObj, WorldApiObj} from '../api/models';
-import {ApiKeyService} from '../api_key/api_key';
+import {AddApiKey} from '../api_key/add_api_key';
+import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
+import {ApiService} from '../api/api';
 import {MapChests} from './map_chests';
 import {Wallet} from './wallet';
 import {dateStringToMediumDate, secondsToDuration} from '../util/dates';
@@ -24,6 +25,7 @@ interface DataSourceObject {
   templateUrl: './account_info.ng.html',
   styleUrls: ['./account_info.scss'],
   imports: [
+    AddApiKey,
     CommonModule,
     MapChests,
     MatButtonModule,
@@ -37,16 +39,11 @@ export class AccountInfo {
 
   readonly data$ = this.createData();
   readonly displayedColumns = ['key', 'value'];
-  readonly needsKey$ = this.createNeedsKey();
 
   constructor(
-    private readonly apiKeyService: ApiKeyService,
+    @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
     private readonly apiService: ApiService
   ) {}
-
-  setApiKey(): void {
-    this.apiKeyService.setApiKey();
-  }
 
   private createData(): Observable<DataSourceObject[]> {
     return combineLatest([
@@ -113,10 +110,6 @@ export class AccountInfo {
     dataArray.push({key: 'Guilds', value: guildNames.join('\r\n')});
 
     return dataArray;
-  }
-
-  private createNeedsKey(): Observable<boolean> {
-    return this.apiKeyService.apiKey$.pipe(map(apiKey => apiKey === null));
   }
 }
 

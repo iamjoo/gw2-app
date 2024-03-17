@@ -37,9 +37,7 @@ enum Path {
   WVW_RANKS = 'wvw/ranks',
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ApiService {
 
   private readonly guildIdToGuild = new Map<string, Observable<GuildApiObj>>();

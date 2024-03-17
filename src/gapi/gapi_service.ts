@@ -31,9 +31,7 @@ export enum GapiStatus {
   ERROR,
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class GapiService implements OnDestroy {
   private readonly destroy$ = new ReplaySubject<void>(1);
   private readonly apiKeysInternal$ = new BehaviorSubject<GapiKeys>(getKeys());

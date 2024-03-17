@@ -6,9 +6,7 @@ import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 import {ApiService} from '../api/api';
 import {ItemApiObj} from '../api/models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ItemService {
 
   private readonly idToItemObs = new Map<number, Observable<ItemApiObj>>();

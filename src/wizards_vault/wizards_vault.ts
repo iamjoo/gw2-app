@@ -1,12 +1,14 @@
 import {CommonModule} from '@angular/common';
-import {Component} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 import {combineLatest, Observable, of as observableOf, pipe} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
 
-import {ApiService} from '../api/api';
+import {AddApiKey} from '../api_key/add_api_key';
 import {AchievementApiObj, DailyAchievementApiObj, DailyAchievementsApiObj, WizardsVaultProgressApiObj, WizardsVaultSpecialProgressApiObj} from '../api/models';
+import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
+import {ApiService} from '../api/api';
 import {FRACTAL_LEVELS_MAP} from '../util/fractal_levels';
 import {WizardsVaultDataSourceObject, WizardsVaultTable} from './wizards_vault_table';
 
@@ -66,7 +68,7 @@ function createWizardsVaultDataSourceObject() {
   selector: 'gw-wizards-vault',
   templateUrl: './wizards_vault.ng.html',
   styleUrls: ['./wizards_vault.scss'],
-  imports: [CommonModule, MatProgressBarModule, WizardsVaultTable],
+  imports: [AddApiKey, CommonModule, MatProgressBarModule, WizardsVaultTable],
   standalone: true,
 })
 export class WizardsVault {
@@ -75,7 +77,10 @@ export class WizardsVault {
   readonly weekly$ = this.createWizardsVaultWeeklyData();
   readonly special$ = this.createWizardsVaultSpecialData();
 
-  constructor(private readonly apiService: ApiService) {}
+  constructor(
+      @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
+      private readonly apiService: ApiService,
+  ) {}
 
   private createWizardsVaultDailyData(): Observable<WizardsVaultDataSourceObject[]> {
     return this.apiService.getWizardsVaultDaily().pipe(

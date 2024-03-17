@@ -1,69 +1,42 @@
-<div
-    class="container"
-    *ngIf="{
-      daily: daily$ | async,
-      weekly: weekly$ | async,
-      special: special$ | async
-    } as data">
-  <mat-progress-bar
-      mode="indeterminate"
-      *ngIf="!data.daily || !data.weekly || !data.special">
-  </mat-progress-bar>
+<div class="container" *ngIf="(apiKeyPresent$ | async) === false; else tableView">
+  <gw-add-api-key></gw-add-api-key>
+</div>
+
+<ng-template #tableView>
   <div
-      class="tables"
-      *ngIf="data.daily && data.weekly && data.special">
-    <div class="title-table-container" *ngIf="data.daily">
-      <h2 class="title">Daily</h2>
-
-      <div class="table-container">
-        <gw-wizards-vault-table [dataSource]="data.daily"></gw-wizards-vault-table>
-
-        <!-- <table [dataSource]="data.daily" mat-table>
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td mat-cell *matCellDef="let element">
-              <div>{{element.name}}</div>
-              <div class="progress" *ngIf="element.total > 1">
-                {{element.current}} / {{element.total}}
-              </div>
-              <div class="bar">
-                <mat-progress-bar [value]="element.progress"></mat-progress-bar>
-              </div>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="acclaim">
-            <th mat-header-cell *matHeaderCellDef>Acclaim</th>
-            <td mat-cell *matCellDef="let element">
-              <div class="acclaim">
-                <div>{{element.acclaim}}</div>
-                <div *ngIf="element.current === element.total">
-                  <mat-icon>done</mat-icon>
-                </div>
-              </div>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="wizardsVaultDisplayedColumns; sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: wizardsVaultDisplayedColumns;"></tr>
-        </table> -->
+      class="main-container"
+      *ngIf="{
+        daily: daily$ | async,
+        weekly: weekly$ | async,
+        special: special$ | async
+      } as data">
+    <mat-progress-bar
+        mode="indeterminate"
+        *ngIf="!data.daily || !data.weekly || !data.special">
+    </mat-progress-bar>
+    <div
+        class="tables"
+        *ngIf="data.daily && data.weekly && data.special">
+      <div class="title-table-container" *ngIf="data.daily">
+        <h2 class="title">Daily</h2>
+        <div class="table-container">
+          <gw-wizards-vault-table [dataSource]="data.daily"></gw-wizards-vault-table>
+        </div>
       </div>
-    </div>
 
-    <div class="title-table-container" *ngIf="data.weekly">
-      <h2 class="title">Weekly</h2>
-
-      <div class="table-container">
-        <gw-wizards-vault-table [dataSource]="data.weekly"></gw-wizards-vault-table>
+      <div class="title-table-container" *ngIf="data.weekly">
+        <h2 class="title">Weekly</h2>
+        <div class="table-container">
+          <gw-wizards-vault-table [dataSource]="data.weekly"></gw-wizards-vault-table>
+        </div>
       </div>
-    </div>
 
-    <div class="title-table-container" *ngIf="data.special">
-      <h2 class="title">Special</h2>
-
-      <div class="table-container">
-        <gw-wizards-vault-table [dataSource]="data.special"></gw-wizards-vault-table>
+      <div class="title-table-container" *ngIf="data.special">
+        <h2 class="title">Special</h2>
+        <div class="table-container">
+          <gw-wizards-vault-table [dataSource]="data.special"></gw-wizards-vault-table>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</ng-template>

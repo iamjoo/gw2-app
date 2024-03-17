@@ -1,8 +1,5 @@
-<div class="container" *ngIf="needsKey$ | async; else searchView">
-  <h2 class="title">This page requires an API key</h2>
-  <button (click)="setApiKey()" color="primary" mat-button>
-    Enter an API key
-  </button>
+<div class="container" *ngIf="(apiKeyPresent$ | async) === false; else searchView">
+  <gw-add-api-key></gw-add-api-key>
 </div>
 
 <ng-template #searchView>

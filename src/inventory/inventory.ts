@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
@@ -10,7 +10,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {combineLatest, EMPTY, Observable, ReplaySubject} from 'rxjs';
 import {debounceTime, filter, map, shareReplay, startWith, take, takeUntil, withLatestFrom} from 'rxjs/operators';
 
-import {ApiKeyService} from '../api_key/api_key';
+import {AddApiKey} from '../api_key/add_api_key';
+import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {ApiService} from '../api/api';
 import {ItemApiObj} from '../api/models';
 import {ItemPrice} from './item_price';
@@ -46,6 +47,7 @@ function sortByName(a: ItemApiObj, b: ItemApiObj): number {
   templateUrl: './inventory.ng.html',
   styleUrls: ['./inventory.scss'],
   imports: [
+    AddApiKey,
     CommonModule,
     ItemPrice,
     MatAutocompleteModule,
@@ -64,7 +66,6 @@ export class Inventory implements OnInit, OnDestroy {
 
   readonly allItems$ = this.itemService.getAllCharacterItems();
   readonly myControl = new FormControl<string|ItemApiObj>('');
-  readonly needsKey$ = this.createNeedsKey();
 
   filteredItems!: Observable<ItemApiObj[]>;
   selectedItem$: Observable<ItemApiObj>|null = null;
@@ -72,7 +73,7 @@ export class Inventory implements OnInit, OnDestroy {
   characterCounts$: Observable<CharacterCounter[]>|null = null;
 
   constructor(
-      private readonly apiKeyService: ApiKeyService,
+      @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
       private readonly apiService: ApiService,
       private readonly itemService: ItemService,
   ) {
@@ -139,16 +140,6 @@ export class Inventory implements OnInit, OnDestroy {
 
   getItemName(item: ItemApiObj): string {
     return item?.name ?? '';
-  }
-
-  setApiKey(): void {
-    this.apiKeyService.setApiKey();
-  }
-
-  private createNeedsKey(): Observable<boolean> {
-    return this.apiKeyService.apiKey$.pipe(
-        map((apiKey) => apiKey === null),
-    );
   }
 
   private setupAllItemCounts(): void {

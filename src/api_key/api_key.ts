@@ -11,9 +11,7 @@ function getApiKey(): string | null {
   return localStorage.getItem(STORAGE_KEY);
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ApiKeyService {
   private readonly apiKeyInternal$ = new BehaviorSubject<string | null>(
     getApiKey()
