@@ -6,10 +6,11 @@ import {combineLatest, Observable, of as observableOf, pipe} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
 
 import {AddApiKey} from '../api_key/add_api_key';
-import {AchievementApiObj, DailyAchievementApiObj, DailyAchievementsApiObj, WizardsVaultProgressApiObj, WizardsVaultSpecialProgressApiObj} from '../api/models';
+import {AchievementApiObj, DailyAchievementApiObj, DailyAchievementsApiObj} from '../api/models';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {ApiService} from '../api/api';
 import {FRACTAL_LEVELS_MAP} from '../util/fractal_levels';
+import {WizardsVaultProgressApiObj, WizardsVaultService, WizardsVaultSpecialProgressApiObj} from '../api/wizards_vault_service';
 import {WizardsVaultDataSourceObject, WizardsVaultTable} from './wizards_vault_table';
 
 interface DailyDataSourceObject {
@@ -80,22 +81,23 @@ export class WizardsVault {
   constructor(
       @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
       private readonly apiService: ApiService,
+      private readonly wizardsVaultService: WizardsVaultService,
   ) {}
 
   private createWizardsVaultDailyData(): Observable<WizardsVaultDataSourceObject[]> {
-    return this.apiService.getWizardsVaultDaily().pipe(
+    return this.wizardsVaultService.getWizardsVaultDaily().pipe(
         createWizardsVaultDataSourceObject(),
         );
   }
 
   private createWizardsVaultWeeklyData(): Observable<WizardsVaultDataSourceObject[]> {
-    return this.apiService.getWizardsVaultWeekly().pipe(
+    return this.wizardsVaultService.getWizardsVaultWeekly().pipe(
         createWizardsVaultDataSourceObject(),
         );
   }
 
   private createWizardsVaultSpecialData(): Observable<WizardsVaultDataSourceObject[]> {
-    return this.apiService.getWizardsVaultSpecial().pipe(
+    return this.wizardsVaultService.getWizardsVaultSpecial().pipe(
         createWizardsVaultDataSourceObject(),
         );
   }
