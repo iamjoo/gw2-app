@@ -1,7 +1,9 @@
-@import '../styles';
-
 .mat-column-key {
   width: 150px;
+}
+
+.mat-column-value {
+  width: 300px;
 }
 
 .container {
@@ -16,7 +18,7 @@
   max-height: 100%;
   overflow-y: auto;
 
-  &:nth-child(n + 1) {
+  &:not(:first-child) {
     margin-left: 20px;
   }
 }
@@ -29,8 +31,7 @@
 }
 
 .title {
-  @include use-font(title);
-  margin-bottom:  20px;
+  margin-bottom: 20px;
 }
 
 .title-table-container {
@@ -40,4 +41,9 @@
   flex-direction: column;
   height: 100%;
   padding: 20px;
+}
+
+.value {
+  padding: 10px;
+  white-space: pre;
 }

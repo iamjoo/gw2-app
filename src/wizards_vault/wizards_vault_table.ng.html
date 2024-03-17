@@ -1,0 +1,29 @@
+<table [dataSource]="dataSource" mat-table>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Objective</th>
+    <td mat-cell *matCellDef="let element">
+      <div>{{element.name}}</div>
+      <div class="progress" *ngIf="element.total > 1">
+        {{element.current}} / {{element.total}}
+      </div>
+      <div class="bar">
+        <mat-progress-bar [value]="element.progress"></mat-progress-bar>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acclaim">
+    <th mat-header-cell *matHeaderCellDef>Acclaim</th>
+    <td mat-cell *matCellDef="let element">
+      <div class="acclaim">
+        <div>{{element.acclaim}}</div>
+        <div *ngIf="element.current >= element.total">
+          <mat-icon>done</mat-icon>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

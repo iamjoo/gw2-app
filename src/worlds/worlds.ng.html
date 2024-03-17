@@ -1,8 +1,8 @@
 <div class="container" *ngIf="{source: data$ | async} as data">
   <mat-progress-bar mode="indeterminate" *ngIf="!data.source"></mat-progress-bar>
   <div class="title-table-container" *ngIf="data.source">
-    <div class="title">Worlds</div>
-    <div class="coming-soon">WvW matchups coming soon!</div>
+    <h2 class="title">Worlds</h2>
+    <h4 class="coming-soon">WvW matchups coming soon!</h4>
 
     <div class="table-container">
       <table [dataSource]="data.source" mat-table>

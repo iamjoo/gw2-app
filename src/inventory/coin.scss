@@ -1,12 +1,11 @@
-@import '../styles';
-
 .coin {
   align-items: center;
   display: flex;
   flex-direction: row;
 
   &.large-font span {
-    @include use-font(subheading-2);
+    font-size: 16px;
+    line-height: 28px;
   }
 }
 

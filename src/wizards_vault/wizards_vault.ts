@@ -1,7 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {Component} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatTableModule} from '@angular/material/table';
 
 import {combineLatest, Observable, of as observableOf, pipe} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
@@ -9,6 +8,7 @@ import {map, switchMap, tap} from 'rxjs/operators';
 import {ApiService} from '../api/api';
 import {AchievementApiObj, DailyAchievementApiObj, DailyAchievementsApiObj, WizardsVaultProgressApiObj, WizardsVaultSpecialProgressApiObj} from '../api/models';
 import {FRACTAL_LEVELS_MAP} from '../util/fractal_levels';
+import {WizardsVaultDataSourceObject, WizardsVaultTable} from './wizards_vault_table';
 
 interface DailyDataSourceObject {
   readonly id: number;
@@ -17,18 +17,33 @@ interface DailyDataSourceObject {
   readonly fractalName?: string;
 }
 
-interface WizardsVaultDataSourceObject {
-  readonly name: string;
-  readonly acclaim: number;
-  readonly current: number;
-  readonly total: number;
-  readonly progress: number;
+type WizardsVaultApiObj = WizardsVaultProgressApiObj|WizardsVaultSpecialProgressApiObj;
+
+function isDailyOrWeekly(apiObj: WizardsVaultApiObj): apiObj is WizardsVaultProgressApiObj {
+  return (apiObj as WizardsVaultProgressApiObj).meta_progress_current != undefined;
 }
 
 function createWizardsVaultDataSourceObject() {
   return pipe(
-      map((progress: WizardsVaultProgressApiObj|WizardsVaultSpecialProgressApiObj) => {
-        return progress.objectives.map((objective) => {
+      map((progress: WizardsVaultApiObj) => {
+        const dataSourceObjects = [];
+
+        // Add meta-progress for daily and weekly objectives
+        if (isDailyOrWeekly(progress)) {
+          const metaPercentProgress =
+              progress.meta_progress_current / progress.meta_progress_complete;
+          const metaProgress = 100 * metaPercentProgress;
+
+          dataSourceObjects.push({
+            name: 'Overall',
+            acclaim: progress.meta_reward_astral,
+            current: progress.meta_progress_current,
+            total: progress.meta_progress_complete,
+            progress: metaProgress,
+          });
+        }
+
+        const objectives = progress.objectives.map((objective) => {
           const percentProgress =
               objective.progress_current / objective.progress_complete;
           const progress = 100 * percentProgress;
@@ -41,6 +56,8 @@ function createWizardsVaultDataSourceObject() {
             progress,
           }
         }).sort((a, b) => a.progress - b.progress);
+
+        return dataSourceObjects.concat(objectives);
       }),
       );
 }
@@ -49,38 +66,32 @@ function createWizardsVaultDataSourceObject() {
   selector: 'gw-wizards-vault',
   templateUrl: './wizards_vault.ng.html',
   styleUrls: ['./wizards_vault.scss'],
-  imports: [CommonModule, MatProgressBarModule, MatTableModule],
+  imports: [CommonModule, MatProgressBarModule, WizardsVaultTable],
   standalone: true,
 })
 export class WizardsVault {
 
-  readonly wizardsVaultDaily$ = this.createWizardsVaultDailyData();
-  readonly wizardsVaultWeekly$ = this.createWizardsVaultWeeklyData();
-  readonly wizardsVaultSpecial$ = this.createWizardsVaultSpecialData();
-  readonly wizardsVaultDisplayedColumns = ['name', 'acclaim'];
+  readonly daily$ = this.createWizardsVaultDailyData();
+  readonly weekly$ = this.createWizardsVaultWeeklyData();
+  readonly special$ = this.createWizardsVaultSpecialData();
 
-  constructor(
-      private readonly apiService: ApiService,
-  ) {}
+  constructor(private readonly apiService: ApiService) {}
 
   private createWizardsVaultDailyData(): Observable<WizardsVaultDataSourceObject[]> {
     return this.apiService.getWizardsVaultDaily().pipe(
         createWizardsVaultDataSourceObject(),
-        tap((a) => console.log(a)),
         );
   }
 
   private createWizardsVaultWeeklyData(): Observable<WizardsVaultDataSourceObject[]> {
     return this.apiService.getWizardsVaultWeekly().pipe(
         createWizardsVaultDataSourceObject(),
-        tap((a) => console.log(a)),
         );
   }
 
   private createWizardsVaultSpecialData(): Observable<WizardsVaultDataSourceObject[]> {
     return this.apiService.getWizardsVaultSpecial().pipe(
         createWizardsVaultDataSourceObject(),
-        tap((a) => console.log(a)),
         );
   }
 

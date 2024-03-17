@@ -23,12 +23,8 @@
   width: 300px;
 
   & p {
-    @include use-font(subheading-2);
+    margin-bottom: 12px;
   }
-}
-
-.item-description {
-  @include use-font(caption);
 }
 
 .item-icon-row {
@@ -41,7 +37,7 @@
 }
 
 .item-name {
-  @include use-font(headline);
+  margin-bottom: 0;
 }
 
 .item-price-row {
@@ -56,8 +52,7 @@
 }
 
 .title {
-  @include use-font(title);
-  margin-bottom:  20px;
+  margin-bottom: 20px;
 }
 
 /* Item rarity colors */

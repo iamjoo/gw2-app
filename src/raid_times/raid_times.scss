@@ -1,8 +1,6 @@
-@use '@angular/material' as mat;
-@import '../styles';
-
 .beat-goal {
-/*  color: mat.mat-color(mat.$mat-green, 400);*/
+  /* green 400*/
+  color: #66BB6A;
 }
 
 .buttons {
@@ -53,7 +51,8 @@
 }
 
 .new-record {
-/*  color: mat.mat-color(mat.$mat-red, 400);*/
+  /* red 400*/
+  color: #EF5350;
 }
 
 .table-container {
@@ -62,7 +61,7 @@
 }
 
 .title {
-  @include use-font(title);
+  margin-bottom: 0;
   margin-right: 20px;
 }
 
@@ -76,7 +75,7 @@
 }
 
 .wing-name {
-  @include use-font(subheading-2);
+  margin-bottom: 0;
   margin-left: 15px;
 }
 

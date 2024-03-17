@@ -1,101 +1,68 @@
 <div
     class="container"
     *ngIf="{
-      wizardsVaultDaily: wizardsVaultDaily$ | async,
-      wizardsVaultWeekly: wizardsVaultWeekly$ | async,
-      wizardsVaultSpecial: wizardsVaultSpecial$ | async
+      daily: daily$ | async,
+      weekly: weekly$ | async,
+      special: special$ | async
     } as data">
   <mat-progress-bar
       mode="indeterminate"
-      *ngIf="!data.wizardsVaultDaily || !data.wizardsVaultWeekly || !data.wizardsVaultSpecial">
+      *ngIf="!data.daily || !data.weekly || !data.special">
   </mat-progress-bar>
   <div
       class="tables"
-      *ngIf="data.wizardsVaultDaily && data.wizardsVaultWeekly && data.wizardsVaultSpecial">
-    <div class="title-table-container" *ngIf="data.wizardsVaultDaily">
-      <div class="title">Daily</div>
+      *ngIf="data.daily && data.weekly && data.special">
+    <div class="title-table-container" *ngIf="data.daily">
+      <h2 class="title">Daily</h2>
 
       <div class="table-container">
-        <table [dataSource]="data.wizardsVaultDaily" mat-table>
+        <gw-wizards-vault-table [dataSource]="data.daily"></gw-wizards-vault-table>
+
+        <!-- <table [dataSource]="data.daily" mat-table>
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let element">
               <div>{{element.name}}</div>
-              <div *ngIf="element.total > 1">
+              <div class="progress" *ngIf="element.total > 1">
                 {{element.current}} / {{element.total}}
               </div>
-              <mat-progress-bar [value]="element.progress"></mat-progress-bar>
+              <div class="bar">
+                <mat-progress-bar [value]="element.progress"></mat-progress-bar>
+              </div>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="acclaim">
             <th mat-header-cell *matHeaderCellDef>Acclaim</th>
             <td mat-cell *matCellDef="let element">
-              <div>{{element.acclaim}}</div>
+              <div class="acclaim">
+                <div>{{element.acclaim}}</div>
+                <div *ngIf="element.current === element.total">
+                  <mat-icon>done</mat-icon>
+                </div>
+              </div>
             </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="wizardsVaultDisplayedColumns; sticky: true"></tr>
           <tr mat-row *matRowDef="let row; columns: wizardsVaultDisplayedColumns;"></tr>
-        </table>
+        </table> -->
       </div>
     </div>
 
-    <div class="title-table-container" *ngIf="data.wizardsVaultWeekly">
-      <div class="title">Weekly</div>
+    <div class="title-table-container" *ngIf="data.weekly">
+      <h2 class="title">Weekly</h2>
 
       <div class="table-container">
-        <table [dataSource]="data.wizardsVaultWeekly" mat-table>
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td mat-cell *matCellDef="let element">
-              <div>{{element.name}}</div>
-              <div *ngIf="element.total > 1">
-                {{element.current}} / {{element.total}}
-              </div>
-              <mat-progress-bar [value]="element.progress"></mat-progress-bar>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="acclaim">
-            <th mat-header-cell *matHeaderCellDef>Acclaim</th>
-            <td mat-cell *matCellDef="let element">
-              <div>{{element.acclaim}}</div>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="wizardsVaultDisplayedColumns; sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: wizardsVaultDisplayedColumns;"></tr>
-        </table>
+        <gw-wizards-vault-table [dataSource]="data.weekly"></gw-wizards-vault-table>
       </div>
     </div>
 
-    <div class="title-table-container" *ngIf="data.wizardsVaultSpecial">
-      <div class="title">Special</div>
+    <div class="title-table-container" *ngIf="data.special">
+      <h2 class="title">Special</h2>
 
       <div class="table-container">
-        <table [dataSource]="data.wizardsVaultSpecial" mat-table>
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td mat-cell *matCellDef="let element">
-              <div>{{element.name}}</div>
-              <div *ngIf="element.total > 1">
-                {{element.current}} / {{element.total}}
-              </div>
-              <mat-progress-bar [value]="element.progress"></mat-progress-bar>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="acclaim">
-            <th mat-header-cell *matHeaderCellDef>Acclaim</th>
-            <td mat-cell *matCellDef="let element">
-              <div>{{element.acclaim}}</div>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="wizardsVaultDisplayedColumns; sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: wizardsVaultDisplayedColumns;"></tr>
-        </table>
+        <gw-wizards-vault-table [dataSource]="data.special"></gw-wizards-vault-table>
       </div>
     </div>
   </div>

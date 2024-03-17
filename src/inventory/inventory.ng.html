@@ -1,5 +1,5 @@
 <div class="container" *ngIf="needsKey$ | async; else searchView">
-  <div class="title">This page requires an API key</div>
+  <h2 class="title">This page requires an API key</h2>
   <button (click)="setApiKey()" color="primary" mat-button>
     Enter an API key
   </button>
@@ -9,7 +9,7 @@
   <div *ngIf="{isReady: allItems$ | async} as data">
     <mat-progress-bar mode="indeterminate" *ngIf="!data.isReady"></mat-progress-bar>
     <div class="container" *ngIf="data.isReady">
-      <div class="title">Inventory Search</div>
+      <h2 class="title">Inventory Search</h2>
 
       <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption [displayWith]="getItemName">
         <mat-option *ngFor="let item of filteredItems | async" [value]="item">
@@ -34,15 +34,15 @@
               [class]="getItemClass(selectedItem)"
               [src]="selectedItem.icon">
           <div class="item-info">
-            <div class="item-name">{{selectedItem.name}}</div>
-            <div class="item-description">{{selectedItem.description}}</div>
+            <div class="item-name mat-headline-5">{{selectedItem.name}}</div>
+            <div class="mat-caption">{{selectedItem.description}}</div>
           </div>
         </div>
         <div class="item-count-price" *ngIf="selectedItemCounts$ | async as itemCount">
           <div class="item-count-row">
-            <p>You have <strong>{{itemCount.count | number}}</strong> total</p>
+            <p class="mat-subtitle-1">You have <strong>{{itemCount.count | number}}</strong> total</p>
             <div class="character-counts" *ngIf="characterCounts$ | async as characterCounts">
-              <p *ngFor="let characterCount of characterCounts">
+              <p class="mat-subtitle-1" *ngFor="let characterCount of characterCounts">
                 {{characterCount.name}} has {{characterCount.count | number}}
               </p>
             </div>

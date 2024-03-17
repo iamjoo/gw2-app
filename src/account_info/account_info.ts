@@ -110,7 +110,7 @@ export class AccountInfo {
       value: (account.daily_ap + account.monthly_ap).toLocaleString(),
     });
     dataArray.push({key: 'Fractal Level', value: account.fractal_level});
-    dataArray.push({key: 'Guilds', value: guildNames.join(', ')});
+    dataArray.push({key: 'Guilds', value: guildNames.join('\r\n')});
 
     return dataArray;
   }

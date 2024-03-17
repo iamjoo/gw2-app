@@ -1,6 +1,3 @@
-@use '@angular/material' as mat;
-@import '../styles';
-
 .mat-column-name {
   width: 264px;
 }
@@ -10,8 +7,7 @@
 }
 
 .coming-soon {
-  @include use-font(subheading-1);
-  margin-bottom:  20px;
+  margin-bottom: 20px;
 }
 
 .container {
@@ -24,8 +20,7 @@
 }
 
 .title {
-  @include use-font(title);
-  margin-bottom:  20px;
+  margin-bottom: 20px;
 }
 
 .title-table-container {
@@ -50,21 +45,26 @@
 /* Population colors */
 
 .low {
-/*  color: mat.mat-color(mat.$mat-light-green, 600);*/
+  /* light-green 600*/
+  color: #7CB342;
 }
 
 .medium {
-/*  color: mat.mat-color(mat.$mat-light-green, 600);*/
+  /* light-green 600*/
+  color: #7CB342;
 }
 
 .high {
-/*  color: mat.mat-color(mat.$mat-lime, 600);*/
+  /* lime 600*/
+  color: #C0CA33;
 }
 
 .very-high {
-/*  color: mat.mat-color(mat.$mat-orange, 600);*/
+  /* orange 600*/
+  color: #FB8C00;
 }
 
 .full {
-/*  color: mat.mat-color(mat.$mat-red, 600);*/
+  /* red 600*/
+  color: #E53935;
 }

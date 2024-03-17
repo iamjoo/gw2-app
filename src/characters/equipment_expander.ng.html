@@ -7,19 +7,19 @@
         {{equipments.length}} Pieces of Equipment
       </span>
       <ng-template #openPanel>
-        <span
+        <h2
             class="open-panel-title"
             [matBadge]="equipments.length"
             matBadgeColor="accent"
             matBadgeOverlap="false">
           Equipment
-        </span>
+        </h2>
       </ng-template>
     </mat-panel-title>
   </mat-expansion-panel-header>
   <div class="container" *ngIf="equipment$ | async as equipment">
     <div class="equipment-section mining-section">
-      <p class="section-title">Mining Tools</p>
+      <h3>Mining Tools</h3>
       <div class="item-row" *ngIf="equipment.axe as axe">
         <p>Axe</p>
         <p>{{axe.name}}</p>
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="equipment-section armor-section">
-      <p class="section-title">Armor</p>
+      <h3>Armor</h3>
       <div class="item-row">
         <p>Helm</p>
         <p *ngIf="equipment.helm as helm">
@@ -85,7 +85,7 @@
       </div>
     </div>
     <div class="equipment-section weapons-section">
-      <p class="section-title">Weapons</p>
+      <h3>Weapons</h3>
       <div class="item-row">
         <p>Weapon Set 1</p>
         <p *ngIf="equipment.weaponA1 as weaponA1">
@@ -115,7 +115,7 @@
       </div>
     </div>
     <div class="equipment-section trinkets-section">
-      <p class="section-title">Trinkets</p>
+      <h3>Trinkets</h3>
       <div class="item-row">
         <p>Amulet</p>
         <p *ngIf="equipment.amulet as amulet">

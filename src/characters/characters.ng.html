@@ -9,7 +9,7 @@
   <div class="main-container" *ngIf="{source: data$ | async} as data">
     <mat-progress-bar mode="indeterminate" *ngIf="!data.source"></mat-progress-bar>
     <div class="title-table-container" *ngIf="data.source">
-      <div class="title">Characters</div>
+      <h2 class="title">Characters</h2>
 
       <div class="table-container">
         <table [dataSource]="data.source" mat-table>
@@ -93,7 +93,7 @@
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let element">
               <div>{{element.name}}</div>
-              <div class="character-title">{{element.title | async}}</div>
+              <div class="character-title mat-caption">{{element.title | async}}</div>
             </td>
           </ng-container>
 

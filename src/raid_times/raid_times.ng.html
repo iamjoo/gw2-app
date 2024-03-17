@@ -8,7 +8,7 @@
       *ngIf="auth.isMissingKeys || !auth.isAuthorized || auth.gapiStatus !== GapiStatus.READY; else tableView">
     <ng-container *ngIf="auth.gapiStatus !== GapiStatus.ERROR">
       <div class="container">
-        <div class="title">Provide a Google API key and client ID then authorize Google</div>
+        <h2 class="title">Provide a Google API key and client ID then authorize Google</h2>
         <button (click)="setApiKeys()" color="primary" mat-button>
           Enter API key and client ID
         </button>
@@ -25,7 +25,7 @@
     <ng-container *ngIf="auth.gapiStatus === GapiStatus.ERROR">
       <div class="container gapi-error">
         <mat-icon color="warn">error</mat-icon>
-        <div class="title">There was an error loading GAPI</div>
+        <h2 class="title">There was an error loading GAPI</h2>
       </div>
     </ng-container>
   </ng-container>
@@ -40,7 +40,7 @@
       <mat-progress-bar mode="indeterminate" *ngIf="!data.source"></mat-progress-bar>
       <div class="title-table-container" *ngIf="data.source">
         <div class="header">
-          <div class="title">Rush PoF Clear Times</div>
+          <h2 class="title">Rush PoF Clear Times</h2>
           <div class="buttons">
             <button
                 (click)="refreshData()"
@@ -71,7 +71,7 @@
                 <ng-container *ngIf="element.isWing">
                   <div class="wing-row">
                     <img [src]="wingIcon">
-                    <div class="wing-name">{{element.encounter}}</div>
+                    <h3 class="wing-name">{{element.encounter}}</h3>
                   </div>
                 </ng-container>
                 <ng-container *ngIf="!element.isWing">

@@ -1,15 +1,3 @@
-@import '../styles';
-
-.mat-column-type {
-  width: 94px;
-}
-
-.mat-column-name {
-  padding-left: 10px;
-  padding-right: 10px;
-  width: 334px;
-}
-
 .container {
   height: 100%;
 }
@@ -26,7 +14,6 @@
 }
 
 .title {
-  @include use-font(title);
   margin-bottom:  20px;
 }
 

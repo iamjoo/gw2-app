@@ -1,13 +1,3 @@
-@import '../styles';
-
-.label {
-  @include use-font(subheading-2);
-}
-
-.not-tradeable {
-  @include use-font(subheading-1);
-}
-
 .title {
-  @include use-font(subheading-2);
+  margin-bottom: 12px;
 }
