@@ -8,11 +8,6 @@ export interface SharedInventoryApiObj {
   readonly count: number;
 }
 
-export interface TitleApiObj {
-  readonly id: number;
-  readonly name: string;
-}
-
 export interface DailyAchievementsApiObj {
   readonly pve: DailyAchievementApiObj[];
   readonly pvp: DailyAchievementApiObj[];

@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {DailyAchievementsApiObj, ItemApiObj, MaterialApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
+import {DailyAchievementsApiObj, ItemApiObj, MaterialApiObj, SharedInventoryApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -17,8 +17,6 @@ enum Path {
   INVENTORY = 'account/inventory',
   ITEMS = 'items',
   MATERIALS = 'account/materials',
-  TITLES = 'titles',
-  WVW_RANKS = 'wvw/ranks',
 }
 
 @Injectable({providedIn: 'root'})
@@ -77,10 +75,6 @@ export class ApiService {
 
   getSharedInventory(): Observable<SharedInventoryApiObj[]> {
     return this.sharedInventory$;
-  }
-
-  getTitle(id: number): Observable<TitleApiObj> {
-    return this.http.get<TitleApiObj>(`${ROOT_URL}${Path.TITLES}/${id}`);
   }
 
   private createDailyAchievements(): Observable<DailyAchievementsApiObj> {
