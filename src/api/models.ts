@@ -22,18 +22,6 @@ export interface BankApiObj {
   readonly count: number;
 }
 
-export interface WalletApiObj {
-  readonly id: number; // use /v2/currencies
-  readonly value: number;
-}
-
-export interface CurrencyApiObj {
-  readonly id: number;
-  readonly name: string;
-  readonly description: string;
-  readonly icon: string;
-}
-
 export interface SharedInventoryApiObj {
   readonly id: number;
   readonly count: number;

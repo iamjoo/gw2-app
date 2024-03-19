@@ -6,8 +6,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {ApiService} from '../api/api';
 import {Coin} from '../inventory/coin';
+import {CurrencyService} from '../api/currency_service';
+import {WalletService} from '../api/wallet_service';
 
 interface DataSourceObject {
   readonly name: string;
@@ -28,12 +29,15 @@ export class Wallet {
   readonly data$ = this.createData();
   readonly displayedColumns = ['currency', 'amount'];
 
-  constructor(private readonly apiService: ApiService) {}
+  constructor(
+      private readonly currencyService: CurrencyService,
+      private readonly walletService: WalletService,
+  ) {}
 
   private createData(): Observable<DataSourceObject[]> {
     return combineLatest([
-      this.apiService.getCurrenciesMap(),
-      this.apiService.getWallet(),
+      this.currencyService.getCurrenciesMap(),
+      this.walletService.getWallet(),
     ]).pipe(
       map(([currencyMap, wallet]) => {
         const data: DataSourceObject[] = [];
