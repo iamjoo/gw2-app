@@ -23,7 +23,6 @@ enum Path {
   GUILD = 'guild',
   INVENTORY = 'account/inventory',
   ITEMS = 'items',
-  MAP_CHESTS_COMPLETED = 'account/mapchests',
   MASTERY_POINTS = 'account/mastery/points',
   MATERIALS = 'account/materials',
   PRICES = 'commerce/prices',
@@ -44,7 +43,6 @@ export class ApiService {
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly dailyAchievementsTomorrow$ = this.createDailyAchievementsTomorrow();
   private readonly files$ = this.createFilesMap();
-  private readonly mapChestsCompleted$ = this.createMapChestsCompleted();
   private readonly masteryPoints$ = this.createMasteryPoints();
   private readonly materials$ = this.createMaterials();
   private readonly sharedInventory$ = this.createSharedInventory();
@@ -131,10 +129,6 @@ export class ApiService {
     return combineLatest(itemRequests$).pipe(
         map((items) => items.flat(1)),
     );
-  }
-
-  getMapChestsCompleted(): Observable<string[]> {
-    return this.mapChestsCompleted$;
   }
 
   getMasteryPoints(): Observable<MasteryPointsApiObj> {
@@ -254,23 +248,6 @@ export class ApiService {
         }),
         shareReplay({bufferSize: 1, refCount: false})
       );
-  }
-
-  private createMapChestsCompleted(): Observable<string[]> {
-    return this.apiKeyService.apiKey$.pipe(
-      switchMap(apiKey => {
-        if (apiKey === null) {
-          return EMPTY;
-        }
-
-        const params = {access_token: apiKey};
-        return this.http.get<string[]>(
-          `${ROOT_URL}${Path.MAP_CHESTS_COMPLETED}`,
-          {params}
-        );
-      }),
-      shareReplay({bufferSize: 1, refCount: false})
-    );
   }
 
   private createMasteryPoints(): Observable<MasteryPointsApiObj> {

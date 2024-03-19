@@ -6,7 +6,7 @@ import {MatTableModule} from '@angular/material/table';
 import {combineLatest, Observable, of as observableOf, pipe} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
 
-import {ApiService} from '../api/api';
+import {MapChestsService} from '../api/map_chests_service';
 
 type MapChestName = 'Verdant Brink'|'Auric Basin'|'Tangled Depths'|
     'Dragon\'s Stand';
@@ -82,10 +82,10 @@ export class MapChests {
   readonly data$ = this.createData();
   readonly displayedColumns = ['name', 'reward'];
 
-  constructor(private readonly apiService: ApiService) {}
+  constructor(private readonly mapChestsService: MapChestsService) {}
 
   private createData(): Observable<DataSourceObject[]> {
-    return this.apiService.getMapChestsCompleted().pipe(
+    return this.mapChestsService.getMapChestsCompleted().pipe(
         map((chestsCompleted) => {
           return ['vb', 'ab', 'td', 'ds'].map((id) => {
             return createMapChestDataSourceObject(id, chestsCompleted);
