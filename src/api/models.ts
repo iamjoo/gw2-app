@@ -11,16 +11,6 @@ export interface AccountApiObj {
   readonly wvw_rank: number;
 }
 
-export interface MasteryPointsApiObj {
-  readonly totals: MasteryApiObj[];
-}
-
-interface MasteryApiObj {
-  readonly region: string;
-  readonly spent: number;
-  readonly earned: number;
-}
-
 export interface AchievementApiObj {
   readonly id: number;
   readonly icon?: string;

@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, WalletApiObj} from './models';
+import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, WalletApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -23,7 +23,6 @@ enum Path {
   GUILD = 'guild',
   INVENTORY = 'account/inventory',
   ITEMS = 'items',
-  MASTERY_POINTS = 'account/mastery/points',
   MATERIALS = 'account/materials',
   PRICES = 'commerce/prices',
   TITLES = 'titles',
@@ -43,7 +42,6 @@ export class ApiService {
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly dailyAchievementsTomorrow$ = this.createDailyAchievementsTomorrow();
   private readonly files$ = this.createFilesMap();
-  private readonly masteryPoints$ = this.createMasteryPoints();
   private readonly materials$ = this.createMaterials();
   private readonly sharedInventory$ = this.createSharedInventory();
   private readonly wallet$ = this.createWallet();
@@ -129,10 +127,6 @@ export class ApiService {
     return combineLatest(itemRequests$).pipe(
         map((items) => items.flat(1)),
     );
-  }
-
-  getMasteryPoints(): Observable<MasteryPointsApiObj> {
-    return this.masteryPoints$;
   }
 
   getMaterials(): Observable<MaterialApiObj[]> {
@@ -248,23 +242,6 @@ export class ApiService {
         }),
         shareReplay({bufferSize: 1, refCount: false})
       );
-  }
-
-  private createMasteryPoints(): Observable<MasteryPointsApiObj> {
-    return this.apiKeyService.apiKey$.pipe(
-      switchMap(apiKey => {
-        if (apiKey === null) {
-          return EMPTY;
-        }
-
-        const params = {access_token: apiKey};
-        return this.http.get<MasteryPointsApiObj>(
-          `${ROOT_URL}${Path.MASTERY_POINTS}`,
-          {params}
-        );
-      }),
-      shareReplay({bufferSize: 1, refCount: false})
-    );
   }
 
   private createMaterials(): Observable<MaterialApiObj[]> {

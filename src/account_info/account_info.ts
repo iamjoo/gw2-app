@@ -7,11 +7,12 @@ import {MatTableModule} from '@angular/material/table';
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {AccountApiObj, MasteryPointsApiObj} from '../api/models';
+import {AccountApiObj} from '../api/models';
 import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {ApiService} from '../api/api';
 import {MapChests} from './map_chests';
+import {MasteryPointsApiObj, MasteryPointsService} from '../api/mastery_points_service';
 import {PvpApiObj, PvpService} from '../api/pvp_service';
 import {Wallet} from './wallet';
 import {WorldApiObj, WorldService} from '../api/world_service';
@@ -45,6 +46,7 @@ export class AccountInfo {
   constructor(
     @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
     private readonly apiService: ApiService,
+    private readonly masteryPointsService: MasteryPointsService,
     private readonly pvpService: PvpService,
     private readonly worldService: WorldService,
   ) {}
@@ -52,7 +54,7 @@ export class AccountInfo {
   private createData(): Observable<DataSourceObject[]> {
     return combineLatest([
       this.apiService.getAccount(),
-      this.apiService.getMasteryPoints(),
+      this.masteryPointsService.getMasteryPoints(),
       this.pvpService.getPvpStats(),
       this.worldService.getWorlds(),
     ]).pipe(
