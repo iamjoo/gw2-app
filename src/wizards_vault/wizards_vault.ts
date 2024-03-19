@@ -7,9 +7,8 @@ import {map, switchMap, tap} from 'rxjs/operators';
 
 import {AchievementsService, AchievementApiObj} from '../api/achievements_service';
 import {AddApiKey} from '../api_key/add_api_key';
-import {DailyAchievementApiObj, DailyAchievementsApiObj} from '../api/models';
+import {DailyAchievementApiObj, DailyAchievementsApiObj, DailyAchievementsService} from '../api/daily_achievements_service';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
-import {ApiService} from '../api/api';
 import {FRACTAL_LEVELS_MAP} from '../util/fractal_levels';
 import {WizardsVaultProgressApiObj, WizardsVaultService, WizardsVaultSpecialProgressApiObj} from '../api/wizards_vault_service';
 import {WizardsVaultDataSourceObject, WizardsVaultTable} from './wizards_vault_table';
@@ -82,7 +81,7 @@ export class WizardsVault {
   constructor(
       private readonly achievementsService: AchievementsService,
       @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
-      private readonly apiService: ApiService,
+      private readonly dailyAchievementsService: DailyAchievementsService,
       private readonly wizardsVaultService: WizardsVaultService,
   ) {}
 
@@ -106,14 +105,14 @@ export class WizardsVault {
 
   // Keeping in case a daily fractals endpoint returns
   private createDailiesData(): Observable<DailyDataSourceObject[]> {
-    return this.apiService.getDailyAchievements().pipe(
+    return this.dailyAchievementsService.getDailyAchievements().pipe(
         this.createDailyDataSourceObject(),
     );
   }
 
   // Keeping in case a daily fractals endpoint returns
   private createDailiesTomorrowData(): Observable<DailyDataSourceObject[]> {
-    return this.apiService.getDailyAchievementsTomorrow().pipe(
+    return this.dailyAchievementsService.getDailyAchievementsTomorrow().pipe(
         this.createDailyDataSourceObject(),
     );
   }
