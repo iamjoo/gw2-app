@@ -7,13 +7,15 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
-import {combineLatest, EMPTY, Observable, ReplaySubject} from 'rxjs';
-import {debounceTime, filter, map, shareReplay, startWith, take, takeUntil, withLatestFrom} from 'rxjs/operators';
+import {combineLatest, EMPTY, Observable, of as observableOf, ReplaySubject} from 'rxjs';
+import {debounceTime, filter, map, shareReplay, startWith, switchMap, take, takeUntil, withLatestFrom} from 'rxjs/operators';
 
+import {AccountService} from '../api/account_service';
 import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {BankService} from '../api/bank_service';
 import {CharactersService} from '../api/characters_service';
+import {GuildApiObj, GuildService, GuildVaultApiObj} from '../api/guild_service';
 import {ItemApiObj} from '../api/item_api_service';
 import {ItemPrice} from './item_price';
 import {ItemService} from '../item/item_service';
@@ -76,10 +78,12 @@ export class Inventory implements OnInit, OnDestroy {
   characterCounts$: Observable<CharacterCounter[]>|null = null;
 
   constructor(
+      private readonly accountService: AccountService,
       @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
       private readonly bankService: BankService,
       private readonly charactersService: CharactersService,
       private readonly itemService: ItemService,
+      private readonly guildService: GuildService,
       private readonly materialsService: MaterialsService,
       private readonly sharedInventoryService: SharedInventoryService,
   ) {
@@ -233,6 +237,30 @@ export class Inventory implements OnInit, OnDestroy {
         }),
     );
 
+    const guildStashCounts$ = this.accountService.getAccount().pipe(
+        switchMap((account) => {
+          return combineLatest(account.guilds.map((guildId) => {
+            return combineLatest([
+                this.guildService.getGuildStash(guildId),
+                this.guildService.getGuild(guildId),
+            ]);
+          })).pipe(map((results) => {
+            for (const [guildVaults, guild] of results) {
+              for (const guildVault of guildVaults) {
+                for (const item of guildVault.inventory) {
+                  if (!item) {
+                    continue;
+                  }
+
+                  const guildName = `[Guild] ${guild.name}`;
+                  this.updateItemCounts(item.id, item.count, guildName);
+                }
+              }
+            }
+          }));
+        }),
+    );
+
     combineLatest([
       equipmentCounts$,
       bagCounts$,
@@ -240,6 +268,7 @@ export class Inventory implements OnInit, OnDestroy {
       sharedInventoryCounts$,
       bankCounts$,
       materialCounts$,
+      guildStashCounts$,
     ]).pipe(
         take(1),
         takeUntil(this.destroy$),

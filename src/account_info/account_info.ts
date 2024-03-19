@@ -61,10 +61,10 @@ export class AccountInfo {
     ]).pipe(
       switchMap(([account, masteryPoints, pvpStats, worlds]) => {
         const guildNames$ = combineLatest(
-          account.guilds.map(guildId => {
+          account.guilds.map((guildId) => {
             return this.guildService.getGuild(guildId);
           })
-        ).pipe(map(guilds => guilds.map(guild => guild.name)));
+        ).pipe(map((guilds) => guilds.map(guild => guild.name)));
 
         return combineLatest([
           observableOf(account),

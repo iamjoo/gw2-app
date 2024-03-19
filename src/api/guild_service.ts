@@ -1,13 +1,22 @@
 import {Injectable} from '@angular/core';
 
-import {Observable} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {Observable, of as observableOf} from 'rxjs';
+import {catchError, shareReplay, switchMap} from 'rxjs/operators';
 
 import {ApiService} from './api';
 
-interface GuildApiObj {
+export interface GuildApiObj {
   readonly name: string;
   readonly id: string;
+}
+
+export interface GuildVaultApiObj {
+  readonly inventory: Array<GuildStashInventoryApiObj|null>;
+}
+
+interface GuildStashInventoryApiObj {
+  readonly id: number;
+  readonly count: number;
 }
 
 const GUILD_PATH = 'guild';
@@ -30,5 +39,15 @@ export class GuildService {
     }
 
     return this.guildIdToGuild.get(id)!;
+  }
+
+  getGuildStash(id: string): Observable<GuildVaultApiObj[]> {
+    const path = `${GUILD_PATH}/${id}/stash`;
+    return this.apiService.authenticatedFetch<GuildVaultApiObj[]>(path).pipe(
+        catchError((err) => {
+          const emptyVault: GuildVaultApiObj = {inventory: []};
+          return observableOf([emptyVault]);
+        }),
+    );
   }
 }
