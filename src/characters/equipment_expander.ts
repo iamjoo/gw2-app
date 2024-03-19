@@ -7,7 +7,8 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {ArmorWeaponInfo} from './armor_weapon_info';
-import {EquipmentApiObj, ItemApiObj} from '../api/models';
+import {EquipmentApiObj} from '../api/characters_service';
+import {ItemApiObj} from '../api/models';
 import {ItemService} from '../item/item_service';
 
 interface Equipment {

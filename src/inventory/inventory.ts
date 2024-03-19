@@ -13,6 +13,7 @@ import {debounceTime, filter, map, shareReplay, startWith, take, takeUntil, with
 import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {ApiService} from '../api/api';
+import {CharactersService} from '../api/characters_service';
 import {ItemApiObj} from '../api/models';
 import {ItemPrice} from './item_price';
 import {ItemService} from '../item/item_service';
@@ -75,6 +76,7 @@ export class Inventory implements OnInit, OnDestroy {
   constructor(
       @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
       private readonly apiService: ApiService,
+      private readonly charactersService: CharactersService,
       private readonly itemService: ItemService,
   ) {
     this.setupAllItemCounts();
@@ -143,7 +145,7 @@ export class Inventory implements OnInit, OnDestroy {
   }
 
   private setupAllItemCounts(): void {
-    const equipmentCounts$ = this.apiService.getCharacters().pipe(
+    const equipmentCounts$ = this.charactersService.getCharacters().pipe(
         map((characters) => {
           for (const character of characters) {
             for (const equipment of character.equipment) {
@@ -154,7 +156,7 @@ export class Inventory implements OnInit, OnDestroy {
         }),
     );
 
-    const bagCounts$ = this.apiService.getCharacters().pipe(
+    const bagCounts$ = this.charactersService.getCharacters().pipe(
         map((characters) => {
           for (const character of characters) {
             for (const bag of character.bags) {
@@ -169,7 +171,7 @@ export class Inventory implements OnInit, OnDestroy {
         }),
     );
 
-    const inventoryCounts$ = this.apiService.getCharacters().pipe(
+    const inventoryCounts$ = this.charactersService.getCharacters().pipe(
         map((characters) => {
           for (const character of characters) {
             for (const bag of character.bags) {

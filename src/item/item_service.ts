@@ -4,6 +4,7 @@ import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
+import {CharactersService} from '../api/characters_service';
 import {ItemApiObj} from '../api/models';
 
 @Injectable({providedIn: 'root'})
@@ -16,6 +17,7 @@ export class ItemService {
 
   constructor(
       private readonly apiService: ApiService,
+      private readonly charactersService: CharactersService,
   ) {}
 
   getAllCharacterItemIdsToItems(): Observable<Map<number, ItemApiObj>> {
@@ -38,7 +40,7 @@ export class ItemService {
   }
 
   private createAllItems(): Observable<ItemApiObj[]> {
-    const equipmentIds$ = this.apiService.getCharacters().pipe(
+    const equipmentIds$ = this.charactersService.getCharacters().pipe(
         map((characters) => {
           return characters
               .flatMap((character) => character.equipment)
@@ -47,7 +49,7 @@ export class ItemService {
         }),
     );
 
-    const bagIds$ = this.apiService.getCharacters().pipe(
+    const bagIds$ = this.charactersService.getCharacters().pipe(
         map((characters) => {
           return characters
               .flatMap((character) => character.bags)
@@ -56,7 +58,7 @@ export class ItemService {
         }),
     );
 
-    const inventoryIds$ = this.apiService.getCharacters().pipe(
+    const inventoryIds$ = this.charactersService.getCharacters().pipe(
         map((characters) => {
           return characters
               .flatMap((character) => character.bags)

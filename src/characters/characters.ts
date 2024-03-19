@@ -11,8 +11,9 @@ import {map, switchMap} from 'rxjs/operators';
 import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {ApiService} from '../api/api';
-import {BagApiObj, CraftingApiObj, DisciplineApiObj, EquipmentApiObj, GenderApiObj, ItemApiObj, ProfessionApiObj, RaceApiObj} from '../api/models';
+import {BagApiObj, CharactersService, CraftingApiObj, DisciplineApiObj, EquipmentApiObj, GenderApiObj, ProfessionApiObj, RaceApiObj} from '../api/characters_service';
 import {EquipmentExpander} from './equipment_expander';
+import {ItemApiObj} from '../api/models';
 import {ItemService} from '../item/item_service';
 import {dateStringToMediumDate, secondsToDuration} from '../util/dates';
 
@@ -95,6 +96,7 @@ export class Characters {
   constructor(
       @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
       private readonly apiService: ApiService,
+      private readonly charactersService: CharactersService,
       private readonly itemService: ItemService,
   ) {}
 
@@ -111,7 +113,7 @@ export class Characters {
     // each `equipment` has an item id
     // each item has name, description, infix_upgrade, etc.
     return combineLatest([
-        this.apiService.getCharacters(),
+        this.charactersService.getCharacters(),
         this.apiService.getFilesMap(),
         this.itemService.getAllCharacterItemIdsToItems(),
     ]).pipe(

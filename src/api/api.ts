@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AchievementApiObj, BankApiObj, CharacterApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
+import {AchievementApiObj, BankApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -33,7 +33,6 @@ export class ApiService {
   private readonly guildIdToGuild = new Map<string, Observable<GuildApiObj>>();
 
   private readonly bank$ = this.createBank();
-  private readonly characters$ = this.createCharacters();
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly dailyAchievementsTomorrow$ = this.createDailyAchievementsTomorrow();
   private readonly files$ = this.createFilesMap();
@@ -55,10 +54,6 @@ export class ApiService {
 
   getBank(): Observable<BankApiObj[]> {
     return this.bank$;
-  }
-
-  getCharacters(): Observable<CharacterApiObj[]> {
-    return this.characters$;
   }
 
   getDailyAchievements(): Observable<DailyAchievementsApiObj> {
@@ -142,23 +137,6 @@ export class ApiService {
         return this.http.get<BankApiObj[]>(`${ROOT_URL}${Path.BANK}`, {
               params,
             });
-      }),
-      shareReplay({bufferSize: 1, refCount: false})
-    );
-  }
-
-  private createCharacters(): Observable<CharacterApiObj[]> {
-    return this.apiKeyService.apiKey$.pipe(
-      switchMap(apiKey => {
-        if (apiKey === null) {
-          return EMPTY;
-        }
-
-        const params = {access_token: apiKey, ids: 'all'};
-        return this.http.get<CharacterApiObj[]>(
-          `${ROOT_URL}${Path.CHARACTERS}`,
-          {params}
-        );
       }),
       shareReplay({bufferSize: 1, refCount: false})
     );
