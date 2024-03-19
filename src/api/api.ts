@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {DailyAchievementsApiObj, ItemApiObj, SharedInventoryApiObj} from './models';
+import {DailyAchievementsApiObj, ItemApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -14,7 +14,6 @@ const ROOT_URL = 'https://api.guildwars2.com/v2/';
 enum Path {
   DAILY_ACHIEVEMENTS = 'achievements/daily',
   DAILY_ACHIEVEMENTS_TOMORROW = 'achievements/daily/tomorrow',
-  INVENTORY = 'account/inventory',
   ITEMS = 'items',
 }
 
@@ -23,7 +22,6 @@ export class ApiService {
 
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly dailyAchievementsTomorrow$ = this.createDailyAchievementsTomorrow();
-  private readonly sharedInventory$ = this.createSharedInventory();
 
   constructor(
     private readonly apiKeyService: ApiKeyService,
@@ -67,10 +65,6 @@ export class ApiService {
     );
   }
 
-  getSharedInventory(): Observable<SharedInventoryApiObj[]> {
-    return this.sharedInventory$;
-  }
-
   private createDailyAchievements(): Observable<DailyAchievementsApiObj> {
     return this.http
       .get<DailyAchievementsApiObj>(`${ROOT_URL}${Path.DAILY_ACHIEVEMENTS}`)
@@ -81,23 +75,6 @@ export class ApiService {
     return this.http
       .get<DailyAchievementsApiObj>(`${ROOT_URL}${Path.DAILY_ACHIEVEMENTS_TOMORROW}`)
       .pipe(shareReplay({bufferSize: 1, refCount: false}));
-  }
-
-  private createSharedInventory(): Observable<SharedInventoryApiObj[]> {
-    return this.apiKeyService.apiKey$.pipe(
-      switchMap(apiKey => {
-        if (apiKey === null) {
-          return EMPTY;
-        }
-
-        const params = {access_token: apiKey};
-        return this.http
-            .get<SharedInventoryApiObj[]>(`${ROOT_URL}${Path.INVENTORY}`, {
-              params,
-            });
-      }),
-      shareReplay({bufferSize: 1, refCount: false})
-    );
   }
 
   authenticatedFetch<T>(path: string, requestParams = {}): Observable<T> {

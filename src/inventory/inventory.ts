@@ -12,13 +12,13 @@ import {debounceTime, filter, map, shareReplay, startWith, take, takeUntil, with
 
 import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
-import {ApiService} from '../api/api';
 import {BankService} from '../api/bank_service';
 import {CharactersService} from '../api/characters_service';
 import {ItemApiObj} from '../api/models';
 import {ItemPrice} from './item_price';
 import {ItemService} from '../item/item_service';
 import {MaterialsService} from '../api/materials_service';
+import {SharedInventoryService} from '../api/shared_inventory_service';
 
 interface CharacterCounter {
   readonly name: string;
@@ -77,11 +77,11 @@ export class Inventory implements OnInit, OnDestroy {
 
   constructor(
       @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
-      private readonly apiService: ApiService,
       private readonly bankService: BankService,
       private readonly charactersService: CharactersService,
       private readonly itemService: ItemService,
       private readonly materialsService: MaterialsService,
+      private readonly sharedInventoryService: SharedInventoryService,
   ) {
     this.setupAllItemCounts();
   }
@@ -195,16 +195,17 @@ export class Inventory implements OnInit, OnDestroy {
         }),
     );
 
-    const sharedInventoryCounts$ = this.apiService.getSharedInventory().pipe(
-        map((inventory) => {
-          for (const item of inventory) {
-            if (!item) {
-              continue;
-            }
+    const sharedInventoryCounts$ =
+        this.sharedInventoryService.getSharedInventory().pipe(
+            map((inventory) => {
+              for (const item of inventory) {
+                if (!item) {
+                  continue;
+                }
 
-            this.updateItemCounts(item.id, item.count, 'Shared Inventory');
-          }
-        }),
+                this.updateItemCounts(item.id, item.count, 'Shared Inventory');
+              }
+            }),
     );
 
     const bankCounts$ = this.bankService.getBank().pipe(

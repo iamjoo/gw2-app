@@ -8,6 +8,7 @@ import {BankService} from '../api/bank_service';
 import {CharactersService} from '../api/characters_service';
 import {ItemApiObj} from '../api/models';
 import {MaterialsService} from '../api/materials_service';
+import {SharedInventoryService} from '../api/shared_inventory_service';
 
 @Injectable({providedIn: 'root'})
 export class ItemService {
@@ -22,6 +23,7 @@ export class ItemService {
       private readonly bankService: BankService,
       private readonly charactersService: CharactersService,
       private readonly materialsService: MaterialsService,
+      private readonly sharedInventoryService: SharedInventoryService,
   ) {}
 
   getAllCharacterItemIdsToItems(): Observable<Map<number, ItemApiObj>> {
@@ -73,12 +75,13 @@ export class ItemService {
         }),
     );
 
-    const sharedInventoryIds$ = this.apiService.getSharedInventory().pipe(
-        map((inventory) => {
-          return inventory
-              .filter((item) => item)
-              .map((item) => item.id);
-        }),
+    const sharedInventoryIds$ =
+        this.sharedInventoryService.getSharedInventory().pipe(
+            map((inventory) => {
+              return inventory
+                  .filter((item) => item)
+                  .map((item) => item.id);
+            }),
     );
 
     const bankIds$ = this.bankService.getBank().pipe(

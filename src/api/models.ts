@@ -1,8 +1,3 @@
-export interface SharedInventoryApiObj {
-  readonly id: number;
-  readonly count: number;
-}
-
 export interface DailyAchievementsApiObj {
   readonly pve: DailyAchievementApiObj[];
   readonly pvp: DailyAchievementApiObj[];
