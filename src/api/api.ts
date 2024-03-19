@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AchievementApiObj, BankApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
+import {AchievementApiObj, BankApiObj, DailyAchievementsApiObj, GuildApiObj, ItemApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -14,10 +14,8 @@ const ROOT_URL = 'https://api.guildwars2.com/v2/';
 enum Path {
   ACHIEVEMENTS = 'achievements',
   BANK = 'account/bank',
-  CHARACTERS = 'characters',
   DAILY_ACHIEVEMENTS = 'achievements/daily',
   DAILY_ACHIEVEMENTS_TOMORROW = 'achievements/daily/tomorrow',
-  FILES = 'files',
   GUILD = 'guild',
   INVENTORY = 'account/inventory',
   ITEMS = 'items',
@@ -35,7 +33,6 @@ export class ApiService {
   private readonly bank$ = this.createBank();
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly dailyAchievementsTomorrow$ = this.createDailyAchievementsTomorrow();
-  private readonly files$ = this.createFilesMap();
   private readonly materials$ = this.createMaterials();
   private readonly sharedInventory$ = this.createSharedInventory();
 
@@ -62,10 +59,6 @@ export class ApiService {
 
   getDailyAchievementsTomorrow(): Observable<DailyAchievementsApiObj> {
     return this.dailyAchievementsTomorrow$;
-  }
-
-  getFilesMap(): Observable<Map<string, string>> {
-    return this.files$;
   }
 
   getGuild(id: string): Observable<GuildApiObj> {
@@ -152,23 +145,6 @@ export class ApiService {
     return this.http
       .get<DailyAchievementsApiObj>(`${ROOT_URL}${Path.DAILY_ACHIEVEMENTS_TOMORROW}`)
       .pipe(shareReplay({bufferSize: 1, refCount: false}));
-  }
-
-  private createFilesMap(): Observable<Map<string, string>> {
-    const params = {ids: 'all'};
-    return this.http
-      .get<FileApiObj[]>(`${ROOT_URL}${Path.FILES}`, {params})
-      .pipe(
-        map((files) => {
-          const fileMap = new Map<string, string>();
-          for (const file of files) {
-            fileMap.set(file.id, file.icon);
-          }
-
-          return fileMap;
-        }),
-        shareReplay({bufferSize: 1, refCount: false})
-      );
   }
 
   private createMaterials(): Observable<MaterialApiObj[]> {

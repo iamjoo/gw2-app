@@ -4,7 +4,7 @@ import {Component, Input} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {ApiService} from '../api/api';
+import {FilesService} from '../api/files_service';
 
 const COPPER_TO_GOLD = 10000;
 const COPPER_TO_SILVER = 100;
@@ -44,7 +44,7 @@ export class Coin {
 
   @Input() useLargeFont = false;
 
-  constructor(private readonly apiService: ApiService) {}
+  constructor(private readonly filesService: FilesService) {}
 
   private createCoinBreakdown(): Observable<CoinBreakdown> {
     return this.amount$.pipe(
@@ -60,7 +60,7 @@ export class Coin {
   }
 
   private createIcons(): Observable<Icon> {
-    return this.apiService.getFilesMap().pipe(
+    return this.filesService.getFilesMap().pipe(
         map((filesMap) => {
           const gold = filesMap.get('ui_coin_gold') ?? '';
           const silver = filesMap.get('ui_coin_silver') ?? '';

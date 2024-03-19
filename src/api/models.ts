@@ -12,11 +12,6 @@ export interface MaterialApiObj {
   readonly count: number;
 }
 
-export interface FileApiObj {
-  readonly id: string;
-  readonly icon: string;
-}
-
 export interface BankApiObj {
   readonly id: number;
   readonly count: number;
