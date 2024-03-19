@@ -22,17 +22,6 @@ export interface SharedInventoryApiObj {
   readonly count: number;
 }
 
-export interface PriceApiObj {
-  readonly id: number;
-  readonly buys: BuySellApiObj;
-  readonly sells: BuySellApiObj;
-}
-
-interface BuySellApiObj {
-  readonly unit_price: number;
-  readonly quantity: number;
-}
-
 export interface TitleApiObj {
   readonly id: number;
   readonly name: string;

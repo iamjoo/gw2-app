@@ -4,9 +4,9 @@ import {Component, Input} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {catchError, filter, map, switchMap, withLatestFrom} from 'rxjs/operators';
 
-import {ApiService} from '../api/api';
 import {Coin} from './coin';
 import {ItemApiObj} from '../api/models';
+import {PricesService} from '../api/prices_service';
 
 interface PriceInfo {
   readonly totalSellAmount: number;
@@ -28,7 +28,7 @@ export class ItemPrice {
 
   readonly prices$ = this.createPrices();
 
-  constructor(private readonly apiService: ApiService) {}
+  constructor(private readonly pricesService: PricesService) {}
 
   @Input()
   set itemCount(count: number|undefined) {
@@ -44,7 +44,7 @@ export class ItemPrice {
     return this.item$.pipe(
         filter((item): item is ItemApiObj => !!item),
         switchMap((item) => {
-          return this.apiService.getPrices(item.id).pipe(
+          return this.pricesService.getPrices(item.id).pipe(
               catchError(() => observableOf(null)),
           );
         }),
