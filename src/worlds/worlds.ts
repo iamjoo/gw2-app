@@ -7,7 +7,7 @@ import {MatTableModule} from '@angular/material/table';
 import {combineLatest, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 
-import {ApiService} from '../api/api';
+import {AccountService} from '../api/account_service';
 import {WorldApiObj, WorldPopulationApi, WorldService} from '../api/world_service';
 
 type WorldPopulation = 'Low'|'Medium'|'High'|'Very High'|'Full';
@@ -62,14 +62,14 @@ export class Worlds {
   readonly displayedColumns = ['name', 'population'];
 
   constructor(
-      private readonly apiService: ApiService,
+      private readonly accountService: AccountService,
       private readonly worldService: WorldService,
   ) {}
 
   private createData(): Observable<DataSourceObject[]> {
     return combineLatest([
         this.worldService.getWorlds(),
-        this.apiService.getAccount().pipe(startWith({world: ''})),
+        this.accountService.getAccount().pipe(startWith({world: ''})),
     ]).pipe(
         map(([worlds, {world: homeId}]) => worlds.map(
             ({id, name, population}) => {

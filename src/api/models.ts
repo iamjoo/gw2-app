@@ -1,16 +1,3 @@
-export interface AccountApiObj {
-  readonly age: number;
-  readonly created: string;
-  readonly daily_ap: number;
-  readonly fractal_level: number;
-  readonly guilds: string[];
-  readonly id: string;
-  readonly monthly_ap: number;
-  readonly name: string;
-  readonly world: number;
-  readonly wvw_rank: number;
-}
-
 export interface AchievementApiObj {
   readonly id: number;
   readonly icon?: string;

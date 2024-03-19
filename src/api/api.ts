@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, WalletApiObj} from './models';
+import {AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, WalletApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -12,7 +12,6 @@ const ITEMS_LIMIT = 199;
 const ROOT_URL = 'https://api.guildwars2.com/v2/';
 
 enum Path {
-  ACCOUNT = 'account',
   ACHIEVEMENTS = 'achievements',
   BANK = 'account/bank',
   CHARACTERS = 'characters',
@@ -35,7 +34,6 @@ export class ApiService {
 
   private readonly guildIdToGuild = new Map<string, Observable<GuildApiObj>>();
 
-  private readonly account$ = this.createAccount();
   private readonly bank$ = this.createBank();
   private readonly characters$ = this.createCharacters();
   private readonly currencies$ = this.createCurrencyMap();
@@ -50,10 +48,6 @@ export class ApiService {
     private readonly apiKeyService: ApiKeyService,
     private readonly http: HttpClient
   ) {}
-
-  getAccount(): Observable<AccountApiObj> {
-    return this.account$;
-  }
 
   getAchievements(ids: number[]): Observable<AchievementApiObj[]> {
     const params = {ids: `${ids.join(',')}`};
@@ -147,22 +141,6 @@ export class ApiService {
 
   getWallet(): Observable<WalletApiObj[]> {
     return this.wallet$;
-  }
-
-  private createAccount(): Observable<AccountApiObj> {
-    return this.apiKeyService.apiKey$.pipe(
-      switchMap(apiKey => {
-        if (apiKey === null) {
-          return EMPTY;
-        }
-
-        const params = {access_token: apiKey};
-        return this.http.get<AccountApiObj>(`${ROOT_URL}${Path.ACCOUNT}`, {
-          params,
-        });
-      }),
-      shareReplay({bufferSize: 1, refCount: false})
-    );
   }
 
   private createBank(): Observable<BankApiObj[]> {

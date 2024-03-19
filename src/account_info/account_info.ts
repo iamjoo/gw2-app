@@ -7,7 +7,7 @@ import {MatTableModule} from '@angular/material/table';
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {AccountApiObj} from '../api/models';
+import {AccountApiObj, AccountService} from '../api/account_service';
 import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {ApiService} from '../api/api';
@@ -44,6 +44,7 @@ export class AccountInfo {
   readonly displayedColumns = ['key', 'value'];
 
   constructor(
+    private readonly accountService: AccountService,
     @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
     private readonly apiService: ApiService,
     private readonly masteryPointsService: MasteryPointsService,
@@ -53,7 +54,7 @@ export class AccountInfo {
 
   private createData(): Observable<DataSourceObject[]> {
     return combineLatest([
-      this.apiService.getAccount(),
+      this.accountService.getAccount(),
       this.masteryPointsService.getMasteryPoints(),
       this.pvpService.getPvpStats(),
       this.worldService.getWorlds(),
