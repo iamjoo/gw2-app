@@ -10,7 +10,7 @@ import {map, switchMap} from 'rxjs/operators';
 import {AccountApiObj, AccountService} from '../api/account_service';
 import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
-import {ApiService} from '../api/api';
+import {GuildService} from '../api/guild_service';
 import {MapChests} from './map_chests';
 import {MasteryPointsApiObj, MasteryPointsService} from '../api/mastery_points_service';
 import {PvpApiObj, PvpService} from '../api/pvp_service';
@@ -46,7 +46,7 @@ export class AccountInfo {
   constructor(
     private readonly accountService: AccountService,
     @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
-    private readonly apiService: ApiService,
+    private readonly guildService: GuildService,
     private readonly masteryPointsService: MasteryPointsService,
     private readonly pvpService: PvpService,
     private readonly worldService: WorldService,
@@ -62,7 +62,7 @@ export class AccountInfo {
       switchMap(([account, masteryPoints, pvpStats, worlds]) => {
         const guildNames$ = combineLatest(
           account.guilds.map(guildId => {
-            return this.apiService.getGuild(guildId);
+            return this.guildService.getGuild(guildId);
           })
         ).pipe(map(guilds => guilds.map(guild => guild.name)));
 

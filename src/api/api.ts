@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AchievementApiObj, BankApiObj, DailyAchievementsApiObj, GuildApiObj, ItemApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
+import {AchievementApiObj, BankApiObj, DailyAchievementsApiObj, ItemApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -16,7 +16,6 @@ enum Path {
   BANK = 'account/bank',
   DAILY_ACHIEVEMENTS = 'achievements/daily',
   DAILY_ACHIEVEMENTS_TOMORROW = 'achievements/daily/tomorrow',
-  GUILD = 'guild',
   INVENTORY = 'account/inventory',
   ITEMS = 'items',
   MATERIALS = 'account/materials',
@@ -27,8 +26,6 @@ enum Path {
 
 @Injectable({providedIn: 'root'})
 export class ApiService {
-
-  private readonly guildIdToGuild = new Map<string, Observable<GuildApiObj>>();
 
   private readonly bank$ = this.createBank();
   private readonly dailyAchievements$ = this.createDailyAchievements();
@@ -59,19 +56,6 @@ export class ApiService {
 
   getDailyAchievementsTomorrow(): Observable<DailyAchievementsApiObj> {
     return this.dailyAchievementsTomorrow$;
-  }
-
-  getGuild(id: string): Observable<GuildApiObj> {
-    if (!this.guildIdToGuild.has(id)) {
-      const guild$ =
-          this.http.get<GuildApiObj>(`${ROOT_URL}${Path.GUILD}/${id}`)
-              .pipe(
-                  shareReplay({bufferSize: 1, refCount: false}),
-              );
-      this.guildIdToGuild.set(id, guild$);
-    }
-
-    return this.guildIdToGuild.get(id)!;
   }
 
   getItem(id: number): Observable<ItemApiObj> {

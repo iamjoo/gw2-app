@@ -54,11 +54,6 @@ export interface DailyAchievementApiObj {
   };
 }
 
-export interface GuildApiObj {
-  readonly name: string;
-  readonly id: string;
-}
-
 export interface ItemApiObj {
   readonly id: number;
   readonly name: string;
