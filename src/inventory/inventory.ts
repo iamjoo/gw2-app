@@ -14,7 +14,7 @@ import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {BankService} from '../api/bank_service';
 import {CharactersService} from '../api/characters_service';
-import {ItemApiObj} from '../api/models';
+import {ItemApiObj} from '../api/item_api_service';
 import {ItemPrice} from './item_price';
 import {ItemService} from '../item/item_service';
 import {MaterialsService} from '../api/materials_service';

@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-import {ItemApiObj, ItemRarity} from '../api/models';
+import {ItemApiObj, ItemRarity} from '../api/item_api_service';
 
 @Component({
   selector: 'gw-armor-weapon-info',

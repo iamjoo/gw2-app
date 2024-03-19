@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {catchError, filter, map, switchMap, withLatestFrom} from 'rxjs/operators';
 
 import {Coin} from './coin';
-import {ItemApiObj} from '../api/models';
+import {ItemApiObj} from '../api/item_api_service';
 import {PricesService} from '../api/prices_service';
 
 interface PriceInfo {

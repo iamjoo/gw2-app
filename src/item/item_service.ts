@@ -3,10 +3,9 @@ import {Injectable} from '@angular/core';
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {ApiService} from '../api/api';
 import {BankService} from '../api/bank_service';
 import {CharactersService} from '../api/characters_service';
-import {ItemApiObj} from '../api/models';
+import {ItemApiObj, ItemApiService} from '../api/item_api_service';
 import {MaterialsService} from '../api/materials_service';
 import {SharedInventoryService} from '../api/shared_inventory_service';
 
@@ -19,9 +18,9 @@ export class ItemService {
       this.createAllItemIdToItem(this.allCharacterItems$);
 
   constructor(
-      private readonly apiService: ApiService,
       private readonly bankService: BankService,
       private readonly charactersService: CharactersService,
+      private readonly itemApiService: ItemApiService,
       private readonly materialsService: MaterialsService,
       private readonly sharedInventoryService: SharedInventoryService,
   ) {}
@@ -36,7 +35,7 @@ export class ItemService {
 
   getItem(id: number): Observable<ItemApiObj> {
     if (!this.idToItemObs.has(id)) {
-      const item$ = this.apiService.getItem(id).pipe(
+      const item$ = this.itemApiService.getItem(id).pipe(
           shareReplay({bufferSize: 1, refCount: false}),
           );
       this.idToItemObs.set(id, item$);
@@ -126,7 +125,7 @@ export class ItemService {
           ]);
         }),
         switchMap((itemIds) => {
-          return this.apiService.getItems(Array.from(itemIds));
+          return this.itemApiService.getItems(Array.from(itemIds));
         }),
         shareReplay({bufferSize: 1, refCount: false}),
     );

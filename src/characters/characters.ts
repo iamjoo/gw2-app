@@ -13,7 +13,7 @@ import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {BagApiObj, CharactersService, CraftingApiObj, DisciplineApiObj, EquipmentApiObj, GenderApiObj, ProfessionApiObj, RaceApiObj} from '../api/characters_service';
 import {EquipmentExpander} from './equipment_expander';
 import {FilesService} from '../api/files_service';
-import {ItemApiObj} from '../api/models';
+import {ItemApiObj} from '../api/item_api_service';
 import {ItemService} from '../item/item_service';
 import {TitlesService} from '../api/titles_service';
 import {dateStringToMediumDate, secondsToDuration} from '../util/dates';

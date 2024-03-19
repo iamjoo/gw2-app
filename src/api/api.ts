@@ -4,17 +4,15 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {DailyAchievementsApiObj, ItemApiObj} from './models';
+import {DailyAchievementsApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
-const ITEMS_LIMIT = 199;
 const ROOT_URL = 'https://api.guildwars2.com/v2/';
 
 enum Path {
   DAILY_ACHIEVEMENTS = 'achievements/daily',
   DAILY_ACHIEVEMENTS_TOMORROW = 'achievements/daily/tomorrow',
-  ITEMS = 'items',
 }
 
 @Injectable({providedIn: 'root'})
@@ -34,35 +32,6 @@ export class ApiService {
 
   getDailyAchievementsTomorrow(): Observable<DailyAchievementsApiObj> {
     return this.dailyAchievementsTomorrow$;
-  }
-
-  getItem(id: number): Observable<ItemApiObj> {
-    return this.http.get<ItemApiObj>(`${ROOT_URL}${Path.ITEMS}/${id}`);
-  }
-
-  getItems(ids: number[]): Observable<ItemApiObj[]> {
-    if (ids.length <= ITEMS_LIMIT) {
-      const joinedIds = ids.join(',');
-      return this.http.get<ItemApiObj[]>(
-          `${ROOT_URL}${Path.ITEMS}?ids=${joinedIds}`);
-    }
-
-    let i: number;
-    let j: number;
-    const allJoinedIds: string[] = [];
-    for (i = 0, j = ids.length; i < j; i += ITEMS_LIMIT) {
-      const joinedIds = ids.slice(i, i + ITEMS_LIMIT).join(',');
-      allJoinedIds.push(joinedIds);
-    }
-
-    const itemRequests$ = allJoinedIds.map((ids) => {
-      return this.http.get<ItemApiObj[]>(
-          `${ROOT_URL}${Path.ITEMS}?ids=${ids}`);
-    });
-
-    return combineLatest(itemRequests$).pipe(
-        map((items) => items.flat(1)),
-    );
   }
 
   private createDailyAchievements(): Observable<DailyAchievementsApiObj> {
