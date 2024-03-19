@@ -8,7 +8,7 @@ import {combineLatest, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
-import {WorldApiObj, WorldPopulationApi} from '../api/models';
+import {WorldApiObj, WorldPopulationApi, WorldService} from '../api/world_service';
 
 type WorldPopulation = 'Low'|'Medium'|'High'|'Very High'|'Full';
 
@@ -61,11 +61,14 @@ export class Worlds {
   readonly data$ = this.createData();
   readonly displayedColumns = ['name', 'population'];
 
-  constructor(private readonly apiService: ApiService) {}
+  constructor(
+      private readonly apiService: ApiService,
+      private readonly worldService: WorldService,
+  ) {}
 
   private createData(): Observable<DataSourceObject[]> {
     return combineLatest([
-        this.apiService.getWorlds(),
+        this.worldService.getWorlds(),
         this.apiService.getAccount().pipe(startWith({world: ''})),
     ]).pipe(
         map(([worlds, {world: homeId}]) => worlds.map(

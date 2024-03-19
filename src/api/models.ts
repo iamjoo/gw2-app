@@ -317,19 +317,6 @@ type AttributeType =
   | 'Toughness'
   | 'Vitality';
 
-export type WorldPopulationApi =
-  | 'Low'
-  | 'Medium'
-  | 'High'
-  | 'VeryHigh'
-  | 'Full';
-
-export interface WorldApiObj {
-  readonly id: number;
-  readonly name: string;
-  readonly population: WorldPopulationApi;
-}
-
 type RewardApiObj = CoinsReward | ItemReward | MasteryReward | TitleReward;
 
 interface BaseReward {

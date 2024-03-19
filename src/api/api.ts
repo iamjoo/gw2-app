@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WalletApiObj, WorldApiObj} from './models';
+import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WalletApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -30,7 +30,6 @@ enum Path {
   PVP = 'pvp/stats',
   TITLES = 'titles',
   WALLET = 'account/wallet',
-  WORLDS = 'worlds',
   WVW_RANKS = 'wvw/ranks',
 }
 
@@ -52,7 +51,6 @@ export class ApiService {
   private readonly pvpStats$ = this.createPvpStats();
   private readonly sharedInventory$ = this.createSharedInventory();
   private readonly wallet$ = this.createWallet();
-  private readonly worlds$ = this.createWorlds();
 
   constructor(
     private readonly apiKeyService: ApiKeyService,
@@ -167,10 +165,6 @@ export class ApiService {
 
   getWallet(): Observable<WalletApiObj[]> {
     return this.wallet$;
-  }
-
-  getWorlds(): Observable<WorldApiObj[]> {
-    return this.worlds$;
   }
 
   private createAccount(): Observable<AccountApiObj> {
@@ -379,13 +373,6 @@ export class ApiService {
   }
 
   nonAuthenticatedFetch<T>(path: string, params = {}): Observable<T> {
-    return this.http.get<T>(`${ROOT_URL}${path}`, {params});
-  }
-
-  private createWorlds(): Observable<WorldApiObj[]> {
-    const params = {ids: 'all'};
-    return this.http
-      .get<WorldApiObj[]>(`${ROOT_URL}${Path.WORLDS}`, {params})
-      .pipe(shareReplay({bufferSize: 1, refCount: false}));
+    return this.http.get<T>(`${ROOT_URL}${path}`, params);
   }
 }

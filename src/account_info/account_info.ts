@@ -7,12 +7,13 @@ import {MatTableModule} from '@angular/material/table';
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {AccountApiObj, MasteryPointsApiObj, PvpApiObj, WorldApiObj} from '../api/models';
+import {AccountApiObj, MasteryPointsApiObj, PvpApiObj} from '../api/models';
 import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {ApiService} from '../api/api';
 import {MapChests} from './map_chests';
 import {Wallet} from './wallet';
+import {WorldApiObj, WorldService} from '../api/world_service';
 import {dateStringToMediumDate, secondsToDuration} from '../util/dates';
 
 interface DataSourceObject {
@@ -42,7 +43,8 @@ export class AccountInfo {
 
   constructor(
     @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
+    private readonly worldService: WorldService,
   ) {}
 
   private createData(): Observable<DataSourceObject[]> {
@@ -50,7 +52,7 @@ export class AccountInfo {
       this.apiService.getAccount(),
       this.apiService.getMasteryPoints(),
       this.apiService.getPvpStats(),
-      this.apiService.getWorlds(),
+      this.worldService.getWorlds(),
     ]).pipe(
       switchMap(([account, masteryPoints, pvpStats, worlds]) => {
         const guildNames$ = combineLatest(
