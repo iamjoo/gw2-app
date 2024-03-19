@@ -3,8 +3,10 @@ import {Injectable} from '@angular/core';
 import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
+import {AccountService} from '../api/account_service';
 import {BankService} from '../api/bank_service';
 import {CharactersService} from '../api/characters_service';
+import {GuildService} from '../api/guild_service';
 import {ItemApiObj, ItemApiService} from '../api/item_api_service';
 import {MaterialsService} from '../api/materials_service';
 import {SharedInventoryService} from '../api/shared_inventory_service';
@@ -18,8 +20,10 @@ export class ItemService {
       this.createAllItemIdToItem(this.allCharacterItems$);
 
   constructor(
+      private readonly accountService: AccountService,
       private readonly bankService: BankService,
       private readonly charactersService: CharactersService,
+      private readonly guildService: GuildService,
       private readonly itemApiService: ItemApiService,
       private readonly materialsService: MaterialsService,
       private readonly sharedInventoryService: SharedInventoryService,
@@ -99,6 +103,28 @@ export class ItemService {
         }),
     );
 
+    const guildStashIds$ = this.accountService.getAccount().pipe(
+        switchMap((account) => {
+          return combineLatest(account.guilds.map((guildId) => {
+            return this.guildService.getGuildStash(guildId);
+          }));
+        })).pipe(map((results) => {
+          const ids = [];
+          for (const guildVaults of results) {
+            for (const guildVault of guildVaults) {
+              for (const item of guildVault.inventory) {
+                if (!item) {
+                  continue;
+                }
+
+                ids.push(item.id);
+              }
+            }
+          }
+
+          return ids;
+        }));
+
     return combineLatest([
       equipmentIds$,
       bagIds$,
@@ -106,6 +132,7 @@ export class ItemService {
       sharedInventoryIds$,
       bankIds$,
       materialIds$,
+      guildStashIds$,
     ]).pipe(
         map(([
           equipmentIds,
@@ -114,6 +141,7 @@ export class ItemService {
           sharedInventoryIds,
           bankIds,
           materialIds,
+          guildStashIds,
         ]) => {
           return new Set([
             ...equipmentIds,
@@ -122,6 +150,7 @@ export class ItemService {
             ...sharedInventoryIds,
             ...bankIds,
             ...materialIds,
+            ...guildStashIds,
           ]);
         }),
         switchMap((itemIds) => {
