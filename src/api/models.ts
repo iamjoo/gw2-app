@@ -1,8 +1,3 @@
-export interface MaterialApiObj {
-  readonly id: number;
-  readonly count: number;
-}
-
 export interface SharedInventoryApiObj {
   readonly id: number;
   readonly count: number;

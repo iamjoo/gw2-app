@@ -18,6 +18,7 @@ import {CharactersService} from '../api/characters_service';
 import {ItemApiObj} from '../api/models';
 import {ItemPrice} from './item_price';
 import {ItemService} from '../item/item_service';
+import {MaterialsService} from '../api/materials_service';
 
 interface CharacterCounter {
   readonly name: string;
@@ -80,6 +81,7 @@ export class Inventory implements OnInit, OnDestroy {
       private readonly bankService: BankService,
       private readonly charactersService: CharactersService,
       private readonly itemService: ItemService,
+      private readonly materialsService: MaterialsService,
   ) {
     this.setupAllItemCounts();
   }
@@ -217,7 +219,7 @@ export class Inventory implements OnInit, OnDestroy {
         }),
     );
 
-    const materialCounts$ = this.apiService.getMaterials().pipe(
+    const materialCounts$ = this.materialsService.getMaterials().pipe(
         map((materials) => {
           for (const material of materials) {
             if (!material) {

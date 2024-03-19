@@ -7,6 +7,7 @@ import {ApiService} from '../api/api';
 import {BankService} from '../api/bank_service';
 import {CharactersService} from '../api/characters_service';
 import {ItemApiObj} from '../api/models';
+import {MaterialsService} from '../api/materials_service';
 
 @Injectable({providedIn: 'root'})
 export class ItemService {
@@ -20,6 +21,7 @@ export class ItemService {
       private readonly apiService: ApiService,
       private readonly bankService: BankService,
       private readonly charactersService: CharactersService,
+      private readonly materialsService: MaterialsService,
   ) {}
 
   getAllCharacterItemIdsToItems(): Observable<Map<number, ItemApiObj>> {
@@ -87,7 +89,7 @@ export class ItemService {
         }),
     );
 
-    const materialIds$ = this.apiService.getMaterials().pipe(
+    const materialIds$ = this.materialsService.getMaterials().pipe(
         map((materials) => {
           return materials
               .filter((material) => material)

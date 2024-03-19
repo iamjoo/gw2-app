@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {DailyAchievementsApiObj, ItemApiObj, MaterialApiObj, SharedInventoryApiObj} from './models';
+import {DailyAchievementsApiObj, ItemApiObj, SharedInventoryApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -16,7 +16,6 @@ enum Path {
   DAILY_ACHIEVEMENTS_TOMORROW = 'achievements/daily/tomorrow',
   INVENTORY = 'account/inventory',
   ITEMS = 'items',
-  MATERIALS = 'account/materials',
 }
 
 @Injectable({providedIn: 'root'})
@@ -24,7 +23,6 @@ export class ApiService {
 
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly dailyAchievementsTomorrow$ = this.createDailyAchievementsTomorrow();
-  private readonly materials$ = this.createMaterials();
   private readonly sharedInventory$ = this.createSharedInventory();
 
   constructor(
@@ -69,10 +67,6 @@ export class ApiService {
     );
   }
 
-  getMaterials(): Observable<MaterialApiObj[]> {
-    return this.materials$;
-  }
-
   getSharedInventory(): Observable<SharedInventoryApiObj[]> {
     return this.sharedInventory$;
   }
@@ -87,22 +81,6 @@ export class ApiService {
     return this.http
       .get<DailyAchievementsApiObj>(`${ROOT_URL}${Path.DAILY_ACHIEVEMENTS_TOMORROW}`)
       .pipe(shareReplay({bufferSize: 1, refCount: false}));
-  }
-
-  private createMaterials(): Observable<MaterialApiObj[]> {
-    return this.apiKeyService.apiKey$.pipe(
-      switchMap(apiKey => {
-        if (apiKey === null) {
-          return EMPTY;
-        }
-
-        const params = {access_token: apiKey};
-        return this.http.get<MaterialApiObj[]>(`${ROOT_URL}${Path.MATERIALS}`, {
-              params,
-            });
-      }),
-      shareReplay({bufferSize: 1, refCount: false})
-    );
   }
 
   private createSharedInventory(): Observable<SharedInventoryApiObj[]> {
