@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, PvpApiObj, WalletApiObj} from './models';
+import {AccountApiObj, AchievementApiObj, BankApiObj, CharacterApiObj, CurrencyApiObj, DailyAchievementsApiObj, FileApiObj, GuildApiObj, ItemApiObj, MasteryPointsApiObj, MaterialApiObj, PriceApiObj, SharedInventoryApiObj, TitleApiObj, WalletApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -27,7 +27,6 @@ enum Path {
   MASTERY_POINTS = 'account/mastery/points',
   MATERIALS = 'account/materials',
   PRICES = 'commerce/prices',
-  PVP = 'pvp/stats',
   TITLES = 'titles',
   WALLET = 'account/wallet',
   WVW_RANKS = 'wvw/ranks',
@@ -48,7 +47,6 @@ export class ApiService {
   private readonly mapChestsCompleted$ = this.createMapChestsCompleted();
   private readonly masteryPoints$ = this.createMasteryPoints();
   private readonly materials$ = this.createMaterials();
-  private readonly pvpStats$ = this.createPvpStats();
   private readonly sharedInventory$ = this.createSharedInventory();
   private readonly wallet$ = this.createWallet();
 
@@ -149,10 +147,6 @@ export class ApiService {
 
   getPrices(id: number): Observable<PriceApiObj> {
     return this.http.get<PriceApiObj>(`${ROOT_URL}${Path.PRICES}/${id}`);
-  }
-
-  getPvpStats(): Observable<PvpApiObj> {
-    return this.pvpStats$;
   }
 
   getSharedInventory(): Observable<SharedInventoryApiObj[]> {
@@ -307,20 +301,6 @@ export class ApiService {
         return this.http.get<MaterialApiObj[]>(`${ROOT_URL}${Path.MATERIALS}`, {
               params,
             });
-      }),
-      shareReplay({bufferSize: 1, refCount: false})
-    );
-  }
-
-  private createPvpStats(): Observable<PvpApiObj> {
-    return this.apiKeyService.apiKey$.pipe(
-      switchMap(apiKey => {
-        if (apiKey === null) {
-          return EMPTY;
-        }
-
-        const params = {access_token: apiKey};
-        return this.http.get<PvpApiObj>(`${ROOT_URL}${Path.PVP}`, {params});
       }),
       shareReplay({bufferSize: 1, refCount: false})
     );

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import {EMPTY, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
 
 import {ApiService} from './api';

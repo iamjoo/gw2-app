@@ -11,10 +11,6 @@ export interface AccountApiObj {
   readonly wvw_rank: number;
 }
 
-export interface PvpApiObj {
-  readonly pvp_rank: number;
-}
-
 export interface MasteryPointsApiObj {
   readonly totals: MasteryApiObj[];
 }
