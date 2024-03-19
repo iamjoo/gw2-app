@@ -23,7 +23,7 @@ export class PricesService {
   constructor(private readonly apiService: ApiService) {}
 
   getPrices(id: number): Observable<PriceApiObj> {
-    return this.apiService.nonAuthenticatedFetch<PriceApiObj>(
-        `${PRICES_PATH}/${id}`);
+    const path = `${PRICES_PATH}/${id}`;
+    return this.apiService.nonAuthenticatedFetch<PriceApiObj>(path);
   }
 }

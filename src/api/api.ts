@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {AchievementApiObj, BankApiObj, DailyAchievementsApiObj, ItemApiObj, MaterialApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
+import {BankApiObj, DailyAchievementsApiObj, ItemApiObj, MaterialApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -12,7 +12,6 @@ const ITEMS_LIMIT = 199;
 const ROOT_URL = 'https://api.guildwars2.com/v2/';
 
 enum Path {
-  ACHIEVEMENTS = 'achievements',
   BANK = 'account/bank',
   DAILY_ACHIEVEMENTS = 'achievements/daily',
   DAILY_ACHIEVEMENTS_TOMORROW = 'achievements/daily/tomorrow',
@@ -36,14 +35,6 @@ export class ApiService {
     private readonly apiKeyService: ApiKeyService,
     private readonly http: HttpClient
   ) {}
-
-  getAchievements(ids: number[]): Observable<AchievementApiObj[]> {
-    const params = {ids: `${ids.join(',')}`};
-    return this.http.get<AchievementApiObj[]>(
-      `${ROOT_URL}${Path.ACHIEVEMENTS}`,
-      {params}
-    );
-  }
 
   getBank(): Observable<BankApiObj[]> {
     return this.bank$;

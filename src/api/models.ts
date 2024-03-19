@@ -1,12 +1,3 @@
-export interface AchievementApiObj {
-  readonly id: number;
-  readonly icon?: string;
-  readonly name: string;
-  readonly description: string;
-  readonly requirement: string;
-  readonly rewards: RewardApiObj[];
-}
-
 export interface MaterialApiObj {
   readonly id: number;
   readonly count: number;
@@ -169,31 +160,3 @@ type AttributeType =
   | 'Precision'
   | 'Toughness'
   | 'Vitality';
-
-type RewardApiObj = CoinsReward | ItemReward | MasteryReward | TitleReward;
-
-interface BaseReward {
-  readonly type: 'Coins' | 'Item' | 'Mastery' | 'Title';
-}
-
-interface CoinsReward extends BaseReward {
-  readonly type: 'Coins';
-  readonly count: number;
-}
-
-export interface ItemReward extends BaseReward {
-  readonly type: 'Item';
-  readonly id: number;
-  readonly count: number;
-}
-
-interface MasteryReward extends BaseReward {
-  readonly type: 'Mastery';
-  readonly id: number;
-  readonly region: string;
-}
-
-interface TitleReward extends BaseReward {
-  readonly type: 'Title';
-  readonly id: number;
-}
