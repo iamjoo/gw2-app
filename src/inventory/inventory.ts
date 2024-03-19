@@ -13,6 +13,7 @@ import {debounceTime, filter, map, shareReplay, startWith, take, takeUntil, with
 import {AddApiKey} from '../api_key/add_api_key';
 import {API_KEY_PRESENT_OBS} from '../api_key/api_key_present';
 import {ApiService} from '../api/api';
+import {BankService} from '../api/bank_service';
 import {CharactersService} from '../api/characters_service';
 import {ItemApiObj} from '../api/models';
 import {ItemPrice} from './item_price';
@@ -76,6 +77,7 @@ export class Inventory implements OnInit, OnDestroy {
   constructor(
       @Inject(API_KEY_PRESENT_OBS) readonly apiKeyPresent$: Observable<boolean>,
       private readonly apiService: ApiService,
+      private readonly bankService: BankService,
       private readonly charactersService: CharactersService,
       private readonly itemService: ItemService,
   ) {
@@ -203,7 +205,7 @@ export class Inventory implements OnInit, OnDestroy {
         }),
     );
 
-    const bankCounts$ = this.apiService.getBank().pipe(
+    const bankCounts$ = this.bankService.getBank().pipe(
         map((bank) => {
           for (const item of bank) {
             if (!item) {

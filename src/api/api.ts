@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
-import {BankApiObj, DailyAchievementsApiObj, ItemApiObj, MaterialApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
+import {DailyAchievementsApiObj, ItemApiObj, MaterialApiObj, SharedInventoryApiObj, TitleApiObj} from './models';
 import {ApiKeyService} from '../api_key/api_key';
 // https://wiki.guildwars2.com/wiki/API:Main
 
@@ -12,7 +12,6 @@ const ITEMS_LIMIT = 199;
 const ROOT_URL = 'https://api.guildwars2.com/v2/';
 
 enum Path {
-  BANK = 'account/bank',
   DAILY_ACHIEVEMENTS = 'achievements/daily',
   DAILY_ACHIEVEMENTS_TOMORROW = 'achievements/daily/tomorrow',
   INVENTORY = 'account/inventory',
@@ -25,7 +24,6 @@ enum Path {
 @Injectable({providedIn: 'root'})
 export class ApiService {
 
-  private readonly bank$ = this.createBank();
   private readonly dailyAchievements$ = this.createDailyAchievements();
   private readonly dailyAchievementsTomorrow$ = this.createDailyAchievementsTomorrow();
   private readonly materials$ = this.createMaterials();
@@ -35,10 +33,6 @@ export class ApiService {
     private readonly apiKeyService: ApiKeyService,
     private readonly http: HttpClient
   ) {}
-
-  getBank(): Observable<BankApiObj[]> {
-    return this.bank$;
-  }
 
   getDailyAchievements(): Observable<DailyAchievementsApiObj> {
     return this.dailyAchievements$;
@@ -87,22 +81,6 @@ export class ApiService {
 
   getTitle(id: number): Observable<TitleApiObj> {
     return this.http.get<TitleApiObj>(`${ROOT_URL}${Path.TITLES}/${id}`);
-  }
-
-  private createBank(): Observable<BankApiObj[]> {
-    return this.apiKeyService.apiKey$.pipe(
-      switchMap(apiKey => {
-        if (apiKey === null) {
-          return EMPTY;
-        }
-
-        const params = {access_token: apiKey};
-        return this.http.get<BankApiObj[]>(`${ROOT_URL}${Path.BANK}`, {
-              params,
-            });
-      }),
-      shareReplay({bufferSize: 1, refCount: false})
-    );
   }
 
   private createDailyAchievements(): Observable<DailyAchievementsApiObj> {

@@ -4,6 +4,7 @@ import {combineLatest, Observable, of as observableOf} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
 import {ApiService} from '../api/api';
+import {BankService} from '../api/bank_service';
 import {CharactersService} from '../api/characters_service';
 import {ItemApiObj} from '../api/models';
 
@@ -17,6 +18,7 @@ export class ItemService {
 
   constructor(
       private readonly apiService: ApiService,
+      private readonly bankService: BankService,
       private readonly charactersService: CharactersService,
   ) {}
 
@@ -77,7 +79,7 @@ export class ItemService {
         }),
     );
 
-    const bankIds$ = this.apiService.getBank().pipe(
+    const bankIds$ = this.bankService.getBank().pipe(
         map((bank) => {
           return bank
               .filter((item) => item)
