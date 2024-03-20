@@ -4,7 +4,6 @@ import {NavigationEnd, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 
-import {ApiService} from '../api/api';
 import {ApiKeyService} from '../api_key/api_key';
 
 @Component({
@@ -13,11 +12,11 @@ import {ApiKeyService} from '../api_key/api_key';
   styleUrls: ['./app.scss'],
 })
 export class App {
+
   readonly activeRoute$ = this.createActiveRoute();
 
   constructor(
     private readonly apiKeyService: ApiKeyService,
-    private readonly apiService: ApiService,
     private readonly router: Router
   ) {}
 

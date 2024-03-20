@@ -26,7 +26,6 @@ import {App} from './app';
     MatTabsModule,
     MatToolbarModule,
   ],
-  providers: [],
   bootstrap: [App],
 })
 export class AppModule {
