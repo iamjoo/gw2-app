@@ -92,7 +92,9 @@ export class Worlds {
   constructor(
       private readonly accountService: AccountService,
       private readonly worldService: WorldService,
-  ) {}
+  ) {
+    this.worldService.getWvwMatchups().subscribe(a => console.log(a));
+  }
 
   private createData(): Observable<DataSourceObject[]> {
     return combineLatest([
