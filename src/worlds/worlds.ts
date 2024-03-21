@@ -5,22 +5,16 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatTableModule} from '@angular/material/table';
 
 import {combineLatest, Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {map, shareReplay, startWith} from 'rxjs/operators';
 
 import {AccountService} from '../api/account_service';
 import {WorldApiObj, WorldPopulationApi, WorldService} from '../api/world_service';
+import {WorldPopulation, WorldPopulationDataSourceObject} from './world_population';
 
-type WorldPopulation = 'Low'|'Medium'|'High'|'Very High'|'Full';
-
-interface DataSourceObject {
-  readonly barValue: number;
-  readonly isHome: boolean;
-  readonly name: string;
-  readonly population: WorldPopulation;
-}
+type WorldPopulationString = 'Low'|'Medium'|'High'|'Very High'|'Full';
 
 function convertWorldPopulationApi(population: WorldPopulationApi):
-    WorldPopulation {
+    WorldPopulationString {
   if (population === 'VeryHigh') {
     return 'Very High'
   }
@@ -72,6 +66,9 @@ function worldNameComparatorFn(a: string, b: string): number {
   return aCountry.localeCompare(bCountry);
 }
 
+const EU_ID_PREFIX = '2';
+const NA_ID_PREFIX = '1';
+
 @Component({
   selector: 'gw-worlds',
   templateUrl: './worlds.ng.html',
@@ -81,12 +78,15 @@ function worldNameComparatorFn(a: string, b: string): number {
     MatIconModule,
     MatProgressBarModule,
     MatTableModule,
+    WorldPopulation,
   ],
   standalone: true,
 })
 export class Worlds {
 
-  readonly data$ = this.createData();
+  private readonly worldsAndHomeId$ = this.createWorldsAndHomeId();
+  readonly euWorlds$ = this.createEuWorlds();
+  readonly naWorlds$ = this.createNaWorlds();
   readonly displayedColumns = ['name', 'population'];
 
   constructor(
@@ -96,21 +96,50 @@ export class Worlds {
     this.worldService.getWvwMatchups().subscribe(a => console.log(a));
   }
 
-  private createData(): Observable<DataSourceObject[]> {
+  private createWorldsAndHomeId(): Observable<[WorldApiObj[], number]> {
     return combineLatest([
         this.worldService.getWorlds(),
-        this.accountService.getAccount().pipe(startWith({world: ''})),
-    ]).pipe(
-        map(([worlds, {world: homeId}]) => {
-          return worlds.map(
-              ({id, name, population}) => {
-                return {
-                  barValue: getBarValue(population),
-                  isHome: id === homeId,
-                  name,
-                  population: convertWorldPopulationApi(population),
-                };
-              }).sort((a, b) => worldNameComparatorFn(a.name, b.name));
+        this.accountService.getAccount().pipe(
+            startWith({world: 0}),
+            map(({world}) => world),
+        ),
+    ]).pipe(shareReplay({bufferSize: 1, refCount: true}));
+  }
+
+  private createEuWorlds(): Observable<WorldPopulationDataSourceObject[]> {
+    return this.worldsAndHomeId$.pipe(
+        map(([worlds, homeId]) => {
+          return worlds
+              .filter(({id}) => `${id}`.substring(0, 1) === EU_ID_PREFIX)
+              .map(
+                  ({id, name, population}) => {
+                    return {
+                      barValue: getBarValue(population),
+                      isHome: id === homeId,
+                      name,
+                      population: convertWorldPopulationApi(population),
+                    };
+                  })
+              .sort((a, b) => worldNameComparatorFn(a.name, b.name));
+        }),
+    );
+  }
+
+  private createNaWorlds(): Observable<WorldPopulationDataSourceObject[]> {
+    return this.worldsAndHomeId$.pipe(
+        map(([worlds, homeId]) => {
+          return worlds
+              .filter(({id}) => `${id}`.substring(0, 1) === NA_ID_PREFIX)
+              .map(
+                  ({id, name, population}) => {
+                    return {
+                      barValue: getBarValue(population),
+                      isHome: id === homeId,
+                      name,
+                      population: convertWorldPopulationApi(population),
+                    };
+                  })
+              .sort((a, b) => worldNameComparatorFn(a.name, b.name));
         }),
     );
   }

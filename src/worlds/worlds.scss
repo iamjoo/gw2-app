@@ -1,22 +1,16 @@
-.mat-column-name {
-  width: 264px;
-}
-
-.mat-column-population {
-  width: 274px;
-}
-
-.coming-soon {
-  margin-bottom: 20px;
-}
-
-.container {
+.main-container {
   height: 100%;
 }
 
 .table-container {
   max-height: 100%;
   overflow-y: auto;
+}
+
+.tables {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
 }
 
 .title {
@@ -30,41 +24,4 @@
   flex-direction: column;
   height: 100%;
   padding: 20px;
-}
-
-.world-name {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  & mat-icon {
-    margin-left: 10px;
-  }
-}
-
-/* Population colors */
-
-.low {
-  /* light-green 600*/
-  color: #7CB342;
-}
-
-.medium {
-  /* light-green 600*/
-  color: #7CB342;
-}
-
-.high {
-  /* lime 600*/
-  color: #C0CA33;
-}
-
-.very-high {
-  /* orange 600*/
-  color: #FB8C00;
-}
-
-.full {
-  /* red 600*/
-  color: #E53935;
 }
