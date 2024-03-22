@@ -24,7 +24,7 @@ interface MatchupWorldsApiObj {
   readonly green: number[];
 }
 
-interface MatchupScoreApiObj {
+interface MatchupVictoryPointsApiObj {
   readonly red: number;
   readonly blue: number;
   readonly green: number;
@@ -32,7 +32,7 @@ interface MatchupScoreApiObj {
 
 interface MatchupApiObj {
   readonly id: string;
-  readonly scores: MatchupScoreApiObj;
+  readonly victory_points: MatchupVictoryPointsApiObj;
   readonly all_worlds: MatchupWorldsApiObj;
 }
 
@@ -49,7 +49,7 @@ export interface WvwMatchup {
 interface WvwTeamInfo {
   readonly worldNames: string[];
   readonly worldIds: number[];
-  readonly score: number;
+  readonly victoryPoints: number;
 }
 
 export const EU_ID_PREFIX = '2';
@@ -126,17 +126,17 @@ export class WorldService {
                             red: {
                               worldIds: worldMatchups.red,
                               worldNames: redWorldNames,
-                              score: matchup.scores.red,
+                              victoryPoints: matchup.victory_points.red,
                             },
                             blue: {
                               worldIds: worldMatchups.blue,
                               worldNames: blueWorldNames,
-                              score: matchup.scores.blue,
+                              victoryPoints: matchup.victory_points.blue,
                             },
                             green: {
                               worldIds: worldMatchups.green,
                               worldNames: greenWorldNames,
-                              score: matchup.scores.green,
+                              victoryPoints: matchup.victory_points.green,
                             },
                           };
                         });

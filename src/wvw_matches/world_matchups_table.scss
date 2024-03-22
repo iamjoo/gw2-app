@@ -2,7 +2,11 @@
   width: 350px;
 }
 
-.score,
+.mat-column-victory-points {
+  width: 85px;
+}
+
+.victory-points,
 .world-names {
   margin-bottom: 12px;
   margin-top: 12px;
@@ -35,19 +39,4 @@
 .blue-team {
   /* blue 400  */
   border-left-color: #42A5F5;
-}
-
-.red-team1 {
-  /* red 300  */
-  border-left-color: #E57373;
-}
-
-.green-team1 {
-  /* green 300  */
-  border-left-color: #81C784;
-}
-
-.blue-team1 {
-  /* blue 300  */
-  border-left-color: #64B5F6;
 }

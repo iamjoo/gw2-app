@@ -58,34 +58,34 @@ export class WvwMatches {
           const dataSourceObjects: WorldMatchupDataSourceObject[] = [];
           euMatchups.forEach((matchup) => {
             const redNames = matchup.red.worldNames.sort().join(', ');
-            const redScore = matchup.red.score;
+            const redVictoryPoints = matchup.red.victoryPoints;
             const redTeam = {
               team: Team.RED,
               worldNames: redNames,
-              score: redScore,
+              victoryPoints: redVictoryPoints,
               isHomeTeam: matchup.red.worldIds.includes(homeWorldId),
             };
             const greenNames = matchup.green.worldNames.sort().join(', ');
-            const greenScore = matchup.green.score;
+            const greenVictoryPoints = matchup.green.victoryPoints;
             const greenTeam = {
               team: Team.GREEN,
               worldNames: greenNames,
-              score: greenScore,
+              victoryPoints: greenVictoryPoints,
               isHomeTeam: matchup.green.worldIds.includes(homeWorldId),
             };
             const blueNames = matchup.blue.worldNames.sort().join(', ');
-            const blueScore = matchup.blue.score;
+            const blueVictoryPoints = matchup.blue.victoryPoints;
             const blueTeam = {
               team: Team.BLUE,
               worldNames: blueNames,
-              score: blueScore,
+              victoryPoints: blueVictoryPoints,
               isHomeTeam: matchup.blue.worldIds.includes(homeWorldId),
             };
 
             dataSourceObjects.push({
               tier: matchup.tier,
               teamInfos: [redTeam, greenTeam, blueTeam].sort(
-                  (a, b) => b.score - a.score),
+                  (a, b) => b.victoryPoints - a.victoryPoints),
             });
           });
 

@@ -24,11 +24,11 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="score">
-    <th mat-header-cell *matHeaderCellDef>Score</th>
+  <ng-container matColumnDef="victory-points">
+    <th mat-header-cell *matHeaderCellDef>Victory Points</th>
     <td mat-cell *matCellDef="let element">
       <ng-container *ngFor="let teamInfo of element.teamInfos">
-        <div class="score">{{teamInfo.score | number: '1.0-0'}}</div>
+        <div class="victory-points">{{teamInfo.victoryPoints | number: '1.0-0'}}</div>
       </ng-container>
     </td>
   </ng-container>

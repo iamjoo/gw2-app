@@ -12,7 +12,7 @@ export enum Team {
 interface TeamInfo {
   readonly team: Team;
   readonly worldNames: string;
-  readonly score: number;
+  readonly victoryPoints: number;
   readonly isHomeTeam: boolean;
 }
 
@@ -38,5 +38,5 @@ export class WorldMatchupsTable {
   @Input({required: true}) dataSource!: WorldMatchupDataSourceObject[];
 
   readonly Team = Team;
-  readonly displayedColumns = ['tier', 'names', 'score'];
+  readonly displayedColumns = ['tier', 'names', 'victory-points'];
 }
