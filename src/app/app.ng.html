@@ -56,6 +56,13 @@
       routerLink="/worlds">
     Worlds
   </a>
+  <a
+      [active]="data.activeRoute === 'wvw-matches'"
+      class="tab"
+      mat-tab-link
+      routerLink="/wvw-matches">
+    WvW Matches
+  </a>
 </nav>
 
 <mat-divider></mat-divider>

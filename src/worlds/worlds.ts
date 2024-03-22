@@ -8,12 +8,12 @@ import {combineLatest, Observable} from 'rxjs';
 import {map, shareReplay, startWith} from 'rxjs/operators';
 
 import {AccountService} from '../api/account_service';
-import {WorldApiObj, WorldPopulationApi, WorldService} from '../api/world_service';
-import {WorldPopulation, WorldPopulationDataSourceObject} from './world_population';
+import {EU_ID_PREFIX, NA_ID_PREFIX, Region, WorldApiObj, WorldPopulationApiString, WorldService} from '../api/world_service';
+import {WorldPopulationTable, WorldPopulationDataSourceObject} from './world_population_table';
 
 type WorldPopulationString = 'Low'|'Medium'|'High'|'Very High'|'Full';
 
-function convertWorldPopulationApi(population: WorldPopulationApi):
+function convertWorldPopulationApi(population: WorldPopulationApiString):
     WorldPopulationString {
   if (population === 'VeryHigh') {
     return 'Very High'
@@ -21,7 +21,7 @@ function convertWorldPopulationApi(population: WorldPopulationApi):
   return population;
 }
 
-function getBarValue(population: WorldPopulationApi): number {
+function getBarValue(population: WorldPopulationApiString): number {
   switch (population) {
     case 'Low':
       return 20;
@@ -66,9 +66,6 @@ function worldNameComparatorFn(a: string, b: string): number {
   return aCountry.localeCompare(bCountry);
 }
 
-const EU_ID_PREFIX = '2';
-const NA_ID_PREFIX = '1';
-
 @Component({
   selector: 'gw-worlds',
   templateUrl: './worlds.ng.html',
@@ -78,7 +75,7 @@ const NA_ID_PREFIX = '1';
     MatIconModule,
     MatProgressBarModule,
     MatTableModule,
-    WorldPopulation,
+    WorldPopulationTable,
   ],
   standalone: true,
 })
@@ -87,14 +84,11 @@ export class Worlds {
   private readonly worldsAndHomeId$ = this.createWorldsAndHomeId();
   readonly euWorlds$ = this.createEuWorlds();
   readonly naWorlds$ = this.createNaWorlds();
-  readonly displayedColumns = ['name', 'population'];
 
   constructor(
       private readonly accountService: AccountService,
       private readonly worldService: WorldService,
-  ) {
-    this.worldService.getWvwMatchups().subscribe(a => console.log(a));
-  }
+  ) {}
 
   private createWorldsAndHomeId(): Observable<[WorldApiObj[], number]> {
     return combineLatest([
@@ -107,29 +101,20 @@ export class Worlds {
   }
 
   private createEuWorlds(): Observable<WorldPopulationDataSourceObject[]> {
-    return this.worldsAndHomeId$.pipe(
-        map(([worlds, homeId]) => {
-          return worlds
-              .filter(({id}) => `${id}`.substring(0, 1) === EU_ID_PREFIX)
-              .map(
-                  ({id, name, population}) => {
-                    return {
-                      barValue: getBarValue(population),
-                      isHome: id === homeId,
-                      name,
-                      population: convertWorldPopulationApi(population),
-                    };
-                  })
-              .sort((a, b) => worldNameComparatorFn(a.name, b.name));
-        }),
-    );
+    return this.createWorldsForRegion('eu');
   }
 
   private createNaWorlds(): Observable<WorldPopulationDataSourceObject[]> {
+    return this.createWorldsForRegion('na');
+  }
+
+  private createWorldsForRegion(region: Region): Observable<WorldPopulationDataSourceObject[]> {
+    const idPrefix = region === 'na' ? NA_ID_PREFIX : EU_ID_PREFIX;
+
     return this.worldsAndHomeId$.pipe(
         map(([worlds, homeId]) => {
           return worlds
-              .filter(({id}) => `${id}`.substring(0, 1) === NA_ID_PREFIX)
+              .filter(({id}) => `${id}`.substring(0, 1) === idPrefix)
               .map(
                   ({id, name, population}) => {
                     return {

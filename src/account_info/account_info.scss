@@ -17,17 +17,12 @@
 .table-container {
   max-height: 100%;
   overflow-y: auto;
-
-  &:not(:first-child) {
-    margin-left: 20px;
-  }
 }
 
 .tables {
   display: flex;
   flex-direction: row;
-  /* Title is 32px with 20px margin */
-  height: calc(100% - 32px - 20px);
+  height: 100%;
 }
 
 .title {

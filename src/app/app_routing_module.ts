@@ -7,6 +7,7 @@ import {Inventory} from '../inventory/inventory';
 import {RaidTimes} from '../raid_times/raid_times';
 import {WizardsVault} from '../wizards_vault/wizards_vault';
 import {Worlds} from '../worlds/worlds';
+import {WvwMatches} from '../wvw_matches/wvw_matches';
 
 const routes: Routes = [
   {path: 'account-info', component: AccountInfo},
@@ -15,6 +16,7 @@ const routes: Routes = [
   {path: 'wizards-vault', component: WizardsVault},
   {path: 'raid-times', component: RaidTimes},
   {path: 'worlds', component: Worlds},
+  {path: 'wvw-matches', component: WvwMatches},
   {path: '', redirectTo: '/account-info', pathMatch: 'full'},
 ];
 

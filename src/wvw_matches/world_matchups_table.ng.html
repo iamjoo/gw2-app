@@ -1,0 +1,38 @@
+<table [dataSource]="dataSource" mat-table>
+  <ng-container matColumnDef="tier">
+    <th mat-header-cell *matHeaderCellDef>Tier</th>
+    <td mat-cell *matCellDef="let element">
+      <div>
+        <div>{{element.tier}}</div>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="names">
+    <th mat-header-cell *matHeaderCellDef>Worlds</th>
+    <td mat-cell *matCellDef="let element">
+      <ng-container *ngFor="let teamInfo of element.teamInfos">
+        <div
+            class="world-names"
+            [class.red-team]="teamInfo.team === Team.RED"
+            [class.green-team]="teamInfo.team === Team.GREEN"
+            [class.blue-team]="teamInfo.team === Team.BLUE">
+          {{teamInfo.worldNames}}
+          <mat-icon *ngIf="teamInfo.isHomeTeam">home</mat-icon>
+        </div>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="score">
+    <th mat-header-cell *matHeaderCellDef>Score</th>
+    <td mat-cell *matCellDef="let element">
+      <ng-container *ngFor="let teamInfo of element.teamInfos">
+        <div class="score">{{teamInfo.score | number: '1.0-0'}}</div>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

@@ -14,9 +14,9 @@ export interface WorldPopulationDataSourceObject {
 }
 
 @Component({
-  selector: 'gw-world-population',
-  templateUrl: './world_population.ng.html',
-  styleUrls: ['./world_population.scss'],
+  selector: 'gw-world-population-table',
+  templateUrl: './world_population_table.ng.html',
+  styleUrls: ['./world_population_table.scss'],
   imports: [
     CommonModule,
     MatIconModule,
@@ -25,7 +25,7 @@ export interface WorldPopulationDataSourceObject {
   ],
   standalone: true,
 })
-export class WorldPopulation {
+export class WorldPopulationTable {
 
   @Input({required: true}) dataSource!: WorldPopulationDataSourceObject[];
 

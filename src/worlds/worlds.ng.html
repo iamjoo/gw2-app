@@ -2,7 +2,7 @@
     class="main-container"
     *ngIf="{
       naWorlds: naWorlds$ | async,
-      euWorlds: euWorlds$ | async
+      euWorlds: euWorlds$ | async,
     } as data">
   <mat-progress-bar mode="indeterminate" *ngIf="!data.naWorlds || !data.euWorlds">
   </mat-progress-bar>
@@ -12,7 +12,7 @@
       <h2 class="title">NA Worlds</h2>
 
       <div class="table-container">
-          <gw-world-population [dataSource]="data.naWorlds"></gw-world-population>
+        <gw-world-population-table [dataSource]="data.naWorlds"></gw-world-population-table>
       </div>
     </div>
 
@@ -20,7 +20,7 @@
       <h2 class="title">EU Worlds</h2>
 
       <div class="table-container">
-        <gw-world-population [dataSource]="data.euWorlds"></gw-world-population>
+        <gw-world-population-table [dataSource]="data.euWorlds"></gw-world-population-table>
       </div>
     </div>
   </div>

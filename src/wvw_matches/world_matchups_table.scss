@@ -1,0 +1,53 @@
+.mat-column-names {
+  width: 350px;
+}
+
+.score,
+.world-names {
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+
+.world-names {
+  align-items: center;
+  border-left: 8px solid;
+  display: flex;
+  flex-direction: row;
+  padding-left: 12px;
+
+  & mat-icon {
+    height: 20px;
+    margin-left: 10px;
+    width: 20px;
+  }
+}
+
+.red-team {
+  /* red 400  */
+  border-left-color: #EF5350;
+}
+
+.green-team {
+  /* green 400  */
+  border-left-color: #66BB6A;
+}
+
+.blue-team {
+  /* blue 400  */
+  border-left-color: #42A5F5;
+}
+
+.red-team1 {
+  /* red 300  */
+  border-left-color: #E57373;
+}
+
+.green-team1 {
+  /* green 300  */
+  border-left-color: #81C784;
+}
+
+.blue-team1 {
+  /* blue 300  */
+  border-left-color: #64B5F6;
+}

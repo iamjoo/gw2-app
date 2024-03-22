@@ -1,0 +1,27 @@
+<div
+    class="main-container"
+    *ngIf="{
+      naMatchups: naMatchups$ | async,
+      euMatchups: euMatchups$ | async
+    } as data">
+  <mat-progress-bar mode="indeterminate" *ngIf="!data.naMatchups || !data.euMatchups">
+  </mat-progress-bar>
+
+  <div class="tables" *ngIf="data.naMatchups && data.euMatchups">
+    <div class="title-table-container" *ngIf="data.euMatchups">
+      <h2 class="title">NA Matches</h2>
+
+      <div class="table-container">
+        <gw-world-matchups-table [dataSource]="data.naMatchups"></gw-world-matchups-table>
+      </div>
+    </div>
+
+    <div class="title-table-container" *ngIf="data.euMatchups">
+      <h2 class="title">EU Matches</h2>
+
+      <div class="table-container">
+        <gw-world-matchups-table [dataSource]="data.euMatchups"></gw-world-matchups-table>
+      </div>
+    </div>
+  </div>
+</div>

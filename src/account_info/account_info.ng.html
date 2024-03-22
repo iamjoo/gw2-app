@@ -5,10 +5,9 @@
 <ng-template #tableView>
   <div class="main-container" *ngIf="{source: data$ | async} as data">
     <mat-progress-bar mode="indeterminate" *ngIf="!data.source"></mat-progress-bar>
-    <div class="title-table-container" *ngIf="data.source">
-      <h2 class="title">Account Info</h2>
-
-      <div class="tables">
+    <div class="tables" *ngIf="data.source">
+      <div class="title-table-container">
+        <h2 class="title">Account Info</h2>
         <div class="table-container">
           <table [dataSource]="data.source" mat-table>
             <ng-container matColumnDef="key">
@@ -25,16 +24,22 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
         </div>
+      </div>
 
+      <div class="title-table-container">
+        <h2 class="title">Wallet</h2>
         <div class="table-container">
           <gw-wallet></gw-wallet>
         </div>
+      </div>
 
+      <div class="title-table-container">
+        <h2 class="title">Daily HoT Map Chests</h2>
         <div class="table-container">
           <gw-map-chests></gw-map-chests>
         </div>
-
       </div>
+
     </div>
   </div>
 </ng-template>
